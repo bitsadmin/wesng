@@ -45,6 +45,7 @@ def main():
         with zipfile.ZipFile("CVEs.zip","r") as cveszip:
             cveszip.extract("CVEs.csv")
         os.remove('CVEs.zip')
+        return 0
 
     print('[+] Parsing systeminfo output')
     systeminfo = open(systeminfo_txt, 'rb').read().decode('ascii')
@@ -215,6 +216,8 @@ Impact: %s
 
 
 def check_file_exists(value):
+    if value is not None:
+        return ''
     if not os.path.isfile(value):
         raise argparse.ArgumentTypeError('File \'%s\' does not exist.' % value)
 
@@ -246,7 +249,7 @@ def parse_arguments():
     )
 
     # Mandatory parameters
-    parser.add_argument('systeminfo', action='store', type=check_file_exists, help='Specify systeminfo.txt file')
+    parser.add_argument('systeminfo', action='store', nargs='?', type=check_file_exists, help='Specify systeminfo.txt file')
     parser.add_argument('cves', action='store', nargs='?', type=check_file_exists, default='CVEs.csv', help='List of known vulnerabilities (default: CVEs.csv)')
 
     # Flags
