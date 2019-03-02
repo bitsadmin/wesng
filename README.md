@@ -6,8 +6,8 @@ WES-NG is a tool which based on the output of Windows' `systeminfo` utility prov
 2. Next, use Windows' built-in `systeminfo.exe` tool obtain the system information of the local system or from a remote system using `systeminfo.exe /S MyRemoteHost`, and redirect this to a file: `systeminfo > systeminfo.txt`
 3. Execute WES-NG with the systeminfo.txt output file as parameter: `wes.py systeminfo.txt`. WES-NG then uses the database to determine which patches are applicable to the system and to which vulnerabilities it is currently exposed, including exploits if available.
 
-## Screenshot
-[Gif animation showing usage of Windows Exploit Suggester - Next Generation](https://raw.githubusercontent.com/bitsadmin/wesng/master/demo.gif)
+## Demo
+![Gif animation showing usage of Windows Exploit Suggester - Next Generation](https://raw.githubusercontent.com/bitsadmin/wesng/master/demo.gif)
 
 ## Collector
 This GitHub repository will regularly update the database of vulnerabilities so running `wes.py` with the `--update` parameter will get you the latest version.
@@ -19,17 +19,19 @@ The WES-NG collector pulls information from various sources:
 These are combined into a single .csv file which is compressed and hosted in this GitHub repository.
 
 ## Rationale
-I developed WES-NG because [GDSSecurity's Windows-Exploit-Suggester](https://github.com/GDSSecurity/Windows-Exploit-Suggester/) tool which used to work excellent for operating systems in the Windows XP and Windows Vista era, does not work for more recent operating systems like Windows 10 and vulnerabilities published in recent years. This is because Microsoft replaced the Microsoft Security Bulletin Data Excel file [1], on which GDSSecurity's Windows-Exploit-Suggester is fully dependent, by the MSRC API [2]. The Microsoft Security Bulletin Data Excel file has not been updated since Q1 2017, so later operating systems and vulnerabilities cannot be detected. Thanks [GDSSecurity](https://github.com/GDSSecurity/), for this great tool which has served many of us for so many years!
+I developed WES-NG because [GDSSecurity's Windows-Exploit-Suggester](https://github.com/GDSSecurity/Windows-Exploit-Suggester/) tool which used to work excellent for operating systems in the Windows XP and Windows Vista era, does not work for more recent operating systems like Windows 10 and vulnerabilities published in recent years. This is because Microsoft replaced the Microsoft Security Bulletin Data Excel file [1], on which GDSSecurity's Windows-Exploit-Suggester is fully dependent, by the MSRC API [2]. The Microsoft Security Bulletin Data Excel file has not been updated since Q1 2017, so later operating systems and vulnerabilities cannot be detected. Thanks [@gdssecurity](https://twitter.com/gdssecurity), for this great tool which has served many of us for so many years!
 
 ## Improvements
-- Add support for [NoPowerShell's](https://github.com/bitsadmin/nopowershell/) `Get-SystemInfo` cmdlet output
+- Add support for [NoPowerShell](https://github.com/bitsadmin/nopowershell/)'s `Get-SystemInfo` cmdlet output
 - Add support for `wmic qfe` output together with support for parameters to manually specify the operating system
 - Add support for alternative output formats of `systeminfo` (csv, table)
 - More testing on the false positive vulnerabilities that are returned
 
 
 [1] https://www.microsoft.com/download/details.aspx?id=36982
+
 [2] https://portal.msrc.microsoft.com/en-us/developer
+
 [3] https://nvd.nist.gov/vuln/data-feeds
 
 
