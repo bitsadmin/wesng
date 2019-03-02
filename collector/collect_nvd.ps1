@@ -1,3 +1,9 @@
+<#
+Author: Arris Huijgen - @bitsadmin
+Website: https://github.com/bitsadmin
+License: BSD 3-Clause
+#>
+
 # Instructions
 # 1. Execute the collect_bulletin.ps1 and collect_msrc.ps1 to collect the latest Microsoft patches
 # 2. Execute the script to enrich the BulletinSearch.xlsx and MSRC CVEs with Exploit-DB links

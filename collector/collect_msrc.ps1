@@ -1,3 +1,9 @@
+<#
+Author: Arris Huijgen - @bitsadmin
+Website: https://github.com/bitsadmin
+License: BSD 3-Clause
+#>
+
 # Instructions
 # 1. Install the MSRC module using: Install-Module MSRCSecurityUpdates -Force
 # 2. Request your own API key via https://portal.msrc.microsoft.com/en-us/developer and paste it here:

@@ -1,3 +1,9 @@
+<#
+Author: Arris Huijgen - @bitsadmin
+Website: https://github.com/bitsadmin
+License: BSD 3-Clause
+#>
+
 # Instructions
 # 1. Install the ImportExcel module using: Install-Module ImportExcel
 # 2. Execute the script and wait for the Bulletin.csv file to be created
