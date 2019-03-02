@@ -9,7 +9,7 @@
 # Website: https://github.com/bitsadmin
 import sys, csv, re, argparse, os, urllib.request, zipfile
 
-VERSION = 0.9
+VERSION = 0.91
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
 FILENAME = 'wes.py'
 
@@ -36,9 +36,7 @@ buildnumbers = {
 def main():
     args = parse_arguments()
 
-    systeminfo_txt = args.systeminfo
-    cves_csv = args.cves
-
+    # Update
     if args.perform_update:
         print('[+] Updating list of vulnerabilities')
         urllib.request.urlretrieve('https://raw.githubusercontent.com/bitsadmin/wesng/master/CVEs.zip', 'CVEs.zip')
@@ -47,14 +45,19 @@ def main():
         os.remove('CVEs.zip')
         return 0
 
+    # Check
+    systeminfo_txt = args.systeminfo
+    cves_csv = args.cves
+
     print('[+] Parsing systeminfo output')
-    systeminfo = open(systeminfo_txt, 'rb').read().decode('ascii')
+    systeminfo = open(systeminfo_txt, 'rb').read()
     try:
         import chardet
         encoding = chardet.detect(systeminfo)
         systeminfo = systeminfo.decode(encoding['encoding'])
     except ImportError:
         print('[!] Warning: chardet module not installed. In case of encoding errors, install chardet using: pip3 install chardet')
+        systeminfo = systeminf.decode('ascii')
 
     regex_version = re.compile(r'^OS .*?:\s+((\d+\.?)+) ((Service Pack (\d)|N/A|.+) )?Build (\d+).*', re.MULTILINE)
     systeminfo_matches = regex_version.findall(systeminfo)[0]
@@ -216,10 +219,14 @@ Impact: %s
 
 
 def check_file_exists(value):
-    if value is not None:
-        return ''
     if not os.path.isfile(value):
         raise argparse.ArgumentTypeError('File \'%s\' does not exist.' % value)
+
+    return value
+
+def check_cves_exists(value):
+    if not os.path.isfile(value):
+        raise argparse.ArgumentTypeError('CVEs file \'%s\' does not exist. Try running %s --update first.' % (value, FILENAME))
 
     return value
 
@@ -248,12 +255,15 @@ def parse_arguments():
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
-    # Mandatory parameters
-    parser.add_argument('systeminfo', action='store', nargs='?', type=check_file_exists, help='Specify systeminfo.txt file')
-    parser.add_argument('cves', action='store', nargs='?', type=check_file_exists, default='CVEs.csv', help='List of known vulnerabilities (default: CVEs.csv)')
-
-    # Flags
+    # Update
     parser.add_argument('-u', '--update', dest='perform_update', action='store_true', help='Download latest list of CVEs')
+    args, xx = parser.parse_known_args()
+    if args.perform_update:
+        return args
+
+    # Options
+    parser.add_argument('systeminfo', action='store', type=check_file_exists, help='Specify systeminfo.txt file')
+    parser.add_argument('cves', action='store', nargs='?', type=check_cves_exists, default='CVEs.csv', help='List of known vulnerabilities (default: CVEs.csv)')
     parser.add_argument('-e', '--exploits-only', dest='only_exploits', action='store_true', help='Show only vulnerabilities with known exploits')
     parser.add_argument('--hide', dest='hiddenvulns', nargs='+', default='', help='Hide vulnerabilities of for example Adobe Flash Player and Microsoft Edge')
     parser.add_argument('-h', '--help', action='help', help='Show this help message and exit')
