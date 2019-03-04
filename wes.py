@@ -9,7 +9,7 @@
 # Website: https://github.com/bitsadmin
 import sys, csv, re, argparse, os, urllib.request, zipfile
 
-VERSION = 0.91
+VERSION = 0.92
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
 FILENAME = 'wes.py'
 
@@ -65,7 +65,7 @@ def main():
     servicepack = systeminfo_matches[4]
     if servicepack == '':
         servicepack = 0
-    win = re.findall('^OS .*?:\s+Microsoftr? Windows (Server )?(\d+|XP|VistaT).*', systeminfo, re.MULTILINE)[0][1]
+    win = re.findall('^OS .*?:\s+Microsoftr? Windows (Server )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE)[0][1]
     arch = re.findall('.*?:\s+([\w\d]+?)-based PC', systeminfo, re.MULTILINE)[0]
     hotfix_matches = re.findall('\s+\[\d+\]: KB\d+', systeminfo, re.MULTILINE)
     hotfixes = []
@@ -107,11 +107,19 @@ def main():
         if version != None:
             version = ' ' + version
         productfilter = 'Windows %s for %s Systems%s' % (win, arch, version)
+    elif win == '8':
+        productfilter = 'Windows %s for %s Systems' % (win, arch)
+    elif win == '8.1':
+        productfilter = 'Windows %s for %s Systems' % (win, arch)
     elif win == '10':
         productfilter = 'Windows %s Version %s for %s Systems' % (win, version, arch)
     # Server OSs
     elif win == '2008':
         productfilter = 'Windows Server %s for %s Systems' % (win, arch)
+    elif win == '2008 R2':
+        if version != None:
+            version = ' ' + version
+        productfilter = 'Windows Server %s for %s Systems%s' % (win, arch, version)
     elif win == '2016':
         productfilter = 'Windows Server %s' % win
     elif win == '2019':
@@ -126,7 +134,7 @@ def main():
     - Installed hotfixes: %s""" % (productfilter, win, mybuild, version, arch, ', '.join(['KB%s' % kb for kb in hotfixes])))
 
     print('[+] Loading CSV with CVEs')
-    # DatePosted,CVE,BulletinKB,Title,AffectedProductID,AffectedProduct,AffectedComponent,Severity,Impact,Supersedes,Reboot,Exploits
+    # DatePosted,CVE,BulletinKB,Title,AffectedProduct,AffectedComponent,Severity,Impact,Supersedes,Exploits
     f = open(cves_csv, 'r')
     cves = csv.DictReader(f, delimiter=',', quotechar='"')
 
