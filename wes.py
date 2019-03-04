@@ -9,7 +9,7 @@
 # Website: https://github.com/bitsadmin
 import sys, csv, re, argparse, os, urllib.request, zipfile
 
-VERSION = 0.92
+VERSION = 0.93
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
 FILENAME = 'wes.py'
 
@@ -17,11 +17,20 @@ filtered = None
 
 # Mapping table between build numbers and versions to be able to import systeminfo output files
 buildnumbers = {
-    # Windows XP
-    #2600: '',
+    # Windows XP / Server 2003 [R2]
+    # ..
 
-    # Windows 7
+    # Windows Vista / Server 2008
+    # ..
+
+    # Windows 7 / Server 2008 R2
     7601: 'Service Pack 1',
+
+    # Windows 8 / Server 2012
+    # ..
+
+    # Windows 8.1 / Server 2012 R2
+    # ..
 
     # Windows 10 / Server
     10240: 1507,
@@ -43,12 +52,13 @@ def main():
         with zipfile.ZipFile("CVEs.zip","r") as cveszip:
             cveszip.extract("CVEs.csv")
         os.remove('CVEs.zip')
-        return 0
+        return
 
-    # Check
+    # Obtain arguments
     systeminfo_txt = args.systeminfo
     cves_csv = args.cves
 
+    # Parse encoding of systeminfo.txt input
     print('[+] Parsing systeminfo output')
     systeminfo = open(systeminfo_txt, 'rb').read()
     try:
@@ -59,18 +69,27 @@ def main():
         print('[!] Warning: chardet module not installed. In case of encoding errors, install chardet using: pip3 install chardet')
         systeminfo = systeminf.decode('ascii')
 
-    regex_version = re.compile(r'^OS .*?:\s+((\d+\.?)+) ((Service Pack (\d)|N/A|.+) )?Build (\d+).*', re.MULTILINE)
-    systeminfo_matches = regex_version.findall(systeminfo)[0]
+    # OS Version
+    regex_version = re.compile(r'.*?:\s+((\d+\.?)+) ((Service Pack (\d)|N/A|.+) )?Build (\d+).*', re.MULTILINE | re.IGNORECASE)
+    systeminfo_matches = regex_version.findall(systeminfo)
+    if len(systeminfo_matches) == 0:
+        print('[-] Not able to detect OS version based on provided input file')
+        exit(1)
+    systeminfo_matches = systeminfo_matches[0]
     mybuild = int(systeminfo_matches[5])
     servicepack = systeminfo_matches[4]
-    if servicepack == '':
-        servicepack = 0
-    win = re.findall('^OS .*?:\s+Microsoftr? Windows (Server )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE)[0][1]
-    arch = re.findall('.*?:\s+([\w\d]+?)-based PC', systeminfo, re.MULTILINE)[0]
-    hotfix_matches = re.findall('\s+\[\d+\]: KB\d+', systeminfo, re.MULTILINE)
+
+    # OS Name
+    win = re.findall('.*?Microsoft[\(R\)]{0,3} Windows[\(R\)]{0,3} (Serverr? )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE | re.IGNORECASE)[0][1]
+
+    # System Type
+    arch = re.findall('.*?([\w\d]+?)-based PC.*', systeminfo, re.MULTILINE | re.IGNORECASE)[0]
+
+    # Hotfix(s)
+    hotfix_matches = re.findall('.*KB\d+.*', systeminfo, re.MULTILINE | re.IGNORECASE)
     hotfixes = []
     for match in hotfix_matches:
-        hotfixes.append(re.search('.*KB(\d+).*', match, re.MULTILINE).group(1))
+        hotfixes.append(re.search('.*KB(\d+).*', match, re.MULTILINE | re.IGNORECASE).group(1))
 
     # Determine Windows 10 version based on build
     version = None
@@ -85,45 +104,65 @@ def main():
 
     # Compile name for product filter
     # Architecture
-    if win not in ['XP', 'VistaT']:
+    if win not in ['XP', 'VistaT', '2003', '2003 R2']:
         if arch == 'X86':
             arch = '32-bit'
         elif arch == 'x64':
             arch = 'x64-based'
+
     # Client OSs
     if win == 'XP':
         productfilter = 'Microsoft Windows XP'
         if arch != 'X86':
             productfilter += ' Professional %s Edition' % arch
-        if servicepack != None:
+        if servicepack:
             productfilter += ' Service Pack %s' % servicepack
     elif win == 'VistaT':
         productfilter = 'Windows Vista'
         if arch != 'x86':
             productfilter += ' %s Edition' % arch
-        if servicepack != None and servicepack != 0:
+        if servicepack:
             productfilter += ' Service Pack %s' % servicepack
     elif win == '7':
-        if version != None:
-            version = ' ' + version
-        productfilter = 'Windows %s for %s Systems%s' % (win, arch, version)
+        pversion = '' if version == None else ' ' + version
+        productfilter = 'Windows %s for %s Systems%s' % (win, arch, pversion)
     elif win == '8':
         productfilter = 'Windows %s for %s Systems' % (win, arch)
     elif win == '8.1':
         productfilter = 'Windows %s for %s Systems' % (win, arch)
     elif win == '10':
         productfilter = 'Windows %s Version %s for %s Systems' % (win, version, arch)
+
     # Server OSs
+    elif win == '2003':
+        if arch == 'X86':
+            arch = ''
+        elif arch == 'x64':
+            arch = ' x64 Edition'
+        pversion = '' if version == None else ' ' + version
+        productfilter = 'Microsoft Windows Server %s%s%s' % (win, arch, pversion)
+    # elif win == '2003 R2':
+    # Not possible to distinguish between Windows Server 2003 and Windows Server 2003 R2 based on the systeminfo output
+    # See: https://serverfault.com/questions/634149/will-systeminfos-os-name-line-distinguish-between-windows-2003-and-2003-r2
+    # In CVEs.csv there is a distinction though between 2003 and 2003 R2. We will need to add support for explicitly
+    # providing the OS in the wes.py commandline.
     elif win == '2008':
-        productfilter = 'Windows Server %s for %s Systems' % (win, arch)
+        pversion = '' if version == None else ' ' + version
+        productfilter = 'Windows Server %s for %s Systems%s' % (win, arch, pversion)
     elif win == '2008 R2':
-        if version != None:
-            version = ' ' + version
-        productfilter = 'Windows Server %s for %s Systems%s' % (win, arch, version)
+        pversion = '' if version == None else ' ' + version
+        productfilter = 'Windows Server %s for %s Systems%s' % (win, arch, pversion)
+    elif win == '2012':
+        productfilter = 'Windows Server %s' % win
+    elif win == '2012 R2':
+        productfilter = 'Windows Server %s' % win
     elif win == '2016':
         productfilter = 'Windows Server %s' % win
     elif win == '2019':
         productfilter = 'Windows Server %s' % win
+    else:
+        print("[-] Failed assessing Windows version %s" % win)
+        exit(1)
 
     print("""[+] Operating System
     - Name: %s
@@ -279,7 +318,7 @@ def parse_arguments():
     # Always show full help when no arguments are provided
     if len(sys.argv) == 1:
         parser.print_help()
-        sys.exit(1)
+        exit(1)
 
     return parser.parse_args()
 
