@@ -70,7 +70,7 @@ def main():
         systeminfo = systeminf.decode('ascii')
 
     # OS Version
-    regex_version = re.compile(r'.*?:\s+((\d+\.?)+) ((Service Pack (\d)|N/A|.+) )?Build (\d+).*', re.MULTILINE | re.IGNORECASE)
+    regex_version = re.compile(r'.*?:\s+((\d+\.?)+) ((Service Pack (\d)|N/A|.+) )?\w+ (\d+).*', re.MULTILINE | re.IGNORECASE)
     systeminfo_matches = regex_version.findall(systeminfo)
     if len(systeminfo_matches) == 0:
         print('[-] Not able to detect OS version based on provided input file')
