@@ -120,6 +120,10 @@ def main():
         if version != None:
             version = ' ' + version
         productfilter = 'Windows Server %s for %s Systems%s' % (win, arch, version)
+    elif win == '2012':
+        productfilter = 'Windows Server %s' % win
+    elif win == '2012 R2':
+        productfilter = 'Windows Server %s' % win
     elif win == '2016':
         productfilter = 'Windows Server %s' % win
     elif win == '2019':
