@@ -59,13 +59,13 @@ def main():
         print('[!] Warning: chardet module not installed. In case of encoding errors, install chardet using: pip3 install chardet')
         systeminfo = systeminf.decode('ascii')
 
-    regex_version = re.compile(r'^OS .*?:\s+((\d+\.?)+) ((Service Pack (\d)|N/A|.+) )?Build (\d+).*', re.MULTILINE)
+    regex_version = re.compile(r'.*?:\s+((\d+\.?)+) ((Service Pack (\d)|N/A|.+) )?[a-zA-Z]* (\d+).*', re.MULTILINE)
     systeminfo_matches = regex_version.findall(systeminfo)[0]
     mybuild = int(systeminfo_matches[5])
     servicepack = systeminfo_matches[4]
     if servicepack == '':
         servicepack = 0
-    win = re.findall('^OS .*?:\s+Microsoftr? Windows (Server )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE)[0][1]
+    win = re.findall('.*?:\s+Microsoftr? Windows (Server )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE)[0][1]
     arch = re.findall('.*?:\s+([\w\d]+?)-based PC', systeminfo, re.MULTILINE)[0]
     hotfix_matches = re.findall('\s+\[\d+\]: KB\d+', systeminfo, re.MULTILINE)
     hotfixes = []
