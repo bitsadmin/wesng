@@ -33,7 +33,12 @@ foreach($secupdate in $msu)
 $docs = $docs | sort @{Expression={$_.DocumentTracking.InitialReleaseDate}}
 
 # DEBUG
-#$docs | Export-Clixml "MSRCdocs.xml"#$docs = Import-Clixml "MSRCdocs.xml""[+] Processing MSRC documents"$allProductIDS = @()$cves_msrc = @()
+#$docs | Export-Clixml "MSRCdocs.xml"
+#$docs = Import-Clixml "MSRCdocs.xml"
+
+"[+] Processing MSRC documents"
+$allProductIDS = @()
+$cves_msrc = @()
 $i = 1
 
 # Monthly releases
