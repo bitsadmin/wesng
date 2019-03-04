@@ -128,6 +128,9 @@ def main():
         productfilter = 'Windows Server %s' % win
     elif win == '2019':
         productfilter = 'Windows Server %s' % win
+    else:
+        print("Failed assessing windows version %s" % win)
+        exit(1)
 
     print("""[+] Operating System
     - Name: %s
