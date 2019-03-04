@@ -15,6 +15,7 @@ $NVDPath = "$env:TMP\NVD"
 New-Item -ItemType Directory $NVDPath -ErrorAction SilentlyContinue | Out-Null
 
 "[+] Downloading NVD JSON updates"
+# Source: https://nvd.nist.gov/vuln/data-feeds
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 for($year = 2002; $year -le [DateTime]::Now.Year; $year++)
 {
@@ -24,7 +25,7 @@ for($year = 2002; $year -le [DateTime]::Now.Year; $year++)
     Remove-Item $outfile
 }
 
-"[+] Extracting ExploitDB links from NVD databases"
+"[+] Extracting exploit links from NVD databases"
 $exploits = @()
 for($year = 2002; $year -le [DateTime]::Now.Year; $year++)
 {
@@ -42,8 +43,8 @@ for($year = 2002; $year -le [DateTime]::Now.Year; $year++)
         if($vendors -notcontains "microsoft")
             { continue }
 
-        # Extract Exploit-DB links
-        $edb = @($cve.cve.references.reference_data | ? refsource -EQ "EXPLOIT-DB" | select -expand url) -join ", "
+        # Extract Exploit-DB and other exploit links
+        $edb = @($cve.cve.references.reference_data | ? { $_.refsource -EQ "EXPLOIT-DB" -or $_.tags -contains 'Exploit' } | select -expand url) -join ", "
         
         # Skip if no exploit available
         if($edb -eq "")
