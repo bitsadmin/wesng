@@ -4,14 +4,14 @@ WES-NG is a tool based on the output of Windows' `systeminfo` utility which prov
 ## Usage
 1. Obtain the latest database of vulnerabilities by executing the command `wes.py --update`.
 2. Use Windows' built-in `systeminfo.exe` tool to obtain the system information of the local system, or from a remote system using `systeminfo.exe /S MyRemoteHost`, and redirect this to a file: `systeminfo > systeminfo.txt`
-3. Execute WES-NG with the systeminfo.txt output file as parameter: `wes.py systeminfo.txt`. WES-NG then uses the database to determine which patches are applicable to the system and to which vulnerabilities it is currently exposed, including exploits if available.
+3. Execute WES-NG with the systeminfo.txt output file as the parameter: `wes.py systeminfo.txt`. WES-NG then uses the database to determine which patches are applicable to the system and to which vulnerabilities are currently exposed, including exploits if available.
 
 ## Demo
 ![Gif animation showing usage of Windows Exploit Suggester - Next Generation](https://raw.githubusercontent.com/bitsadmin/wesng/master/demo.gif)
 
 ## Collector
-This GitHub repository regularly updates the database of vulnerabilities, so running `wes.py` with the `--update` parameter will get you the latest version.
-In case for some reason you want to manually generate the .csv file with hotfix information, use the scripts from the [/collector](collector) folder to compile the database. Read the comments at the top of each script and execute them in the order as they are listed below. Executing these scripts will produce CVEs.csv.
+This GitHub repository regularly updates the database of vulnerabilities, so running `wes.py` with the `--update` parameter gets the latest version.
+If manual generation of the .csv file with hotfix information is required, use the scripts from the [/collector](collector) folder to compile the database. Read the comments at the top of each script and execute them in the order as they are listed below. Executing these scripts will produce CVEs.csv.
 The WES-NG collector pulls information from various sources:
 - Microsoft Security Bulletin Data: KBs for older systems [1]
 - MSRC: The Microsoft Security Update API of the Microsoft Security Response Center (MSRC): Standard source of information for modern Microsoft Updates [2]
@@ -25,7 +25,7 @@ I developed WES-NG because while [GDSSecurity's Windows-Exploit-Suggester](https
 - Add support for [NoPowerShell](https://github.com/bitsadmin/nopowershell/)'s `Get-SystemInfo` cmdlet output
 - Add support for `wmic qfe` output together with support for parameters to manually specify the operating system
 - Add support for alternative output formats of `systeminfo` (csv, table)
-- More testing on the false positive vulnerabilities that are returned
+- More testing on the returned false positive vulnerabilities
 
 
 [1] https://www.microsoft.com/download/details.aspx?id=36982
