@@ -64,10 +64,10 @@ def main():
     try:
         import chardet
         encoding = chardet.detect(systeminfo)
-        systeminfo = systeminfo.decode(encoding['encoding'])
-    except ImportError:
+        systeminfo = systeminfo.decode(encoding['encoding'], 'ignore')
+    except (ImportError, ModuleNotFoundError):
         print('[!] Warning: chardet module not installed. In case of encoding errors, install chardet using: pip3 install chardet')
-        systeminfo = systeminfo.decode('ascii')
+        systeminfo = systeminfo.decode('ascii', 'ignore')
 
     # OS Version
     regex_version = re.compile(r'.*?:\s+((\d+\.?)+) ((Service Pack (\d)|N/A|.+) )?\w+ (\d+).*', re.MULTILINE | re.IGNORECASE)
