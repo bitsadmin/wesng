@@ -49,7 +49,7 @@ def main():
     if args.perform_update:
         print('[+] Updating list of vulnerabilities')
         urllib.request.urlretrieve('https://raw.githubusercontent.com/bitsadmin/wesng/master/CVEs.zip', 'CVEs.zip')
-        with zipfile.ZipFile("CVEs.zip","r") as cveszip:
+        with zipfile.ZipFile("CVEs.zip", "r") as cveszip:
             cveszip.extract("CVEs.csv")
         os.remove('CVEs.zip')
         return
@@ -67,7 +67,7 @@ def main():
         systeminfo = systeminfo.decode(encoding['encoding'])
     except ImportError:
         print('[!] Warning: chardet module not installed. In case of encoding errors, install chardet using: pip3 install chardet')
-        systeminfo = systeminf.decode('ascii')
+        systeminfo = systeminfo.decode('ascii')
 
     # OS Version
     regex_version = re.compile(r'.*?:\s+((\d+\.?)+) ((Service Pack (\d)|N/A|.+) )?\w+ (\d+).*', re.MULTILINE | re.IGNORECASE)
@@ -124,7 +124,7 @@ def main():
         if servicepack:
             productfilter += ' Service Pack %s' % servicepack
     elif win == '7':
-        pversion = '' if version == None else ' ' + version
+        pversion = '' if version is None else ' ' + version
         productfilter = 'Windows %s for %s Systems%s' % (win, arch, pversion)
     elif win == '8':
         productfilter = 'Windows %s for %s Systems' % (win, arch)
@@ -139,7 +139,7 @@ def main():
             arch = ''
         elif arch == 'x64':
             arch = ' x64 Edition'
-        pversion = '' if version == None else ' ' + version
+        pversion = '' if version is None else ' ' + version
         productfilter = 'Microsoft Windows Server %s%s%s' % (win, arch, pversion)
     # elif win == '2003 R2':
     # Not possible to distinguish between Windows Server 2003 and Windows Server 2003 R2 based on the systeminfo output
@@ -147,10 +147,10 @@ def main():
     # In CVEs.csv there is a distinction though between 2003 and 2003 R2. We will need to add support for explicitly
     # providing the OS in the wes.py commandline.
     elif win == '2008':
-        pversion = '' if version == None else ' ' + version
+        pversion = '' if version is None else ' ' + version
         productfilter = 'Windows Server %s for %s Systems%s' % (win, arch, pversion)
     elif win == '2008 R2':
-        pversion = '' if version == None else ' ' + version
+        pversion = '' if version is None else ' ' + version
         productfilter = 'Windows Server %s for %s Systems%s' % (win, arch, pversion)
     elif win == '2012':
         productfilter = 'Windows Server %s' % win
@@ -261,7 +261,7 @@ Affected product: %s
 Affected component: %s
 Severity: %s
 Impact: %s
-%s: %s 
+%s: %s
 """ % (res['DatePosted'], res['CVE'], res['BulletinKB'], res['AffectedProduct'], res['AffectedComponent'], res['Severity'], res['Impact'], label, value))
 
 
@@ -283,13 +283,13 @@ def parse_arguments():
   Download latest list of CVEs
   {0} --update
   {0} -u
-  
+
   Determine vulnerabilities
   {0} systeminfo.txt
-  
+
   Determine vulnerabilities explicitly specifying CVEs csv
   {0} systeminfo.txt C:\tmp\CVEs.csv
-  
+
   List only vulnerabilities with exploits, excluding Edge and Flash
   {0} systeminfo.txt --exploits-only --hide "Internet Explorer" Edge Flash
   {0} systeminfo.txt -e --hide "Internet Explorer" Edge Flash
