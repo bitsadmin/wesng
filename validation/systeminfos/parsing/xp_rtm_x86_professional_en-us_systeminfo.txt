@@ -1,0 +1,43 @@
+
+Host Name:                 WINXPSP0
+OS Name:                   Microsoft Windows XP Professional
+OS Version:                5.1.2600 Build 2600
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Uniprocessor Free
+Registered Owner:          User
+Registered Organization:   
+Product ID:                55274-640-8935532-23337
+Original Install Date:     4/23/2014, 9:17:55 PM
+System Up Time:            0 Days, 0 Hours, 2 Minutes, 28 Seconds
+System Manufacturer:       VMware, Inc.
+System Model:              VMware Virtual Platform
+System type:               X86-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: x86 Family 6 Model 14 Stepping 3 GenuineIntel ~2496 Mhz
+BIOS Version:              INTEL  - 6040000
+Windows Directory:         C:\WINDOWS
+System Directory:          C:\WINDOWS\System32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
+Total Physical Memory:     511 MB
+Available Physical Memory: 403 MB
+Virtual Memory: Max Size:  1,762 MB
+Virtual Memory: Available: 1,573 MB
+Virtual Memory: In Use:    189 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    MSHOME
+Logon Server:              \\WINXPSP0
+Hotfix(s):                 3 Hotfix(s) Installed.
+                           [01]: File 1
+                           [02]: Q147222
+                           [03]: KB893803v2 - Update
+NetWork Card(s):           1 NIC(s) Installed.
+                           [01]: VMware Accelerated AMD PCNet Adapter
+                                 Connection Name: Local Area Connection
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.159.254
+                                 IP address(es)
+                                 [01]: 192.168.159.200

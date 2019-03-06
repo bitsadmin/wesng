@@ -1,0 +1,43 @@
+
+Host Name:                 WIN7SP1X86
+OS Name:                   Microsoft Windows 7 Enterprise 
+OS Version:                6.1.7601 Service Pack 1 Build 7601
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          User
+Registered Organization:   
+Product ID:                00392-918-5000002-85428
+Original Install Date:     8/22/2014, 6:01:39 PM
+System Boot Time:          1/17/2019, 6:10:26 PM
+System Manufacturer:       VMware, Inc.
+System Model:              VMware Virtual Platform
+System Type:               X86-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: x64 Family 6 Model 78 Stepping 3 GenuineIntel ~2496 Mhz
+BIOS Version:              Phoenix Technologies LTD 6.00, 4/13/2018
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
+Total Physical Memory:     1,023 MB
+Available Physical Memory: 619 MB
+Virtual Memory: Max Size:  2,047 MB
+Virtual Memory: Available: 1,622 MB
+Virtual Memory: In Use:    425 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\WIN7SP1X86
+Hotfix(s):                 2 Hotfix(s) Installed.
+                           [01]: KB2534111
+                           [02]: KB976902
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: Intel(R) PRO/1000 MT Network Connection
+                                 Connection Name: Local Area Connection
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.159.254
+                                 IP address(es)
+                                 [01]: 192.168.159.199
+                                 [02]: fe80::28ee:b930:163a:e978

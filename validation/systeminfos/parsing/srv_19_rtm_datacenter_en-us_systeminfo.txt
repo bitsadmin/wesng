@@ -1,0 +1,47 @@
+
+Host Name:                 WIN-O863JARO7CM
+OS Name:                   Microsoft Windows Server 2019 Datacenter
+OS Version:                10.0.17763 N/A Build 17763
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Server
+OS Build Type:             Multiprocessor Free
+Registered Owner:          Windows User
+Registered Organization:   
+Product ID:                00430-70000-00001-AA890
+Original Install Date:     10/3/2018, 2:06:51 AM
+System Boot Time:          1/13/2019, 1:52:11 PM
+System Manufacturer:       VMware, Inc.
+System Model:              VMware7,1
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 78 Stepping 3 GenuineIntel ~2496 Mhz
+BIOS Version:              VMware, Inc. VMW71.00V.9694812.B64.1808210100, 8/21/2018
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume2
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC-08:00) Pacific Time (US & Canada)
+Total Physical Memory:     2,047 MB
+Available Physical Memory: 823 MB
+Virtual Memory: Max Size:  3,199 MB
+Virtual Memory: Available: 2,183 MB
+Virtual Memory: In Use:    1,016 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\WIN-O863JARO7CM
+Hotfix(s):                 5 Hotfix(s) Installed.
+                           [01]: KB4462930
+                           [02]: KB4470788
+                           [03]: KB4480056
+                           [04]: KB4480979
+                           [05]: KB4480116
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: Intel(R) 82574L Gigabit Network Connection
+                                 Connection Name: Ethernet0
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.159.254
+                                 IP address(es)
+                                 [01]: 192.168.159.128
+                                 [02]: fe80::b444:b900:1018:e397
+Hyper-V Requirements:      A hypervisor has been detected. Features required for Hyper-V will not be displayed.

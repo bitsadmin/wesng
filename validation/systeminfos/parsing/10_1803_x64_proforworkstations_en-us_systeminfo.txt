@@ -1,0 +1,45 @@
+
+Host Name:                 DESKTOP-OOF6NB5
+OS Name:                   Microsoft Windows 10 Pro for Workstations
+OS Version:                10.0.17134 N/A Build 17134
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          User
+Registered Organization:   
+Product ID:                00391-70000-00000-AA281
+Original Install Date:     03/05/2018, 00:31:28
+System Boot Time:          12/01/2019, 03:09:00
+System Manufacturer:       VMware, Inc.
+System Model:              VMware7,1
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 78 Stepping 3 GenuineIntel ~2496 Mhz
+BIOS Version:              VMware, Inc. VMW71.00V.9694812.B64.1808210100, 21/08/2018
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume2
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC-08:00) Pacific Time (US & Canada)
+Total Physical Memory:     2.047 MB
+Available Physical Memory: 522 MB
+Virtual Memory: Max Size:  3.199 MB
+Virtual Memory: Available: 1.744 MB
+Virtual Memory: In Use:    1.455 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\DESKTOP-OOF6NB5
+Hotfix(s):                 N/A
+Network Card(s):           2 NIC(s) Installed.
+                           [01]: Intel(R) 82574L Gigabit Network Connection
+                                 Connection Name: Ethernet0
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.159.254
+                                 IP address(es)
+                                 [01]: 192.168.159.130
+                                 [02]: fe80::d145:7f59:d213:82cd
+                           [02]: Bluetooth Device (Personal Area Network)
+                                 Connection Name: Bluetooth Network Connection
+                                 Status:          Media disconnected
+Hyper-V Requirements:      A hypervisor has been detected. Features required for Hyper-V will not be displayed.

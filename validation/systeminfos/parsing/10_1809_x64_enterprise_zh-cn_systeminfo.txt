@@ -1,0 +1,43 @@
+
+主机名:           DESKTOP-0CQH3P2
+OS 名称:          Microsoft Windows 10 企业版 LTSC
+OS 版本:          10.0.17763 暂缺 Build 17763
+OS 制造商:        Microsoft Corporation
+OS 配置:          独立工作站
+OS 构件类型:      Multiprocessor Free
+注册的所有人:     User
+注册的组织:       
+产品 ID:          00425-00000-00002-AA474
+初始安装日期:     2019/1/24, 9:46:29
+系统启动时间:     2019/1/24, 10:32:25
+系统制造商:       VMware, Inc.
+系统型号:         VMware7,1
+系统类型:         x64-based PC
+处理器:           安装了 1 个处理器。
+                  [01]: Intel64 Family 6 Model 158 Stepping 9 GenuineIntel ~2808 Mhz
+BIOS 版本:        VMware, Inc. VMW71.00V.9694812.B64.1808210100, 2018/8/21
+Windows 目录:     C:\Windows
+系统目录:         C:\Windows\system32
+启动设备:         \Device\HarddiskVolume2
+系统区域设置:     zh-cn;中文(中国)
+输入法区域设置:   zh-cn;中文(中国)
+时区:             (UTC+01:00) 阿姆斯特丹，柏林，伯尔尼，罗马，斯德哥尔摩，维也纳
+物理内存总量:     2,047 MB
+可用的物理内存:   417 MB
+虚拟内存: 最大值: 3,199 MB
+虚拟内存: 可用:   1,662 MB
+虚拟内存: 使用中: 1,537 MB
+页面文件位置:     C:\pagefile.sys
+域:               WORKGROUP
+登录服务器:       \\DESKTOP-0CQH3P2
+修补程序:         安装了 1 个修补程序。
+                  [01]: KB4464455
+网卡:             安装了 1 个 NIC。
+                  [01]: Intel(R) 82574L Gigabit Network Connection
+                      连接名:      Ethernet0
+                      启用 DHCP:   是
+                      DHCP 服务器: 192.168.5.254
+                      IP 地址
+                        [01]: 192.168.5.128
+                        [02]: fe80::80b0:e291:97be:f0a6
+Hyper-V 要求:     已检测到虚拟机监控程序。将不显示 Hyper-V 所需的功能。

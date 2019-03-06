@@ -1,0 +1,46 @@
+
+Host Name:                 DESKTOP-LFQSJM4
+OS Name:                   Microsoft Windows 10 Enterprise
+OS Version:                10.0.17134 N/A Build 17134
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          Windows-gebruiker
+Registered Organization:   
+Product ID:                00329-00000-00003-AA191
+Original Install Date:     26-1-2019, 08:27:55
+System Boot Time:          26-1-2019, 08:51:26
+System Manufacturer:       VMware, Inc.
+System Model:              VMware Virtual Platform
+System Type:               X86-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: x64 Family 6 Model 158 Stepping 9 GenuineIntel ~2808 Mhz
+BIOS Version:              Phoenix Technologies LTD 6.00, 13-4-2018
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             nl;Nederlands (Nederland)
+Input Locale:              en-us;Engels (Verenigde Staten)
+Time Zone:                 (UTC+01:00) Amsterdam, Berlijn, Bern, Rome, Stockholm, Wenen
+Total Physical Memory:     1.023 MB
+Available Physical Memory: 363 MB
+Virtual Memory: Max Size:  2.751 MB
+Virtual Memory: Available: 1.231 MB
+Virtual Memory: In Use:    1.520 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\DESKTOP-LFQSJM4
+Hotfix(s):                 4 Hotfix(s) Installed.
+                           [01]: KB4230204
+                           [02]: KB4456655
+                           [03]: KB4457146
+                           [04]: KB4457128
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: Intel(R) 82574L Gigabit Network Connection
+                                 Connection Name: Ethernet0
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.5.254
+                                 IP address(es)
+                                 [01]: 192.168.5.129
+                                 [02]: fe80::a930:6429:d92c:e9d2
+Hyper-V Requirements:      A hypervisor has been detected. Features required for Hyper-V will not be displayed.

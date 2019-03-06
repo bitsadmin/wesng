@@ -1,0 +1,70 @@
+KB2483139: Latvian Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Czech Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Russian Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Danish Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Italian Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Hungarian Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Korean Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Swedish Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Polish Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Croatian Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Ukrainian Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Norwegian Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Greek Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Bulgarian Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Portuguese (Portugal) Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Dutch Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Portuguese (Brazil) Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Spanish Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Chinese (Simplified) Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Slovenian Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Chinese (Traditional) Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Japanese Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Thai Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: German Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Estonian Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Lithuanian Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Slovak Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Finnish Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Arabic Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Hebrew Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Serbian (Latin) Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Romanian Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: French Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB2483139: Turkish Language Pack - Windows 7 Service Pack 1 for x64-based Systems (KB2483139)
+KB3109560: Security Update for Windows 7 for x64-based Systems (KB3109560)
+KB3102429: Update for Windows 7 for x64-based Systems (KB3102429)
+KB3138378: Update for Windows 7 for x64-based Systems (KB3138378)
+KB3150513: Update for Windows 7 for x64-based Systems (KB3150513)
+KB3177467: 2018-10 Update for Windows 7 for x64-based Systems (KB3177467)
+KB4461532: Security Update for Microsoft PowerPoint 2016 (KB4461532) 64-Bit Edition
+KB4483187: 2018-12 Cumulative Security Update for Internet Explorer 11 for Windows 7 for x64-based systems (KB4483187)
+KB4461435: Update for Microsoft Office 2016 (KB4461435) 64-Bit Edition
+KB4461533: Update for Microsoft Office 2016 (KB4461533) 64-Bit Edition
+KB3203480: Update for Microsoft Office 2016 (KB3203480) 64-Bit Edition
+KB4032230: Update for Microsoft Office 2016 (KB4032230) 64-Bit Edition
+KB4461531: Update for Microsoft Visio 2016 (KB4461531) 64-Bit Edition
+KB4461601: Security Update for Microsoft Outlook 2016 (KB4461601) 64-Bit Edition
+KB4461543: Security Update for Microsoft Word 2016 (KB4461543) 64-Bit Edition
+KB4022162: Security Update for Microsoft Office 2016 (KB4022162) 64-Bit Edition
+KB4481252: Microsoft Silverlight (KB4481252)
+KB4032257: Update for Microsoft Access 2016 (KB4032257) 64-Bit Edition
+KB4462114: Update for Skype for Business 2016 (KB4462114) 64-Bit Edition
+KB4461536: Update for Microsoft Office 2016 (KB4461536) 64-Bit Edition
+KB4462147: Update for Microsoft Outlook 2016 (KB4462147) 64-Bit Edition
+KB4461599: Update for Microsoft PowerPoint 2016 (KB4461599) 64-Bit Edition
+KB4462134: Update for Microsoft Project 2016 (KB4462134) 64-Bit Edition
+KB4022161: Update for Microsoft Office 2016 (KB4022161) 64-Bit Edition
+KB4462145: Update for Microsoft Word 2016 (KB4462145) 64-Bit Edition
+KB4018294: Security Update for Microsoft Office 2016 (KB4018294) 64-Bit Edition
+KB4462115: Security Update for Microsoft Excel 2016 (KB4462115) 64-Bit Edition
+KB4462146: Security Update for Microsoft Office 2016 (KB4462146) 64-Bit Edition
+KB890830: Windows Malicious Software Removal Tool x64 - February 2019 (KB890830)
+KB4487078: 2019-02 Security and Quality Rollup for .NET Framework 3.5.1, 4.5.2, 4.6, 4.6.1, 4.6.2, 4.7, 4.7.1, 4.7.2 for Windows 7 and Server 2008 R2 for x64 (KB4487078)
+KB4486563: 2019-02 Security Monthly Quality Rollup for Windows 7 for x64-based Systems (KB4486563)
+KB4486565: 2019-02 Preview of Monthly Quality Rollup for Windows 7 for x64-based Systems (KB4486565)
+KB4487256: 2019-02 Preview of Quality Rollup for .NET Framework 3.5.1, 4.5.2, 4.6, 4.6.1, 4.6.2, 4.7, 4.7.1, 4.7.2 for Windows 7 and Server 2008 R2 for x64 (KB4487256)
+KB4461439: Update for Microsoft Office 2016 (KB4461439) 64-Bit Edition
+KB4462214: Update for Microsoft Office 2016 (KB4462214) 64-Bit Edition
+KB4032231: Update for Microsoft Office 2016 (KB4032231) 64-Bit Edition
+KB2310138: Definition Update for Microsoft Security Essentials - KB2310138 (Definition 1.289.501.0)

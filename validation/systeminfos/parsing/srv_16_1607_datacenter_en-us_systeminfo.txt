@@ -1,0 +1,65 @@
+
+Host Name:                 MYSERVER
+OS Name:                   Microsoft Windows Server 2016 Datacenter
+OS Version:                10.0.14393 N/A Build 14393
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Server
+OS Build Type:             Multiprocessor Free
+Registered Owner:          Windows User
+Registered Organization:   
+Product ID:                00377-90931-50406-AA597
+Original Install Date:     3/3/2018, 3:50:28 AM
+System Boot Time:          1/5/2019, 9:52:19 AM
+System Manufacturer:       MSI
+System Model:              MS-7A70
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 158 Stepping 9 GenuineIntel ~2808 Mhz
+BIOS Version:              American Megatrends Inc. A.40, 7/17/2017
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume2
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
+Total Physical Memory:     16,312 MB
+Available Physical Memory: 3,790 MB
+Virtual Memory: Max Size:  18,744 MB
+Virtual Memory: Available: 5,802 MB
+Virtual Memory: In Use:    12,942 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\MYSERVER
+Hotfix(s):                 5 Hotfix(s) Installed.
+                           [01]: KB4049065
+                           [02]: KB4091664
+                           [03]: KB4132216
+                           [04]: KB4465659
+                           [05]: KB4483229
+Network Card(s):           4 NIC(s) Installed.
+                           [01]: Realtek PCIe GBE Family Controller
+                                 Connection Name: Ethernet
+                                 DHCP Enabled:    No
+                                 IP address(es)
+                                 [01]: 192.168.254.1
+                           [02]: VMware Virtual Ethernet Adapter for VMnet1
+                                 Connection Name: VMware Network Adapter VMnet1
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.44.254
+                                 IP address(es)
+                                 [01]: 192.168.44.1
+                                 [02]: fe80::21ab:bac8:d160:6ca8
+                           [03]: Microsoft KM-TEST Loopback Adapter
+                                 Connection Name: Loopback
+                                 Status:          Hardware not present
+                           [04]: VMware Virtual Ethernet Adapter for VMnet8
+                                 Connection Name: VMware Network Adapter VMnet8
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.5.254
+                                 IP address(es)
+                                 [01]: 192.168.5.1
+                                 [02]: fe80::fc0f:cdf0:913a:a359
+Hyper-V Requirements:      VM Monitor Mode Extensions: Yes
+                           Virtualization Enabled In Firmware: Yes
+                           Second Level Address Translation: Yes
+                           Data Execution Prevention Available: Yes

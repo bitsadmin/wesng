@@ -1,0 +1,42 @@
+
+Host Name:                 SRV2K8SP0X64
+OS Name:                   Microsoftr Windows Serverr 2008 Standard 
+OS Version:                6.0.6001 Service Pack 1 Build 6001
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Server
+OS Build Type:             Multiprocessor Free
+Registered Owner:          Windows User
+Registered Organization:   
+Product ID:                92573-082-2500115-76417
+Original Install Date:     4/25/2014, 11:48:11 PM
+System Boot Time:          3/4/2019, 8:42:38 AM
+System Manufacturer:       VMware, Inc.
+System Model:              VMware Virtual Platform
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 78 Stepping 3 GenuineIntel ~2496 Mhz
+BIOS Version:              Phoenix Technologies LTD 6.00, 4/13/2018
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
+Total Physical Memory:     1,022 MB
+Available Physical Memory: 623 MB
+Page File: Max Size:       2,303 MB
+Page File: Available:      1,910 MB
+Page File: In Use:         393 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\SRV2K8SP0X64
+Hotfix(s):                 1 Hotfix(s) Installed.
+                           [01]: KB956250
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: Intel(R) PRO/1000 MT Network Connection
+                                 Connection Name: Local Area Connection
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.159.254
+                                 IP address(es)
+                                 [01]: 192.168.159.211
+                                 [02]: fe80::492b:6258:39a7:5c86

@@ -1,0 +1,49 @@
+[+] Parsing systeminfo output
+[+] Operating System
+    - Name: Windows 10 Version 1809 for x64-based Systems
+    - Generation: 10
+    - Build: 17763
+    - Version: 1809
+    - Architecture: x64-based
+    - Installed hotfixes: KB2693643, KB4483452, KB4465477, KB4465664, KB4470502, KB4470788, KB4471331, KB4487038, KB4487044
+[+] Loading CSV with CVEs
+[+] Determining missing patches
+[+] Found vulnerabilities
+
+Date: 20181129
+CVE: ADV180030
+KB: KB4477029
+Affected product: Adobe Flash Player on Windows 10 Version 1809 for x64-based Systems
+Affected component: Adobe Flash Player
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20190115
+CVE: CVE-2019-0545
+KB: KB4480056
+Affected product: Microsoft .NET Framework 4.7.2 on Windows 10 Version 1809 for x64-based Systems
+Affected component: .NET Framework
+Severity: Important
+Impact: Information Disclosure
+Exploit: n/a
+
+Date: 20190115
+CVE: CVE-2019-0545
+KB: KB4480056
+Affected product: Microsoft .NET Framework 3.5 on Windows 10 Version 1809 for x64-based Systems
+Affected component: .NET Framework
+Severity: Important
+Impact: Information Disclosure
+Exploit: n/a
+
+Date: 20190108
+CVE: ADV190001
+KB: KB4480979
+Affected product: Adobe Flash Player on Windows 10 Version 1809 for x64-based Systems
+Affected component: Adobe Flash Player
+Severity: 
+Impact: 
+Exploit: n/a
+
+[+] Done. Displaying 4 of the 4 vulnerabilities found.

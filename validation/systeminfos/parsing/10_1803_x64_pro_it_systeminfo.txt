@@ -1,0 +1,58 @@
+
+Nome host:                            PC044
+Nome SO:                              Microsoft Windows 10 Pro
+Versione SO:                          10.0.17134 N/D build 17134
+Produttore SO:                        Microsoft Corporation
+Configurazione SO:                    Workstation membro
+Tipo build SO:                        Multiprocessor Free
+Proprietario registrato:              N/D
+Organizzazione registrata:            N/D
+Numero di serie:                      00330-50000-00000-AAOEM
+Data di installazione originale:      10/09/2018, 09:40:53
+Tempo di avvio sistema:               04/03/2019, 08:34:58
+Produttore sistema:                   HP
+Modello sistema:                      HP EliteOne 800 G2 23-in Non-Touch AiO
+Tipo sistema:                         x64-based PC
+Processore:                           1 processore(i) installati.
+                                      [01]: Intel64 Family 6 Model 94 Stepping 3 GenuineIntel ~3192 Mhz
+Versione BIOS:                        HP N11 Ver. 02.17, 08/08/2016
+Directory Windows:                    C:\WINDOWS
+Directory di sistema:                 C:\WINDOWS\system32
+Dispositivo di avvio:                 \Device\HarddiskVolume1
+Impostazioni locali sistema:          it;Italiano (Italia)
+Impostazioni locali di input:         it;Italiano (Italia)
+Fuso orario:                          (UTC+01:00) Amsterdam, Berlino, Berna, Roma, Stoccolma, Vienna
+Memoria fisica totale:                8.073 MB
+Memoria fisica disponibile:           785 MB
+Memoria virtuale: dimensione massima: 13.730 MB
+Memoria virtuale: disponibile:        2.515 MB
+Memoria virtuale: in uso:             11.215 MB
+Posizioni file di paging:             D:\pagefile.sys
+Dominio:                              intranet.xxxxx.it
+Server di accesso:                    \\SRVDC20
+Aggiornamenti rapidi:                 10 Aggiornamenti rapidi installati.
+                                      [01]: KB4100347
+                                      [02]: KB4338853
+                                      [03]: KB4343669
+                                      [04]: KB4456655
+                                      [05]: KB4465663
+                                      [06]: KB4477137
+                                      [07]: KB4480979
+                                      [08]: KB4485449
+                                      [09]: KB4487038
+                                      [10]: KB4487017
+Schede di rete:                       2 NIC installate.
+                                      [01]: Intel(R) Ethernet Connection (2) I219-LM
+                                            Nome connessione: Ethernet
+                                            DHCP abilitato:   Sç
+                                            Server DHCP:      192.168.1.237
+                                            Indirizzi IP
+                                            [01]: 192.168.1.48
+                                            [02]: fe80::35c2:a744:ed99:4e26
+                                      [02]: Intel(R) Dual Band Wireless-AC 8260
+                                            Nome connessione: Wi-Fi
+                                            Stato:            Supporto disconnesso
+Requisiti Hyper-V:                    Estensioni modalitÖ di monitoraggio macchina virtuale: Sç
+                                      Virtualizzazione abilitata nel firmware: No
+                                      Conversione indirizzi di secondo livello: Sç
+                                      Prevenzione esecuzione dati disponibile: Sç

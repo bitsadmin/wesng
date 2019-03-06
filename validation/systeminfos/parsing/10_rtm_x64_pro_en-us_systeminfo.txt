@@ -1,0 +1,44 @@
+
+Host Name:                 DESKTOP-J4ED1CA
+OS Name:                   Microsoft Windows 10 Pro
+OS Version:                10.0.10240 N/A Build 10240
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          User
+Registered Organization:   
+Product ID:                00330-80000-00000-AA603
+Original Install Date:     7/19/2015, 6:31:16 PM
+System Boot Time:          9/6/2018, 2:43:51 PM
+System Manufacturer:       VMware, Inc.
+System Model:              VMware Virtual Platform
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 78 Stepping 3 GenuineIntel ~2496 Mhz
+BIOS Version:              Phoenix Technologies LTD 6.00, 5/19/2017
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
+Total Physical Memory:     2,047 MB
+Available Physical Memory: 808 MB
+Virtual Memory: Max Size:  3,199 MB
+Virtual Memory: Available: 2,027 MB
+Virtual Memory: In Use:    1,172 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\DESKTOP-J4ED1CA
+Hotfix(s):                 2 Hotfix(s) Installed.
+                           [01]: KB3074665
+                           [02]: KB4021701
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: Intel(R) 82574L Gigabit Network Connection
+                                 Connection Name: Ethernet0
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.159.254
+                                 IP address(es)
+                                 [01]: 192.168.159.134
+                                 [02]: fe80::b9b9:942e:62dc:b503
+Hyper-V Requirements:      A hypervisor has been detected. Features required for Hyper-V will not be displayed.

@@ -1,0 +1,48 @@
+
+Host Name:                 WIN81U1X64
+OS Name:                   Microsoft Windows 8.1 Enterprise
+OS Version:                6.3.9600 N/A Build 9600
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          User
+Registered Organization:   
+Product ID:                00261-30000-00000-AA825
+Original Install Date:     8/9/2014, 12:46:22 PM
+System Boot Time:          3/3/2019, 11:04:07 PM
+System Manufacturer:       VMware, Inc.
+System Model:              VMware Virtual Platform
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 78 Stepping 3 GenuineIntel ~2496 Mhz
+BIOS Version:              Phoenix Technologies LTD 6.00, 4/13/2018
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC-08:00) Pacific Time (US & Canada)
+Total Physical Memory:     2,047 MB
+Available Physical Memory: 1,023 MB
+Virtual Memory: Max Size:  3,199 MB
+Virtual Memory: Available: 2,104 MB
+Virtual Memory: In Use:    1,095 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\WIN81U1X64
+Hotfix(s):                 6 Hotfix(s) Installed.
+                           [01]: KB2919355
+                           [02]: KB2919442
+                           [03]: KB2937220
+                           [04]: KB2938772
+                           [05]: KB2939471
+                           [06]: KB2949621
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: Intel(R) 82574L Gigabit Network Connection
+                                 Connection Name: Ethernet0
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.159.254
+                                 IP address(es)
+                                 [01]: 192.168.159.197
+                                 [02]: fe80::d544:db2:380:5993
+Hyper-V Requirements:      A hypervisor has been detected. Features required for Hyper-V will not be displayed.

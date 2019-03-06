@@ -1,0 +1,400 @@
+[+] Parsing systeminfo output
+[+] Operating System
+    - Name: Windows 10 Version 1803 for x64-based Systems
+    - Generation: 10
+    - Build: 17134
+    - Version: 1803
+    - Architecture: x64-based
+    - Installed hotfixes: KB4462930, KB4485449, KB4487038, KB4487017
+[+] Loading CSV with CVEs
+[+] Determining missing patches
+[+] Found vulnerabilities
+
+Date: 20180710
+CVE: CVE-2018-0949
+KB: KB4345421
+Affected product: Internet Explorer 11 on Windows 10 Version 1803 for x64-based Systems
+Affected component: Internet Explorer
+Severity: Important
+Impact: Security Feature Bypass
+Exploit: n/a
+
+Date: 20180731
+CVE: CVE-2018-8202
+KB: KB4345421
+Affected product: Microsoft .NET Framework 4.7.2 on Windows 10 Version 1803 for x64-based Systems
+Affected component: .NET Framework
+Severity: Important
+Impact: Elevation of Privilege
+Exploit: n/a
+
+Date: 20180731
+CVE: CVE-2018-8202
+KB: KB4345421
+Affected product: Microsoft .NET Framework 3.5 on Windows 10 Version 1803 for x64-based Systems
+Affected component: .NET Framework
+Severity: Important
+Impact: Elevation of Privilege
+Exploit: n/a
+
+Date: 20180726
+CVE: CVE-2018-8206
+KB: KB4345421
+Affected product: Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Windows
+Severity: Important
+Impact: Denial of Service
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8222
+KB: KB4345421
+Affected product: Windows 10 Version 1803 for x64-based Systems
+Affected component: Device Guard
+Severity: Important
+Impact: Security Feature Bypass
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8242
+KB: KB4345421
+Affected product: Internet Explorer 11 on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8356
+KB: KB4345421
+Affected product: Microsoft .NET Framework 4.7.2 on Windows 10 Version 1803 for x64-based Systems
+Affected component: .NET Framework
+Severity: Important
+Impact: Security Feature Bypass
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8356
+KB: KB4345421
+Affected product: Microsoft .NET Framework 3.5 on Windows 10 Version 1803 for x64-based Systems
+Affected component: .NET Framework
+Severity: Important
+Impact: Security Feature Bypass
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8260
+KB: KB4345421
+Affected product: Microsoft .NET Framework 4.7.2 on Windows 10 Version 1803 for x64-based Systems
+Affected component: .NET Framework
+Severity: Important
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8262
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Edge
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8274
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Edge
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8275
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8276
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Important
+Impact: Security Feature Bypass
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8278
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Edge
+Severity: Important
+Impact: Spoofing
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8279
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: https://www.exploit-db.com/exploits/45214/
+
+Date: 20180710
+CVE: CVE-2018-8280
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8282
+KB: KB4345421
+Affected product: Windows 10 Version 1803 for x64-based Systems
+Affected component: Windows Kernel
+Severity: Important
+Impact: Denial of Service
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8284
+KB: KB4345421
+Affected product: Microsoft .NET Framework 4.7.2 on Windows 10 Version 1803 for x64-based Systems
+Affected component: .NET Framework
+Severity: Important
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8284
+KB: KB4345421
+Affected product: Microsoft .NET Framework 3.5 on Windows 10 Version 1803 for x64-based Systems
+Affected component: .NET Framework
+Severity: Important
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8286
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8287
+KB: KB4345421
+Affected product: Internet Explorer 11 on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Important
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8287
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Important
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8288
+KB: KB4345421
+Affected product: Internet Explorer 11 on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: https://www.exploit-db.com/exploits/45213/
+
+Date: 20180710
+CVE: CVE-2018-8288
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: https://www.exploit-db.com/exploits/45213/
+
+Date: 20180719
+CVE: CVE-2018-8289
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Edge
+Severity: Important
+Impact: Information Disclosure
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8290
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8291
+KB: KB4345421
+Affected product: Internet Explorer 11 on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: https://www.exploit-db.com/exploits/45215/
+
+Date: 20180719
+CVE: CVE-2018-8291
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: https://www.exploit-db.com/exploits/45215/
+
+Date: 20180710
+CVE: CVE-2018-8294
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8296
+KB: KB4345421
+Affected product: Internet Explorer 11 on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8297
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Edge
+Severity: Important
+Impact: Information Disclosure
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8301
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Edge
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8313
+KB: KB4345421
+Affected product: Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Windows
+Severity: Important
+Impact: Elevation of Privilege
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8125
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Scripting Engine
+Severity: Important
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8307
+KB: KB4345421
+Affected product: Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft WordPad
+Severity: Important
+Impact: Security Feature Bypass
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8308
+KB: KB4345421
+Affected product: Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Windows
+Severity: Important
+Impact: Elevation of Privilege
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8309
+KB: KB4345421
+Affected product: Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Windows
+Severity: Important
+Impact: Denial of Service
+Exploit: n/a
+
+Date: 20180710
+CVE: CVE-2018-8324
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Edge
+Severity: Critical
+Impact: Information Disclosure
+Exploit: n/a
+
+Date: 20180719
+CVE: CVE-2018-8325
+KB: KB4345421
+Affected product: Microsoft Edge on Windows 10 Version 1803 for x64-based Systems
+Affected component: Microsoft Edge
+Severity: Important
+Impact: Information Disclosure
+Exploit: n/a
+
+Date: 20181113
+CVE: CVE-2018-8566
+KB: KB4465663
+Affected product: Windows 10 Version 1803 for x64-based Systems
+Affected component: BitLocker
+Severity: Important
+Impact: Security Feature Bypass
+Exploit: n/a
+
+Date: 20181129
+CVE: ADV180030
+KB: KB4477029
+Affected product: Adobe Flash Player on Windows 10 Version 1803 for x64-based Systems
+Affected component: Adobe Flash Player
+Severity: Critical
+Impact: Remote Code Execution
+Exploit: n/a
+
+Date: 20190108
+CVE: ADV190001
+KB: KB4480979
+Affected product: Adobe Flash Player on Windows 10 Version 1803 for x64-based Systems
+Affected component: Adobe Flash Player
+Severity: 
+Impact: 
+Exploit: n/a
+
+Date: 20190220
+CVE: ADV190005
+KB: KB4487029
+Affected product: Windows 10 Version 1803 for x64-based Systems
+Affected component: Description
+Severity: 
+Impact: Defense in Depth
+Exploit: n/a
+
+[+] Done. Displaying 43 of the 43 vulnerabilities found.
