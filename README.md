@@ -21,18 +21,23 @@ These are combined into a single .csv file which is compressed and hosted in thi
 ## Rationale
 I developed WES-NG because while [GDSSecurity's Windows-Exploit-Suggester](https://github.com/GDSSecurity/Windows-Exploit-Suggester/) worked excellently for operating systems in the Windows XP and Windows Vista era, GDSSecurity's Windows-Exploit-Suggester does not work for operating systems like Windows 10 and vulnerabilities published in recent years. This is because Microsoft replaced the Microsoft Security Bulletin Data Excel file [1] on which GDSSecurity's Windows-Exploit-Suggester is fully dependent, by the MSRC API [2]. The Microsoft Security Bulletin Data Excel file has not been updated since Q1 2017, so later operating systems and vulnerabilities cannot be detected. Thanks [@gdssecurity](https://twitter.com/gdssecurity), for this great tool which has served many of us for so many years!
 
+## Bugs
+- Bugs can be submitted via the [Issues](https://github.com/bitsadmin/wesng/issues) page
+- For false positives in results, please follow the steps at the [Report false positives](https://github.com/bitsadmin/wesng/wiki/Reporting-false-positives) page on the [Wiki](https://github.com/bitsadmin/wesng/wiki)
+
 ## Improvements
 - Add support for [NoPowerShell](https://github.com/bitsadmin/nopowershell/)'s `Get-SystemInfo` cmdlet output
 - Add support for `wmic qfe` output together with support for parameters to manually specify the operating system
 - Add support for alternative output formats of `systeminfo` (csv, table)
-- More testing on the returned false positive vulnerabilities
+- More testing on the returned false positive vulnerabilities - see also the [wiki](https://github.com/bitsadmin/wesng/wiki)
+- Add the option to output to csv
 
-
+## References
 [1] https://www.microsoft.com/download/details.aspx?id=36982
 
 [2] https://portal.msrc.microsoft.com/en-us/developer
 
 [3] https://nvd.nist.gov/vuln/data-feeds
 
-
+#
 **Authored by Arris Huijgen ([@bitsadmin](https://twitter.com/bitsadmin/) - https://github.com/bitsadmin/)**
