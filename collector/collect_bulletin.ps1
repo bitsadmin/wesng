@@ -39,31 +39,27 @@ foreach($line in $xlsx)
     $AffectedComponent = $line.AffectedComponent
     $Severity = $line.Severity
     $Impact = $line.Impact
-    $supersede = $line.Supersedes -split { $_ -eq ";" -or $_ -eq "," } | % { $_ -replace '.*?(\d{6,}).*','$1' }
+    $Supersedes = $line.Supersedes -split { $_ -eq ";" -or $_ -eq "," } | % { $_ -replace '.*?(\d{6,}).*','$1' }
 
-    if($supersede -eq $null)
+    if($Supersedes -eq $null)
     {
-        $supersede = @("")
+        $Supersedes = @("")
     }
 
     # Iterate over CVEs
     foreach($cve in $CVEs)
     {
 
-        # Iterate over superseeded KBs
-        foreach($ss in $supersede)
-        {
-            $cve_bulletin += [PSCustomObject]@{
-                DatePosted=$DatePosted;
-                CVE=$cve.Trim();
-                BulletinKB=$ComponentKB;
-                Title=$Title;
-                AffectedProduct=$AffectedProduct;
-                AffectedComponent=$AffectedComponent;
-                Severity=$Severity;
-                Impact=$Impact;
-                Supersedes=$ss
-            }
+        $cve_bulletin += [PSCustomObject]@{
+            DatePosted=$DatePosted;
+            CVE=$cve.Trim();
+            BulletinKB=$ComponentKB;
+            Title=$Title;
+            AffectedProduct=$AffectedProduct;
+            AffectedComponent=$AffectedComponent;
+            Severity=$Severity;
+            Impact=$Impact;
+            Supersedes=$Supersedes -join ";"
         }
     }
 

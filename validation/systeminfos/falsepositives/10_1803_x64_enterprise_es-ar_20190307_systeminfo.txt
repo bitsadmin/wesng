@@ -1,0 +1,46 @@
+OS Name:                   Microsoft Windows 10 Enterprise
+OS Version:                10.0.17134 N/A Build 17134
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Member Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          Usuario de Windows
+Registered Organization:   
+Product ID:                00329-10180-00000-AA626
+Original Install Date:     5/24/2018, 9:07:00 AM
+System Boot Time:          3/7/2019, 7:54:07 AM
+System Manufacturer:       Dell Inc.
+System Model:              OptiPlex 3040
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 94 Stepping 3 GenuineIntel ~3192 Mhz
+BIOS Version:              Dell Inc. 1.6.1, 12/6/2017
+Windows Directory:         C:\WINDOWS
+System Directory:          C:\WINDOWS\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             es-ar;Spanish (Argentina)
+Input Locale:              es-mx;Spanish (Mexico)
+Time Zone:                 (UTC-03:00) City of Buenos Aires
+Total Physical Memory:     8,093 MB
+Available Physical Memory: 4,626 MB
+Virtual Memory: Max Size:  9,373 MB
+Virtual Memory: Available: 4,836 MB
+Virtual Memory: In Use:    4,537 MB
+Page File Location(s):     C:\pagefile.sys
+Hotfix(s):                 6 Hotfix(s) Installed.
+                           [01]: KB4456655
+                           [02]: KB4465663
+                           [03]: KB4477029
+                           [04]: KB4477137
+                           [05]: KB4480979
+                           [06]: KB4487029
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: Realtek PCIe GBE Family Controller
+                                 Connection Name: Ethernet
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.148.1
+                                 IP address(es)
+                                 [01]: 192.168.148.19
+Hyper-V Requirements:      VM Monitor Mode Extensions: Yes
+                           Virtualization Enabled In Firmware: Yes
+                           Second Level Address Translation: Yes
+                           Data Execution Prevention Available: Yes

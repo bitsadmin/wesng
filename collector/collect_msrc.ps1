@@ -63,7 +63,7 @@ foreach($doc in $docs)
         foreach($kb in $cve.Remediations)
         {
             $BulletinKB = $kb.Description.Value
-            $Supersedes = $kb.Supercedence -split { $_ -eq ", " -or $_ -eq "; " } | ? { $_ -inotlike '*MS*' }
+            $Supersedes = $kb.Supercedence -split {$_ -eq ";" -or $_ -eq "," -or $_ -eq " "} | ? { $_ -and $_ -inotlike '*MS*' }
             if($Supersedes -eq $null) { $Supersedes = @("") }
 
             # Iterate over products patched by the KB
@@ -74,19 +74,16 @@ foreach($doc in $docs)
                 $Impact = ($threats | ? Type -EQ 0).Description.Value
                 $AffectedProduct = $doc.ProductTree.FullProductName | ? ProductId -EQ $productid | select -expand Value
                 
-                foreach($supersede in $Supersedes)
-                {
-                    $cves_msrc += [PSCustomObject]@{
-                        DatePosted=$DatePosted;
-                        CVE=$CveID;
-                        BulletinKB=$BulletinKB;
-                        Title=$Title;
-                        AffectedProduct=$AffectedProduct;
-                        AffectedComponent=$AffectedComponent;
-                        Severity=$Severity;
-                        Impact=$Impact;
-                        Supersedes=$supersede
-                    }
+                $cves_msrc += [PSCustomObject]@{
+                    DatePosted=$DatePosted;
+                    CVE=$CveID;
+                    BulletinKB=$BulletinKB;
+                    Title=$Title;
+                    AffectedProduct=$AffectedProduct;
+                    AffectedComponent=$AffectedComponent;
+                    Severity=$Severity;
+                    Impact=$Impact;
+                    Supersedes=$Supersedes -join ";"
                 }
             }
         }

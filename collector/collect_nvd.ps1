@@ -7,6 +7,7 @@ License: BSD 3-Clause
 # Instructions
 # 1. Execute the collect_bulletin.ps1 and collect_msrc.ps1 to collect the latest Microsoft patches
 # 2. Execute the script to enrich the BulletinSearch.xlsx and MSRC CVEs with Exploit-DB links
+$minwesversion = 0.94
 
 "Start: {0}" -f [DateTime]::Now
 
@@ -60,6 +61,9 @@ for($year = 2002; $year -le [DateTime]::Now.Year; $year++)
     Remove-Item "$NVDPath\nvdcve-1.0-$year.json"
 }
 
+# Remove NVD directory
+Remove-Item -Recurse $NVDPath
+
 "[+] Storing list of CVEs and Exploit-DB links"
 # DEBUG
 #$exploits | Export-Clixml "NVD.xml"
@@ -92,7 +96,7 @@ foreach($exploit in $exploits)
     $matchcount = $matches | measure | select -expand Count
 
     # Report status
-    $status = "[{0:000}/{1:000}] {2} - " -f $counter,$total,$exploit.CVE
+    $status = "[{0:0000}/{1:0000}] {2} - " -f $counter,$total,$exploit.CVE
     if($exploitcount -eq 1)
     { $status += "Added 1 exploit" }
     else
@@ -107,13 +111,27 @@ foreach($exploit in $exploits)
 }
 
 # DEBUG
-#$cve_bulletin | Export-Clixml "CVEs.xml"
+#$CVEs | Export-Clixml "CVEs.xml"
 
-"[+] Writing enriched CVEs to CVEs.csv"
+# Legacy output
+"[+] Legacy: Writing enriched CVEs to CVEs.csv"
 $CVEs | Export-Csv -NoTypeInformation -Encoding ASCII "CVEs.csv"
 
-"[+] Packing CVEs.csv to CVEs.zip"
-Compress-Archive -LiteralPath .\CVEs.csv -CompressionLevel Optimal -DestinationPath CVEs.zip
+"[+] Legacy: Packing CVEs.csv to CVEs.zip"
+Compress-Archive -LiteralPath .\CVEs.csv -CompressionLevel Optimal -DestinationPath CVEs.zip -Force
+Remove-Item CVEs.csv
+
+# New output
+$outcsv = "CVEs_{0}.csv" -f [DateTime]::Now.ToString("yyyyMMdd")
+"[+] Writing enriched CVEs to $outcsv"
+$CVEs | Export-Csv -NoTypeInformation -Encoding ASCII $outcsv
+$wesver = $minwesversion.ToString("0.00", [System.Globalization.CultureInfo]::InvariantCulture)
+$outversion = "Version_{0}.txt" -f $wesver
+"[+] Writing minimum required version number to $outversion"
+New-Item $outversion -Type File -Value ("This definition file requires you to at least use wes version {0}`r`n`r`nDownload the latest version from https://github.com/bitsadmin/wesng`r`n" -f $wesver) | Out-Null
+"[+] Packing files into definitions.zip"
+Compress-Archive -LiteralPath $outcsv,$outversion -CompressionLevel Optimal -DestinationPath definitions.zip -Force
+Remove-Item $outcsv,$outversion
 
 "[+] Done!"
 "End: {0}" -f [DateTime]::Now

@@ -7,10 +7,12 @@
 #
 # Author: Arris Huijgen (@bitsadmin)
 # Website: https://github.com/bitsadmin
-import sys, csv, re, argparse, os, urllib.request, zipfile
+import sys, csv, re, argparse, os, urllib.request, zipfile, io
+from collections import Counter
 
-VERSION = 0.93
+VERSION = 0.94
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
+BANNER = 'Windows Exploit Suggester %.2f ( %s )' % (VERSION, WEB_URL)
 FILENAME = 'wes.py'
 
 filtered = None
@@ -45,32 +47,163 @@ buildnumbers = {
 def main():
     args = parse_arguments()
 
-    # Update
+    # Update definitions
     if args.perform_update:
-        print('[+] Updating list of vulnerabilities')
-        urllib.request.urlretrieve('https://raw.githubusercontent.com/bitsadmin/wesng/master/CVEs.zip', 'CVEs.zip')
-        with zipfile.ZipFile("CVEs.zip", "r") as cveszip:
-            cveszip.extract("CVEs.csv")
-        os.remove('CVEs.zip')
+        print('[+] Updating definitions')
+        urllib.request.urlretrieve('https://raw.githubusercontent.com/bitsadmin/wesng/master/definitions.zip', 'definitions.zip')
+        cves, date = load_defintions('definitions.zip')
+        print('[+] Obtained definitions created at %s' % date)
         return
 
-    # Obtain arguments
-    systeminfo_txt = args.systeminfo
-    cves_csv = args.cves
+    # Update application
+    if args.perform_wesupdate:
+        print('[+] Updating wes.py')
+        urllib.request.urlretrieve('https://raw.githubusercontent.com/bitsadmin/wesng/master/wes.py', 'wes.py')
+        print('[+] Updated to the latest version. Relaunch wes.py to use.')
+        return
+
+    # Banner
+    print(BANNER)
 
     # Parse encoding of systeminfo.txt input
     print('[+] Parsing systeminfo output')
+    productfilter, win, mybuild, version, arch, hotfixes = determine_product(args.systeminfo)
+    manual_hotfixes = list(set([patch.upper().replace('KB', '') for patch in args.installedpatch]))
+
+    print("""[+] Operating System
+    - Name: %s
+    - Generation: %s
+    - Build: %s
+    - Version: %s
+    - Architecture: %s
+    - Installed hotfixes: %s
+    - Manually specified hotfixes: %s""" % (productfilter, win, mybuild, version, arch,
+                                            ', '.join(['KB%s' % kb for kb in hotfixes]),
+                                            ', '.join(['KB%s' % kb for kb in manual_hotfixes])))
+
+    # Append manually specified KBs to list of hotfixes
+    hotfixes = list(set(hotfixes + manual_hotfixes))
+
+    print('[+] Loading definitions')
+    cves, date = load_defintions(args.definitions)
+    if not cves:
+        exit(1)
+    print('    - Creation date of definitions: %s' % date)
+
+    print('[+] Determining missing patches')
+    found = determine_missing_patches(productfilter, cves, hotfixes)
+
+    print('[+] Applying display filters')
+    filtered = apply_display_filters(found, args.hiddenvuln, args.only_exploits)
+
+    # Display results
+    if len([filtered]) > 0:
+        print('[+] Found vulnerabilities')
+        verb = 'Displaying'
+        if args.outputfile:
+            store_results(args.outputfile, filtered)
+            verb = 'Saved'
+            print_summary(filtered)
+        else:
+            print_results(filtered)
+            print_summary(filtered)
+            print()
+
+        print('[+] Done. %s %d of the %d vulnerabilities found.' % (verb, len(filtered), len(found)))
+    else:
+        print('[-] No vulnerabilities found\n')
+
+
+def load_defintions(definitions):
+    with zipfile.ZipFile(definitions, "r") as definitionszip:
+        files = definitionszip.namelist()
+
+        # CVEs_yyyyMMdd.csv
+        # DatePosted,CVE,BulletinKB,Title,AffectedProduct,AffectedComponent,Severity,Impact,Supersedes,Exploits
+        cves = list(filter(lambda f: f.startswith('CVEs'), files))
+        cvesfile = cves[0]
+        date = cvesfile.split('.')[0].split('_')[1]
+        f = io.TextIOWrapper(definitionszip.open(cvesfile, 'r'))
+        cves = csv.DictReader(f, delimiter=',', quotechar='"')
+
+        # Version_X.XX.txt
+        versions = list(filter(lambda f: f.startswith('Version'), files))
+        versionsfile = versions[0]
+        dbversion = float(re.search('Version_(.*)\.txt', versionsfile, re.MULTILINE | re.IGNORECASE).group(1))
+
+        if dbversion > VERSION:
+            print('[-] Definitions require at least version %.2f of wes.py. Please update using wes.py --update-wes.' % dbversion)
+            return None, date
+
+        return cves, date
+
+
+def apply_display_filters(found, hiddenvulns, only_exploits):
+    # --hide 'Product 1' 'Product 2'
+    hiddenvulns = list(map(lambda s: s.lower(), hiddenvulns))
+    filtered = []
+    for cve in found:
+        add = True
+        for hidden in hiddenvulns:
+            if hidden in cve['AffectedComponent'].lower() or hidden in cve['AffectedProduct'].lower():
+                add = False
+                break
+        if add:
+            filtered.append(cve)
+
+    # --exploits-only
+    if only_exploits:
+        filtered = list(filter(lambda res: res['Exploits'], filtered))
+
+    return filtered
+
+
+def determine_missing_patches(productfilter, cves, hotfixes):
+    # Filter CVEs that are applicable to this system
+    global filtered
+    filtered = filter(lambda cve: productfilter in cve['AffectedProduct'], cves)
+    filtered = list(filtered)
+    for entry in filtered:
+        entry['Relevant'] = True
+
+    # Collect patches that are already superseeded and
+    # merge these with the patches found installed on the system
+    hotfixes += [cve['Supersedes'] for cve in filtered]
+    hotfixes = list(filter(None, set(hotfixes)))
+
+    for hotfix in hotfixes:
+        mark_superseeded_hotfix(hotfix)
+
+    # Check if left over KBs contain overlaps, for example a separate security hotfix
+    # which is also contained in a monthly rollup update
+    check = filter(lambda cve: cve['Relevant'], filtered)
+    supersedes = set([x['Supersedes'] for x in check])
+    checked = filter(lambda cve: cve['BulletinKB'] in supersedes, check)
+    for c in checked:
+        c['Relevant'] = False
+
+    # Final results
+    found = list(filter(lambda cve: cve['Relevant'], filtered))
+    for f in found:
+        del f['Relevant']
+
+    return found
+
+
+def determine_product(systeminfo_txt):
     systeminfo = open(systeminfo_txt, 'rb').read()
     try:
         import chardet
         encoding = chardet.detect(systeminfo)
         systeminfo = systeminfo.decode(encoding['encoding'], 'ignore')
     except (ImportError, ModuleNotFoundError):
-        print('[!] Warning: chardet module not installed. In case of encoding errors, install chardet using: pip3 install chardet')
+        print(
+            '[!] Warning: chardet module not installed. In case of encoding errors, install chardet using: pip3 install chardet')
         systeminfo = systeminfo.decode('ascii', 'ignore')
 
     # OS Version
-    regex_version = re.compile(r'.*?:\s+((\d+\.?)+) ((Service Pack (\d)|N/A|.+) )?\w+ (\d+).*', re.MULTILINE | re.IGNORECASE)
+    regex_version = re.compile(r'.*?:\s+((\d+\.?)+) ((Service Pack (\d)|N/A|.+) )?\w+ (\d+).*',
+                               re.MULTILINE | re.IGNORECASE)
     systeminfo_matches = regex_version.findall(systeminfo)
     if len(systeminfo_matches) == 0:
         print('[-] Not able to detect OS version based on provided input file')
@@ -164,89 +297,36 @@ def main():
         print("[-] Failed assessing Windows version %s" % win)
         exit(1)
 
-    print("""[+] Operating System
-    - Name: %s
-    - Generation: %s
-    - Build: %s
-    - Version: %s
-    - Architecture: %s
-    - Installed hotfixes: %s""" % (productfilter, win, mybuild, version, arch, ', '.join(['KB%s' % kb for kb in hotfixes])))
-
-    print('[+] Loading CSV with CVEs')
-    # DatePosted,CVE,BulletinKB,Title,AffectedProduct,AffectedComponent,Severity,Impact,Supersedes,Exploits
-    f = open(cves_csv, 'r')
-    cves = csv.DictReader(f, delimiter=',', quotechar='"')
-
-    print('[+] Determining missing patches')
-    # Filter CVEs that are applicable to this system
-    global filtered
-    filtered = filter(lambda cve: productfilter in cve['AffectedProduct'], cves)
-    filtered = list(filtered)
-    for entry in filtered:
-        entry['Relevant'] = True
-
-    # Collect patches that are already superseeded and
-    # merge these with the patches found installed on the system
-    hotfixes += [cve['Supersedes'] for cve in filtered]
-    hotfixes = list(filter(None, set(hotfixes)))
-
-    for hotfix in hotfixes:
-        mark_superseeded_hotfix(hotfix)
-
-    # Check if left over KBs contain overlaps, for example a separate security hotfix
-    # which is also contained in a monthly rollup update
-    check = filter(lambda cve: cve['Relevant'], filtered)
-    supersedes = set([x['Supersedes'] for x in check])
-    checked = filter(lambda cve: cve['BulletinKB'] in supersedes, check)
-    for c in checked:
-        c['Relevant'] = False
-
-    # Final results
-    found = list(filter(lambda cve: cve['Relevant'], filtered))
-    for f in found:
-        del f['Relevant']
-
-    # Apply display filters
-    hiddenvulns = list(map(lambda s: s.lower(), args.hiddenvulns))
-    filtered = []
-    for cve in found:
-        add = True
-        for hidden in hiddenvulns:
-            if hidden in cve['AffectedComponent'].lower() or hidden in cve['AffectedProduct'].lower():
-                add = False
-                break
-        if add:
-            filtered.append(cve)
-
-    if args.only_exploits:
-        filtered = list(filter(lambda res: res['Exploits'], filtered))
-
-    # Display results
-    if len([filtered]) > 0:
-        print('[+] Found vulnerabilities\n')
-        printresults(filtered)
-    else:
-        print('[-] No vulnerabilities found\n')
-
-    print('[+] Done. Displaying %d of the %d vulnerabilities found.' % (len(filtered), len(found)))
+    return productfilter, win, mybuild, version, arch, hotfixes
 
 
 def mark_superseeded_hotfix(superseeded):
     global filtered
 
     # Locate all CVEs for KB
-    foundSuperseeded = filter(lambda cve: cve['Relevant'] and cve['BulletinKB'] == superseeded, filtered)
-    for ss in foundSuperseeded:
-        ss['Relevant'] = False
+    for ssitem in superseeded.split(';'):
+        foundSuperseeded = filter(lambda cve: cve['Relevant'] and cve['BulletinKB'] == ssitem, filtered)
+        for ss in foundSuperseeded:
+            ss['Relevant'] = False
 
-        # In case there is a child, recurse (depth first)
-        if ss['Supersedes']:
-            mark_superseeded_hotfix(ss['Supersedes'])
+            # In case there is a child, recurse (depth first)
+            if ss['Supersedes']:
+                mark_superseeded_hotfix(ss['Supersedes'])
 
 
-def printresults(results):
+def print_summary(results):
+    grouped = Counter([r['BulletinKB'] for r in results])
+    print('[+] Missing patches: %d' % len(grouped))
+    for line in grouped.most_common():
+        kb = line[0]
+        number = line[1]
+        print('    - KB%s: patches %s %s' % (kb, number, 'vulnerabilty' if number == 1 else 'vulnerabilities'))
+
+
+def print_results(results):
+    print()
     for res in results:
-        exploits = res['Exploits']
+        exploits = res['Exploits'] if 'Exploits' in res else ''
         label = 'Exploit'
         value = 'n/a'
         if len(exploits) > 0:
@@ -265,54 +345,86 @@ Impact: %s
 """ % (res['DatePosted'], res['CVE'], res['BulletinKB'], res['AffectedProduct'], res['AffectedComponent'], res['Severity'], res['Impact'], label, value))
 
 
+def store_results(outputfile, results):
+    print('[+] Writing %d results to %s' % (len(results), outputfile))
+    with open(outputfile, 'w', newline='') as f:
+        header = list(results[0].keys())
+        header.remove('Supersedes')
+        writer = csv.DictWriter(f, fieldnames=header, quoting=csv.QUOTE_ALL)
+        writer.writeheader()
+        for r in results:
+            del r['Supersedes']
+            writer.writerow(r)
+
+
 def check_file_exists(value):
     if not os.path.isfile(value):
         raise argparse.ArgumentTypeError('File \'%s\' does not exist.' % value)
 
     return value
 
-def check_cves_exists(value):
+
+def check_definitions_exists(value):
     if not os.path.isfile(value):
-        raise argparse.ArgumentTypeError('CVEs file \'%s\' does not exist. Try running %s --update first.' % (value, FILENAME))
+        raise argparse.ArgumentTypeError('Definitions file \'%s\' does not exist. Try running %s --update first.' % (value, FILENAME))
 
     return value
 
 
 def parse_arguments():
     examples = r'''examples:
-  Download latest list of CVEs
+  Download latest definitions
   {0} --update
   {0} -u
 
   Determine vulnerabilities
   {0} systeminfo.txt
+  
+  Determine vulnerabilities and output to file
+  {0} systeminfo.txt --output vulns.csv
+  {0} systeminfo.txt -o vulns.csv
+  
+  Determine vulnerabilities explicitly specifying KBs to reduce false-positives
+  {0} systeminfo.txt --patches KB4345421 KB4487017
+  {0} systeminfo.txt -p KB4345421 KB4487017
 
-  Determine vulnerabilities explicitly specifying CVEs csv
-  {0} systeminfo.txt C:\tmp\CVEs.csv
+  Determine vulnerabilities explicitly specifying definitions file
+  {0} systeminfo.txt C:\tmp\mydefs.zip
 
   List only vulnerabilities with exploits, excluding Edge and Flash
   {0} systeminfo.txt --exploits-only --hide "Internet Explorer" Edge Flash
   {0} systeminfo.txt -e --hide "Internet Explorer" Edge Flash
+  
+  Download latest version of WES-NG
+  {0} --update-wes
 '''.format(FILENAME)
 
     parser = argparse.ArgumentParser(
-        description='Windows Exploit Suggester %.2f ( %s )' % (VERSION, WEB_URL),
+        description=BANNER,
         add_help=False,
         epilog=examples,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
-    # Update
+    # Update definitions
     parser.add_argument('-u', '--update', dest='perform_update', action='store_true', help='Download latest list of CVEs')
     args, xx = parser.parse_known_args()
     if args.perform_update:
         return args
 
+    # Update application
+    parser.add_argument('--update-wes', dest='perform_wesupdate', action='store_true', help='Download latest version of wes.py')
+    args, xx = parser.parse_known_args()
+    if args.perform_wesupdate:
+        return args
+
     # Options
     parser.add_argument('systeminfo', action='store', type=check_file_exists, help='Specify systeminfo.txt file')
-    parser.add_argument('cves', action='store', nargs='?', type=check_cves_exists, default='CVEs.csv', help='List of known vulnerabilities (default: CVEs.csv)')
+    parser.add_argument('definitions', action='store', nargs='?', type=check_definitions_exists, default='definitions.zip', help='List of known vulnerabilities (default: definitions.zip)')
+    parser.add_argument('-p', '--patches', dest='installedpatch', nargs='+', default='', help='Manually specify installed patches in addition to the ones listed in the systeminfo.txt file')
     parser.add_argument('-e', '--exploits-only', dest='only_exploits', action='store_true', help='Show only vulnerabilities with known exploits')
-    parser.add_argument('--hide', dest='hiddenvulns', nargs='+', default='', help='Hide vulnerabilities of for example Adobe Flash Player and Microsoft Edge')
+    parser.add_argument('--hide', dest='hiddenvuln', nargs='+', default='', help='Hide vulnerabilities of for example Adobe Flash Player and Microsoft Edge')
+    parser.add_argument('-o', '--output', action='store', dest='outputfile', nargs='?', help='Store results in a file')
     parser.add_argument('-h', '--help', action='help', help='Show this help message and exit')
 
     # Always show full help when no arguments are provided
