@@ -7,18 +7,57 @@
 #
 # Author: Arris Huijgen (@bitsadmin)
 # Website: https://github.com/bitsadmin
-import sys, csv, re, argparse, os, urllib.request, zipfile, io
-from collections import Counter
+
+from __future__ import print_function
+
+import sys, csv, re, argparse, os, zipfile, io
+import logging
+from collections import Counter, OrderedDict
+
+if sys.version_info.major == 2:
+    from urllib import urlretrieve
+    ModuleNotFoundError = ImportError
+else:
+    from urllib.request import urlretrieve
+
+try:
+    import chardet
+
+    def charset_convert(data):
+        encoding = chardet.detect(data)
+        data = data.decode(encoding['encoding'], 'ignore')
+
+        if sys.version_info.major == 2:
+            data = data.encode(sys.getfilesystemencoding())
+
+        return data
+
+except (ImportError, ModuleNotFoundError):
+    def charset_convert(data):
+        data = data.decode('ascii', 'ignore')
+
+        if sys.version_info.major == 2:
+            data = data.encode(sys.getfilesystemencoding())
+
+        return data
+
+    logging.warning(
+        'chardet module not installed. In case of encoding '
+        'errors, install chardet using: pip{} install chardet'.format(
+            sys.version_info.major))
+
+
+class WesException(Exception):
+    pass
+
 
 VERSION = 0.94
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
 BANNER = 'Windows Exploit Suggester %.2f ( %s )' % (VERSION, WEB_URL)
 FILENAME = 'wes.py'
 
-filtered = None
-
 # Mapping table between build numbers and versions to be able to import systeminfo output files
-buildnumbers = {
+buildnumbers = OrderedDict([
     # Windows XP / Server 2003 [R2]
     # ..
 
@@ -26,7 +65,7 @@ buildnumbers = {
     # ..
 
     # Windows 7 / Server 2008 R2
-    7601: 'Service Pack 1',
+    (7601, 'Service Pack 1'),
 
     # Windows 8 / Server 2012
     # ..
@@ -35,14 +74,15 @@ buildnumbers = {
     # ..
 
     # Windows 10 / Server
-    10240: 1507,
-    10586: 1511,
-    14393: 1607,
-    15063: 1703,
-    16299: 1709,
-    17134: 1803,
-    17763: 1809
-}
+    (10240, 1507),
+    (10586, 1511),
+    (14393, 1607),
+    (15063, 1703),
+    (16299, 1709),
+    (17134, 1803),
+    (17763, 1809)
+])
+
 
 def main():
     args = parse_arguments()
@@ -50,7 +90,7 @@ def main():
     # Update definitions
     if args.perform_update:
         print('[+] Updating definitions')
-        urllib.request.urlretrieve('https://raw.githubusercontent.com/bitsadmin/wesng/master/definitions.zip', 'definitions.zip')
+        urlretrieve('https://raw.githubusercontent.com/bitsadmin/wesng/master/definitions.zip', 'definitions.zip')
         cves, date = load_defintions('definitions.zip')
         print('[+] Obtained definitions created at %s' % date)
         return
@@ -58,7 +98,7 @@ def main():
     # Update application
     if args.perform_wesupdate:
         print('[+] Updating wes.py')
-        urllib.request.urlretrieve('https://raw.githubusercontent.com/bitsadmin/wesng/master/wes.py', 'wes.py')
+        urlretrieve('https://raw.githubusercontent.com/bitsadmin/wesng/master/wes.py', 'wes.py')
         print('[+] Updated to the latest version. Relaunch wes.py to use.')
         return
 
@@ -67,7 +107,8 @@ def main():
 
     # Parse encoding of systeminfo.txt input
     print('[+] Parsing systeminfo output')
-    productfilter, win, mybuild, version, arch, hotfixes = determine_product(args.systeminfo)
+    systeminfo_data = open(args.systeminfo, 'rb').read()
+    productfilter, win, mybuild, version, arch, hotfixes = determine_product(systeminfo_data)
     manual_hotfixes = list(set([patch.upper().replace('KB', '') for patch in args.installedpatch]))
 
     print("""[+] Operating System
@@ -85,16 +126,20 @@ def main():
     hotfixes = list(set(hotfixes + manual_hotfixes))
 
     print('[+] Loading definitions')
-    cves, date = load_defintions(args.definitions)
-    if not cves:
-        exit(1)
-    print('    - Creation date of definitions: %s' % date)
+    try:
+        cves, date = load_defintions(args.definitions)
 
-    print('[+] Determining missing patches')
-    found = determine_missing_patches(productfilter, cves, hotfixes)
+        print('    - Creation date of definitions: %s' % date)
+
+        print('[+] Determining missing patches')
+        filtered, found = determine_missing_patches(productfilter, cves, hotfixes)
+
+    except WesException as e:
+        print('[-] ' + e.msg)
+        exit(1)
 
     print('[+] Applying display filters')
-    filtered = apply_display_filters(found, args.hiddenvuln, args.only_exploits)
+    filtered = apply_display_filters(filtered, found, args.hiddenvuln, args.only_exploits)
 
     # Display results
     if len([filtered]) > 0:
@@ -124,7 +169,7 @@ def load_defintions(definitions):
         cvesfile = cves[0]
         date = cvesfile.split('.')[0].split('_')[1]
         f = io.TextIOWrapper(definitionszip.open(cvesfile, 'r'))
-        cves = csv.DictReader(f, delimiter=',', quotechar='"')
+        cves = csv.DictReader(f, delimiter=str(','), quotechar=str('"'))
 
         # Version_X.XX.txt
         versions = list(filter(lambda f: f.startswith('Version'), files))
@@ -132,13 +177,14 @@ def load_defintions(definitions):
         dbversion = float(re.search('Version_(.*)\.txt', versionsfile, re.MULTILINE | re.IGNORECASE).group(1))
 
         if dbversion > VERSION:
-            print('[-] Definitions require at least version %.2f of wes.py. Please update using wes.py --update-wes.' % dbversion)
-            return None, date
+            raise WesException(
+                'Definitions require at least version %.2f of wes.py. '
+                'Please update using wes.py --update-wes.' % dbversion)
 
         return cves, date
 
 
-def apply_display_filters(found, hiddenvulns, only_exploits):
+def apply_display_filters(filtered, found, hiddenvulns, only_exploits):
     # --hide 'Product 1' 'Product 2'
     hiddenvulns = list(map(lambda s: s.lower(), hiddenvulns))
     filtered = []
@@ -160,19 +206,24 @@ def apply_display_filters(found, hiddenvulns, only_exploits):
 
 def determine_missing_patches(productfilter, cves, hotfixes):
     # Filter CVEs that are applicable to this system
-    global filtered
-    filtered = filter(lambda cve: productfilter in cve['AffectedProduct'], cves)
-    filtered = list(filtered)
-    for entry in filtered:
-        entry['Relevant'] = True
+    filtered = []
+
+    for cve in cves:
+        if productfilter in cve['AffectedProduct']:
+            cve['Relevant'] = True
+
+            filtered.append(cve)
+
+            if cve['Supersedes']:
+                hotfixes.append(cve['Supersedes'])
 
     # Collect patches that are already superseeded and
     # merge these with the patches found installed on the system
-    hotfixes += [cve['Supersedes'] for cve in filtered]
-    hotfixes = list(filter(None, set(hotfixes)))
+    hotfixes = set(hotfixes)
 
+    marked = set()
     for hotfix in hotfixes:
-        mark_superseeded_hotfix(hotfix)
+        mark_superseeded_hotfix(filtered, hotfix, marked)
 
     # Check if left over KBs contain overlaps, for example a separate security hotfix
     # which is also contained in a monthly rollup update
@@ -187,27 +238,19 @@ def determine_missing_patches(productfilter, cves, hotfixes):
     for f in found:
         del f['Relevant']
 
-    return found
+    return filtered, found
 
 
-def determine_product(systeminfo_txt):
-    systeminfo = open(systeminfo_txt, 'rb').read()
-    try:
-        import chardet
-        encoding = chardet.detect(systeminfo)
-        systeminfo = systeminfo.decode(encoding['encoding'], 'ignore')
-    except (ImportError, ModuleNotFoundError):
-        print(
-            '[!] Warning: chardet module not installed. In case of encoding errors, install chardet using: pip3 install chardet')
-        systeminfo = systeminfo.decode('ascii', 'ignore')
+def determine_product(systeminfo):
+    systeminfo = charset_convert(systeminfo)
 
     # OS Version
     regex_version = re.compile(r'.*?:\s+((\d+\.?)+) ((Service Pack (\d)|N/A|.+) )?\w+ (\d+).*',
                                re.MULTILINE | re.IGNORECASE)
     systeminfo_matches = regex_version.findall(systeminfo)
     if len(systeminfo_matches) == 0:
-        print('[-] Not able to detect OS version based on provided input file')
-        exit(1)
+        raise WesException('Not able to detect OS version based on provided input file')
+
     systeminfo_matches = systeminfo_matches[0]
     mybuild = int(systeminfo_matches[5])
     servicepack = systeminfo_matches[4]
@@ -294,15 +337,12 @@ def determine_product(systeminfo_txt):
     elif win == '2019':
         productfilter = 'Windows Server %s' % win
     else:
-        print("[-] Failed assessing Windows version %s" % win)
-        exit(1)
+        raise WesException('Failed assessing Windows version {}'.format(win))
 
     return productfilter, win, mybuild, version, arch, hotfixes
 
 
-def mark_superseeded_hotfix(superseeded):
-    global filtered
-
+def mark_superseeded_hotfix(filtered, superseeded, marked):
     # Locate all CVEs for KB
     for ssitem in superseeded.split(';'):
         foundSuperseeded = filter(lambda cve: cve['Relevant'] and cve['BulletinKB'] == ssitem, filtered)
@@ -310,8 +350,9 @@ def mark_superseeded_hotfix(superseeded):
             ss['Relevant'] = False
 
             # In case there is a child, recurse (depth first)
-            if ss['Supersedes']:
-                mark_superseeded_hotfix(ss['Supersedes'])
+            if ss['Supersedes'] and ss['Supersedes'] not in marked:
+                marked.add(ss['Supersedes'])
+                mark_superseeded_hotfix(filtered, ss['Supersedes'], marked)
 
 
 def print_summary(results):
@@ -379,11 +420,11 @@ def parse_arguments():
 
   Determine vulnerabilities
   {0} systeminfo.txt
-  
+
   Determine vulnerabilities and output to file
   {0} systeminfo.txt --output vulns.csv
   {0} systeminfo.txt -o vulns.csv
-  
+
   Determine vulnerabilities explicitly specifying KBs to reduce false-positives
   {0} systeminfo.txt --patches KB4345421 KB4487017
   {0} systeminfo.txt -p KB4345421 KB4487017
@@ -394,7 +435,7 @@ def parse_arguments():
   List only vulnerabilities with exploits, excluding Edge and Flash
   {0} systeminfo.txt --exploits-only --hide "Internet Explorer" Edge Flash
   {0} systeminfo.txt -e --hide "Internet Explorer" Edge Flash
-  
+
   Download latest version of WES-NG
   {0} --update-wes
 '''.format(FILENAME)
