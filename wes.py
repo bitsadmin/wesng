@@ -135,7 +135,7 @@ def main():
         filtered, found = determine_missing_patches(productfilter, cves, hotfixes)
 
     except WesException as e:
-        print('[-] ' + e.msg)
+        print('[-] ' + str(e))
         exit(1)
 
     print('[+] Applying display filters')
