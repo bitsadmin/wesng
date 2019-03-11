@@ -51,7 +51,7 @@ class WesException(Exception):
     pass
 
 
-VERSION = 0.94
+VERSION = 0.941
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
 BANNER = 'Windows Exploit Suggester %.2f ( %s )' % (VERSION, WEB_URL)
 FILENAME = 'wes.py'
@@ -108,7 +108,13 @@ def main():
     # Parse encoding of systeminfo.txt input
     print('[+] Parsing systeminfo output')
     systeminfo_data = open(args.systeminfo, 'rb').read()
-    productfilter, win, mybuild, version, arch, hotfixes = determine_product(systeminfo_data)
+    try:
+        productfilter, win, mybuild, version, arch, hotfixes = determine_product(systeminfo_data)
+
+    except WesException as e:
+        print('[-] ' + str(e))
+        exit(1)
+
     manual_hotfixes = list(set([patch.upper().replace('KB', '') for patch in args.installedpatch]))
 
     print("""[+] Operating System
@@ -245,8 +251,7 @@ def determine_product(systeminfo):
     systeminfo = charset_convert(systeminfo)
 
     # OS Version
-    regex_version = re.compile(r'.*?:\s+((\d+\.?)+) ((Service Pack (\d)|N/A|.+) )?\w+ (\d+).*',
-                               re.MULTILINE | re.IGNORECASE)
+    regex_version = re.compile(r'.*((\d+\.?)+) ((Service Pack (\d)|N\/\w|.+) )?[ -Ñ]+ (\d+).*', re.MULTILINE | re.IGNORECASE)
     systeminfo_matches = regex_version.findall(systeminfo)
     if len(systeminfo_matches) == 0:
         raise WesException('Not able to detect OS version based on provided input file')
@@ -256,7 +261,10 @@ def determine_product(systeminfo):
     servicepack = systeminfo_matches[4]
 
     # OS Name
-    win = re.findall('.*?Microsoft[\(R\)]{0,3} Windows[\(R\)]{0,3} (Serverr? )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE | re.IGNORECASE)[0][1]
+    win_matches = re.findall('.*?Microsoft[\(R\)]{0,3} Windows[\(R\)]{0,3} (Serverr? )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE | re.IGNORECASE)
+    if len(win_matches) == 0:
+        raise WesException('Not able to detect OS name based on provided input file')
+    win = win_matches[0][1]
 
     # System Type
     arch = re.findall('.*?([\w\d]+?)-based PC.*', systeminfo, re.MULTILINE | re.IGNORECASE)[0]
