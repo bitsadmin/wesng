@@ -251,7 +251,7 @@ def determine_product(systeminfo):
     systeminfo = charset_convert(systeminfo)
 
     # OS Version
-    regex_version = re.compile(r'.*((\d+\.?)+) ((Service Pack (\d)|N\/\w|.+) )?[ -Ñ]+ (\d+).*', re.MULTILINE | re.IGNORECASE)
+    regex_version = re.compile(r'.*((\d+\.?)+) ((Service Pack (\d)|N\/\w|.+) )?[ -\xa5]+ (\d+).*', re.MULTILINE | re.IGNORECASE)
     systeminfo_matches = regex_version.findall(systeminfo)
     if len(systeminfo_matches) == 0:
         raise WesException('Not able to detect OS version based on provided input file')
