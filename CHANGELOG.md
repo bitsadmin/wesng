@@ -1,3 +1,15 @@
+# Version 0.942
+**New features**
+- Support for 'wmic qfe' output in case the list of KBs in the systeminfo output is cut off
+- Parameter to use the most recent KB installed as reference point to filter out all vulnerabilities of KBs prior this date
+- Parameter to show version
+- (Hidden) flag to debug supersedes
+
+**Improvements**
+- Added comments to the code for improved readability
+- Some minor improvements
+
+
 # Version 0.94
 ## wes.py
 **New features**
