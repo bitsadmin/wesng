@@ -1,0 +1,6 @@
+Please wait while WMIC is being installed.Caption  CSName    Description                       FixComments  HotFixID    InstallDate  InstalledBy  InstalledOn  Name  ServicePackInEffect  Status  
+         WINXPSP1                                                 File 1                                                   KB893803v2                   
+         WINXPSP1                                                 Q147222                                                                               
+         WINXPSP1  Windows Installer 3.1 (KB893803)  Update       KB893803v2               User                            SP3                          
+
+

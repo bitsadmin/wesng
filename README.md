@@ -35,6 +35,7 @@ See [CHANGELOG.md](https://github.com/bitsadmin/wesng/blob/master/CHANGELOG.md)
 - Add support for `wmic qfe` output together with support for parameters to manually specify the operating system
 - Add support for alternative output formats of `systeminfo` (csv, table)
 - More testing on the returned false positive vulnerabilities - see also the [wiki](https://github.com/bitsadmin/wesng/wiki)
+- Add support for Itanium architecuture
 
 ## References
 [1] https://www.microsoft.com/download/details.aspx?id=36982

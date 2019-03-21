@@ -1,0 +1,269 @@
+
+Host Name:                 USER-8CEF73C787
+OS Name:                   Microsoft(R) Windows(R) XP Professional x64 Edition
+OS Version:                5.2.3790 Service Pack 2 Build 3790
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Uniprocessor Free
+Registered Owner:          User
+Registered Organization:   
+Product ID:                76588-652-8284616-50882
+Original Install Date:     3/21/2019, 1:35:10 AM
+System Up Time:            0 Days, 2 Hours, 9 Minutes, 53 Seconds
+System Manufacturer:       VMware, Inc.
+System Model:              VMware Virtual Platform
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: EM64T Family 6 Model 78 Stepping 3 GenuineIntel ~2496 Mhz
+BIOS Version:              UNKNOWN
+Windows Directory:         C:\WINDOWS
+System Directory:          C:\WINDOWS\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
+Total Physical Memory:     1,023 MB
+Available Physical Memory: 557 MB
+Page File: Max Size:       2,491 MB
+Page File: Available:      2,192 MB
+Page File: In Use:         299 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\USER-8CEF73C787
+Hotfix(s):                 300 Hotfix(s) Installed.
+                           [01]: File 1
+                           [02]: File 1
+                           [03]: File 1
+                           [04]: File 1
+                           [05]: File 1
+                           [06]: File 1
+                           [07]: File 1
+                           [08]: File 1
+                           [09]: File 1
+                           [10]: File 1
+                           [11]: File 1
+                           [12]: File 1
+                           [13]: File 1
+                           [14]: File 1
+                           [15]: File 1
+                           [16]: File 1
+                           [17]: File 1
+                           [18]: File 1
+                           [19]: File 1
+                           [20]: File 1
+                           [21]: File 1
+                           [22]: File 1
+                           [23]: File 1
+                           [24]: File 1
+                           [25]: File 1
+                           [26]: File 1
+                           [27]: File 1
+                           [28]: File 1
+                           [29]: File 1
+                           [30]: File 1
+                           [31]: File 1
+                           [32]: File 1
+                           [33]: File 1
+                           [34]: File 1
+                           [35]: File 1
+                           [36]: File 1
+                           [37]: File 1
+                           [38]: File 1
+                           [39]: File 1
+                           [40]: File 1
+                           [41]: File 1
+                           [42]: File 1
+                           [43]: File 1
+                           [44]: File 1
+                           [45]: File 1
+                           [46]: File 1
+                           [47]: File 1
+                           [48]: File 1
+                           [49]: File 1
+                           [50]: File 1
+                           [51]: File 1
+                           [52]: File 1
+                           [53]: File 1
+                           [54]: File 1
+                           [55]: File 1
+                           [56]: File 1
+                           [57]: File 1
+                           [58]: File 1
+                           [59]: File 1
+                           [60]: File 1
+                           [61]: File 1
+                           [62]: File 1
+                           [63]: File 1
+                           [64]: File 1
+                           [65]: File 1
+                           [66]: File 1
+                           [67]: File 1
+                           [68]: File 1
+                           [69]: File 1
+                           [70]: File 1
+                           [71]: File 1
+                           [72]: File 1
+                           [73]: File 1
+                           [74]: File 1
+                           [75]: File 1
+                           [76]: File 1
+                           [77]: File 1
+                           [78]: File 1
+                           [79]: File 1
+                           [80]: File 1
+                           [81]: File 1
+                           [82]: File 1
+                           [83]: File 1
+                           [84]: File 1
+                           [85]: File 1
+                           [86]: File 1
+                           [87]: File 1
+                           [88]: File 1
+                           [89]: File 1
+                           [90]: File 1
+                           [91]: File 1
+                           [92]: File 1
+                           [93]: File 1
+                           [94]: File 1
+                           [95]: File 1
+                           [96]: File 1
+                           [97]: File 1
+                           [98]: File 1
+                           [99]: File 1
+                           [100]: File 1
+                           [101]: File 1
+                           [102]: File 1
+                           [103]: File 1
+                           [104]: File 1
+                           [105]: File 1
+                           [106]: File 1
+                           [107]: File 1
+                           [108]: File 1
+                           [109]: File 1
+                           [110]: File 1
+                           [111]: File 1
+                           [112]: File 1
+                           [113]: File 1
+                           [114]: File 1
+                           [115]: File 1
+                           [116]: File 1
+                           [117]: File 1
+                           [118]: File 1
+                           [119]: File 1
+                           [120]: File 1
+                           [121]: File 1
+                           [122]: File 1
+                           [123]: File 1
+                           [124]: File 1
+                           [125]: File 1
+                           [126]: File 1
+                           [127]: File 1
+                           [128]: File 1
+                           [129]: File 1
+                           [130]: File 1
+                           [131]: File 1
+                           [132]: File 1
+                           [133]: File 1
+                           [134]: File 1
+                           [135]: File 1
+                           [136]: File 1
+                           [137]: File 1
+                           [138]: File 1
+                           [139]: File 1
+                           [140]: File 1
+                           [141]: File 1
+                           [142]: File 1
+                           [143]: File 1
+                           [144]: Q147222
+                           [145]: KB929399
+                           [146]: KB941569_WM11
+                           [147]: KB952069_WM11x64
+                           [148]: KB954155_WM11x64
+                           [149]: KB978695_WM11x64
+                           [150]: KB2834904-v2_WM11
+                           [151]: KB975558_WM8
+                           [152]: KB2378111_WM11x64
+                           [153]: KB939683
+                           [154]: KB954154_WM11x64
+                           [155]: KB973540_WM11x64
+                           [156]: KB925398_WMP64
+                           [157]: KB2706045-IE8 - Update
+                           [158]: KB982632-IE8 - Update
+                           [159]: KB2564958
+                           [160]: MSCompPackV1 - Update
+                           [161]: KB2115168 - Update
+                           [162]: KB2229593 - Update
+                           [163]: KB2345886 - Update
+                           [164]: KB2347290 - Update
+                           [165]: KB2378111 - Update
+                           [166]: KB2387149 - Update
+                           [167]: KB2393802 - Update
+                           [168]: KB2419635 - Update
+                           [169]: KB2423089 - Update
+                           [170]: KB2443105 - Update
+                           [171]: KB2476490 - Update
+                           [172]: KB2478960 - Update
+                           [173]: KB2478971 - Update
+                           [174]: KB2479943 - Update
+                           [175]: KB2481109 - Update
+                           [176]: KB2483185 - Update
+                           [177]: KB2485663 - Update
+                           [178]: KB2492386 - Update
+                           [179]: KB2506212 - Update
+                           [180]: KB2507938 - Update
+                           [181]: KB2508429 - Update
+                           [182]: KB2509553 - Update
+                           [183]: KB2535512 - Update
+                           [184]: KB2536276-v2 - Update
+                           [185]: KB2544893-v2 - Update
+                           [186]: KB2566454 - Update
+                           [187]: KB2570947 - Update
+                           [188]: KB2584146 - Update
+                           [189]: KB2598479 - Update
+                           [190]: KB2603381 - Update
+                           [191]: KB2619339 - Update
+                           [192]: KB2620712 - Update
+                           [193]: KB2631813 - Update
+                           [194]: KB2638806 - Update
+                           [195]: KB2644615 - Update
+                           [196]: KB2653956 - Update
+                           [197]: KB2655992 - Update
+                           [198]: KB2659262 - Update
+                           [199]: KB2676562 - Update
+                           [200]: KB2685939 - Update
+                           [201]: KB2686509 - Update
+                           [202]: KB2691442 - Update
+                           [203]: KB2698365 - Update
+                           [204]: KB2705219-v2 - Update
+                           [205]: KB2712808 - Update
+                           [206]: KB2727528 - Update
+                           [207]: KB2748349 - Update
+                           [208]: KB2749655 - Update
+                           [209]: KB2770660 - Update
+                           [210]: KB2780091 - Update
+                           [211]: KB2803821-v2 - Update
+                           [212]: KB2807986 - Update
+                           [213]: KB2808679 - Update
+                           [214]: KB2813170 - Update
+                           [215]: KB2813345 - Update
+                           [216]: KB2820917 - Update
+                           [217]: KB2834886 - Update
+                           [218]: KB2847311 - Update
+                           [219]: KB2850869 - Update
+                           [220]: KB2862152 - Update
+                           [221]: KB2862330 - Update
+                           [222]: KB2862335 - Update
+                           [223]: KB2864058 - Update
+                           [224]: KB2864063 - Update
+                           [225]: KB2868626 - Update
+                           [226]: KB2875783 - Update
+                           [227]: KB2876217 - Update
+                           [228]: KB2876331 - Update
+                           [2
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: Intel(R) PRO/1000 MT Network Connection
+                                 Connection Name: Local Area Connection
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.159.254
+                                 IP address(es)
+                                 [01]: 192.168.159.217

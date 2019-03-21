@@ -57,30 +57,14 @@ class WesException(Exception):
 
 
 # Applictation details
-VERSION = 0.942
+VERSION = 0.95
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
-BANNER = 'Windows Exploit Suggester %.3f ( %s )' % (VERSION, WEB_URL)
+BANNER = 'Windows Exploit Suggester %.2f ( %s )' % (VERSION, WEB_URL)
 FILENAME = 'wes.py'
 
 # Mapping table between build numbers and versions to correctly identify
-# the Windows version specified in the systeminfo output
+# the Windows 10/Server 2016 version specified in the systeminfo output
 buildnumbers = OrderedDict([
-    # Windows XP / Server 2003 [R2]
-    # ..
-
-    # Windows Vista / Server 2008
-    # ..
-
-    # Windows 7 / Server 2008 R2
-    (7601, 'Service Pack 1'),
-
-    # Windows 8 / Server 2012
-    # ..
-
-    # Windows 8.1 / Server 2012 R2
-    # ..
-
-    # Windows 10 / Server
     (10240, 1507),
     (10586, 1511),
     (14393, 1607),
@@ -101,7 +85,7 @@ def main():
     if hasattr(args, 'perform_update') and args.perform_update:
         print('[+] Updating definitions')
         urlretrieve('https://raw.githubusercontent.com/bitsadmin/wesng/master/definitions.zip', 'definitions.zip')
-        cves, date = load_defintions('definitions.zip')
+        cves, date = load_definitions('definitions.zip')
         print('[+] Obtained definitions created at %s' % date)
         return
 
@@ -114,7 +98,7 @@ def main():
 
     # Show tree of supersedes (for debugging purposes)
     if hasattr(args, 'debugsupersedes') and args.debugsupersedes:
-        cves, date = load_defintions('definitions.zip')
+        cves, date = load_definitions('definitions.zip')
         productfilter = args.debugsupersedes[0]
         supersedes = args.debugsupersedes[1:]
         filtered = []
@@ -124,12 +108,12 @@ def main():
 
             filtered.append(cve)
 
-        debug_supersedes(filtered, supersedes, 0)
+        debug_supersedes(filtered, supersedes, 0, args.verbosesupersedes)
         return
 
     # Show version
     if hasattr(args, 'showversion') and args.showversion:
-        cves, date = load_defintions('definitions.zip')
+        cves, date = load_definitions('definitions.zip')
         print('Wes.py version: %.3f' % VERSION)
         print('Database version: %s' % date)
         return
@@ -164,9 +148,11 @@ def main():
     - Generation: %s
     - Build: %s
     - Version: %s
-    - Architecture: %s
-    - Installed hotfixes (%d): %s''' % (productfilter, win, mybuild, version, arch,
-                                        len(hotfixes), ', '.join(['KB%s' % kb for kb in hotfixes]))
+    - Architecture: %s''' % (productfilter, win, mybuild, version, arch)
+    if hotfixes:
+        info += '\n    - Installed hotfixes (%d): %s' % (len(hotfixes), ', '.join(['KB%s' % kb for kb in hotfixes]))
+    else:
+        info += '\n    - Installed hotfixes: None'
     if manual_hotfixes:
         info += '\n    - Manually specified hotfixes (%d): %s' % (len(manual_hotfixes),
                                                                   ', '.join(['KB%s' % kb for kb in manual_hotfixes]))
@@ -178,7 +164,7 @@ def main():
     # Load definitions from definitions.zip (default) or user-provided location
     print('[+] Loading definitions')
     try:
-        cves, date = load_defintions(args.definitions)
+        cves, date = load_definitions(args.definitions)
         print('    - Creation date of definitions: %s' % date)
 
         print('[+] Determining missing patches')
@@ -198,22 +184,32 @@ def main():
             recentdate = int(recentkb['DatePosted'])
             found = list(filter(lambda kb: int(kb['DatePosted']) >= recentdate, found))
 
+    if 'Windows Server' in productfilter:
+        print('[+] Filtering duplicate vulnerabilities')
+        found = filter_duplicates(found)
+
     # If specified, hide results containing the user-specified string
     # in the AffectedComponent and AffectedProduct attributes
-    print('[+] Applying display filters')
-    filtered = apply_display_filters(filtered, found, args.hiddenvuln, args.only_exploits)
+    if args.hiddenvuln or args.only_exploits:
+        print('[+] Applying display filters')
+        filtered = apply_display_filters(found, args.hiddenvuln, args.only_exploits)
+    else:
+        filtered = found
+
+    # Split up list of KBs and the potential Service Packs/Cumulative updates available
+    kbs, sp = get_patches_servicepacks(filtered, cves, productfilter)
 
     # Display results
-    if len([filtered]) > 0:
+    if len(filtered) > 0:
         print('[+] Found vulnerabilities')
         verb = 'Displaying'
         if args.outputfile:
             store_results(args.outputfile, filtered)
             verb = 'Saved'
-            print_summary(filtered)
+            print_summary(kbs, sp)
         else:
             print_results(filtered)
-            print_summary(filtered)
+            print_summary(kbs, sp)
             print()
         print('[+] Done. %s %d of the %d vulnerabilities found.' % (verb, len(filtered), len(found)))
     else:
@@ -222,17 +218,9 @@ def main():
 
 # Load definitions.zip containing a CSV with vulnerabilities collected by the WES collector module
 # and a file determining the minimum wes.py version the definitions are compatible with.
-def load_defintions(definitions):
+def load_definitions(definitions):
     with zipfile.ZipFile(definitions, 'r') as definitionszip:
         files = definitionszip.namelist()
-
-        # CVEs_yyyyMMdd.csv
-        # DatePosted,CVE,BulletinKB,Title,AffectedProduct,AffectedComponent,Severity,Impact,Supersedes,Exploits
-        cves = list(filter(lambda f: f.startswith('CVEs'), files))
-        cvesfile = cves[0]
-        date = cvesfile.split('.')[0].split('_')[1]
-        f = io.TextIOWrapper(definitionszip.open(cvesfile, 'r'))
-        cves = csv.DictReader(f, delimiter=str(','), quotechar=str('"'))
 
         # Version_X.XX.txt
         versions = list(filter(lambda f: f.startswith('Version'), files))
@@ -244,11 +232,29 @@ def load_defintions(definitions):
                 'Definitions require at least version %.2f of wes.py. '
                 'Please update using wes.py --update-wes.' % dbversion)
 
-        return cves, date
+        # CVEs_yyyyMMdd.csv
+        # DatePosted,CVE,BulletinKB,Title,AffectedProduct,AffectedComponent,Severity,Impact,Supersedes,Exploits
+        cvesfiles = list(filter(lambda f: f.startswith('CVEs'), files))
+        cvesfile = cvesfiles[0]
+        cvesdate = cvesfile.split('.')[0].split('_')[1]
+        f = io.TextIOWrapper(definitionszip.open(cvesfile, 'r'))
+        cves = csv.DictReader(filter(lambda row: row[0]!='#', f), delimiter=str(','), quotechar=str('"'))
+
+        # Custom_yyyyMMdd.csv
+        customfiles = list(filter(lambda f: f.startswith('Custom'), files))
+        customfile = customfiles[0]
+        #customdate = customfile.split('.')[0].split('_')[1]
+        f = io.TextIOWrapper(definitionszip.open(customfile, 'r'))
+        custom = csv.DictReader(filter(lambda row: row[0]!='#', f), delimiter=str(','), quotechar=str('"'))
+
+        # Merge official and custom list of CVEs
+        merged = [cve for cve in cves] + [c for c in custom]
+
+        return merged, cvesdate
 
 
 # Hide results containing the user specified string(s) in the AffectedComponent or AffectedProduct attributes
-def apply_display_filters(filtered, found, hiddenvulns, only_exploits):
+def apply_display_filters(found, hiddenvulns, only_exploits):
     # --hide 'Product 1' 'Product 2'
     hiddenvulns = list(map(lambda s: s.lower(), hiddenvulns))
     filtered = []
@@ -268,14 +274,70 @@ def apply_display_filters(filtered, found, hiddenvulns, only_exploits):
     return filtered
 
 
+# Filter duplicate CVEs for the Windows Server operating systems which often have a
+# 'Windows Server 2XXX' and a 'Windows Server 2XXX (Server Core installation)' CVE that are exactly the same
+def filter_duplicates(found):
+    cves = list(set([cve['CVE'] for cve in found]))
+    newfound = []
+
+    # Iterate over unique CVEs
+    for cve in cves:
+        coreresults = list(filter(lambda cr: cr['CVE'] == cve and 'Server Core' in cr['AffectedProduct'], found))
+
+        # If no 'Server Core' results for CVE, just add all records matching the CVE
+        if len(coreresults) == 0:
+            normalresults = list(filter(lambda nr: nr['CVE'] == cve, found))
+            for n in normalresults:
+                newfound.append(n)
+            continue
+
+        # In case 'Server Core' records are found, identify matching non-core results
+        for r in coreresults:
+            regularcounterparts = list(filter(lambda c:
+                                              'Server Core' not in c['AffectedProduct'] and
+                                              c['CVE'] == r['CVE'] and
+                                              c['BulletinKB'] == r['BulletinKB'] and
+                                              c['Title'] == r['Title'] and
+                                              c['AffectedComponent'] == r['AffectedComponent'] and
+                                              c['Severity'] == r['Severity'] and
+                                              c['Impact'] == r['Impact'] and
+                                              c['Exploits'] == r['Exploits'], found))
+
+            # If non-'Server Core' counterparts are found, add these
+            if len(regularcounterparts) >= 1:
+                for rc in regularcounterparts:
+                    newfound.append(rc)
+            # Otherwise, add the 'Server Core' CVE
+            else:
+                newfound.append(r)
+
+    return newfound
+
+
+# Filter CVEs that are applicable to this system
 def determine_missing_patches(productfilter, cves, hotfixes):
-    # Filter CVEs that are applicable to this system
     filtered = []
 
-    for cve in cves:
-        if productfilter in cve['AffectedProduct']:
-            cve['Relevant'] = True
+    # Product with a Service Pack
+    if 'Service Pack' in productfilter:
+        for cve in cves:
+            if productfilter not in cve['AffectedProduct']:
+                continue
 
+            cve['Relevant'] = True
+            filtered.append(cve)
+
+            if cve['Supersedes']:
+                hotfixes.append(cve['Supersedes'])
+    # Make sure that if the productfilter does not contain a Service Pack, we don't list the versions of that OS
+    # which include a Service Pack in the product name
+    else:
+        productfilter_sp = productfilter + ' Service Pack'
+        for cve in cves:
+            if productfilter not in cve['AffectedProduct'] or productfilter_sp in cve['AffectedProduct']:
+                continue
+
+            cve['Relevant'] = True
             filtered.append(cve)
 
             if cve['Supersedes']:
@@ -305,6 +367,7 @@ def determine_missing_patches(productfilter, cves, hotfixes):
     return filtered, found
 
 
+# Function which recursively marks KBs as irrelevant whenever they are superseeded
 def mark_superseeded_hotfix(filtered, superseeded, marked):
     # Locate all CVEs for KB
     for ssitem in superseeded.split(';'):
@@ -377,8 +440,9 @@ def determine_product(systeminfo):
         if servicepack:
             productfilter += ' Service Pack %s' % servicepack
     elif win == '7':
-        pversion = '' if version is None else ' ' + version
-        productfilter = 'Windows %s for %s Systems%s' % (win, arch, pversion)
+        productfilter = 'Windows %s for %s Systems' % (win, arch)
+        if servicepack:
+            productfilter += ' Service Pack %s' % servicepack
     elif win == '8':
         productfilter = 'Windows %s for %s Systems' % (win, arch)
     elif win == '8.1':
@@ -430,43 +494,87 @@ def get_hotfixes(text):
 
 
 # Debugging feature to list hierarchy of superseeded KBs according to the definitions file
-def debug_supersedes(cves, kbs, indent):
+def debug_supersedes(cves, kbs, indent, verbose):
     for kb in kbs:
         # Determine KBs superseeded by provided KB
         foundkbs = list(filter(lambda k: k['BulletinKB'] == kb, cves))
 
         # Extract date and title
+        titles = []
+        for f in foundkbs:
+            titles.append(f['Title'])
+        titles = list(set(filter(None, titles)))
+        titles.sort()
+
         kbdate = foundkbs[0]['DatePosted'] if foundkbs else '????????'
-        kbtitle = foundkbs[0]['Title'] if foundkbs else ''
+        kbtitle = titles[0] if titles else ''
 
         # Print
         indentstr = '  ' * indent
-        print('[%.2d][%s] %s%s - %s' % (indent, kbdate, indentstr, kb, kbtitle))
+        print('[%.2d][%s] %s%s - %s' % (indent, kbdate, indentstr, kb.ljust(7, ' '), kbtitle))
+        if verbose and len(titles) > 1:
+            for t in titles[1:]:
+                print('%s%s%s' % (indentstr, ' ' * 25, t))
 
         # Recursively iterate over KBs superseeded by the current KB
-        filtered = list(filter(lambda cve: cve['BulletinKB'] == kb, cves))
         supersedes = []
-        for f in filtered:
+        for f in foundkbs:
             supersedes += f['Supersedes'].split(';')
         supersedes = list(set(filter(None, supersedes)))
-        debug_supersedes(cves, supersedes, indent + 1)
+        debug_supersedes(cves, supersedes, indent + 1, verbose)
+
+
+# Split up list of KBs and the potential Service Packs/Cumulative updates available
+def get_patches_servicepacks(results, cves, productfilter):
+    # Extract available Service Packs (if any)
+    sp = list(filter(lambda c: c['CVE'].startswith('SP'), results))
+    if len(sp) > 0:
+        sp = sp[0]  # There should only be one result
+
+        # Only focus on OS + architecure, current service pack is not relevant
+        productfilter = re.sub(' Service Pack \d', '', productfilter)
+
+        # Determine service packs available for the OS and determine the latest version available
+        servicepacks = list(filter(lambda c: c['CVE'].startswith('SP') and productfilter in c['AffectedProduct'], cves))
+        lastpatch = get_last_patch(servicepacks, sp)
+
+        # Remove service packs from regular KB output
+        kbs = list(filter(lambda c: not c['CVE'].startswith('SP'), results))
+
+        return kbs, lastpatch
+
+    return results, None
+
+
+# Obtain most recent patch tracing back recursively locating records which superseeded the provided record
+def get_last_patch(servicepacks, kb):
+    results = list(filter(lambda c: c['Supersedes'] == kb['BulletinKB'], servicepacks))
+
+    if results:
+        return get_last_patch(servicepacks, results[0])
+    else:
+        return kb
 
 
 # Show summary at the end of results containing the number of patches and the most recent patch installed
-def print_summary(results):
+def print_summary(kbs, sp):
     # Show missing KBs with number of vulnerabilites per KB
-    grouped = Counter([r['BulletinKB'] for r in results])
+    grouped = Counter([r['BulletinKB'] for r in kbs])
     print('[+] Missing patches: %d' % len(grouped))
     for line in grouped.most_common():
         kb = line[0]
         number = line[1]
         print('    - KB%s: patches %s %s' % (kb, number, 'vulnerabilty' if number == 1 else 'vulnerabilities'))
 
-    # Latest KB
-    if not results:
-        return
+    # Show in case a service pack is missing
+    if sp:
+        print('[+] Missing service pack')
+        print('    - %s' % sp['Title'])
 
-    foundkb = get_most_recent_kb(results)
+    # Latest KB
+    if not kbs:
+        return
+    foundkb = get_most_recent_kb(kbs)
     print('''[+] KB with the most recent release date
     - ID: KB%s
     - Release date: %s''' % (foundkb['BulletinKB'], foundkb['DatePosted']))
@@ -497,12 +605,13 @@ def print_results(results):
         print('''Date: %s
 CVE: %s
 KB: KB%s
+Title: %s
 Affected product: %s
 Affected component: %s
 Severity: %s
 Impact: %s
 %s: %s
-''' % (res['DatePosted'], res['CVE'], res['BulletinKB'], res['AffectedProduct'], res['AffectedComponent'], res['Severity'], res['Impact'], label, value))
+''' % (res['DatePosted'], res['CVE'], res['BulletinKB'], res['Title'], res['AffectedProduct'], res['AffectedComponent'], res['Severity'], res['Impact'], label, value))
 
 
 # Output results of wes.py to a .csv file
@@ -514,7 +623,8 @@ def store_results(outputfile, results):
         writer = csv.DictWriter(f, fieldnames=header, quoting=csv.QUOTE_ALL)
         writer.writeheader()
         for r in results:
-            del r['Supersedes']
+            if 'Supersedes' in r:
+                del r['Supersedes']
             writer.writerow(r)
 
 
@@ -590,15 +700,17 @@ def parse_arguments():
         return args
 
     # Show version
-    parser.add_argument('-v', '--version', dest='showversion', action='store_true', help='Show version information')
+    parser.add_argument('--version', dest='showversion', action='store_true', help='Show version information')
     args, xx = parser.parse_known_args()
     if args.showversion:
         return args
 
     # Debug supersedes: perform a check on the supersedence tree according to the definitions.zip
-    # First argument is OS (as listed in the definitions), next arguments are 1 or more KBs
-    # Example: wes.py --debug-supersedes "Windows 7 for x64-based Systems Service Pack 1" 3100773
+    # First argument is OS (as listed in the definitions) or an empty string for no filter, next arguments are 1 or more KBs.
+    # The --verbose argument will have wes.py print all titles of KBs found instead of only the first title.
+    # Example: wes.py --debug-supersedes "Windows Vista x64 Edition Service Pack 2" 3216916 --verbose
     parser.add_argument('--debug-supersedes', dest='debugsupersedes', nargs='+', default='', help=argparse.SUPPRESS)
+    parser.add_argument('--verbose', dest='verbosesupersedes', action='store_true', help=argparse.SUPPRESS)
     args, xx = parser.parse_known_args()
     if args.debugsupersedes:
         return args

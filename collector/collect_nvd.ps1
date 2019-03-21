@@ -127,10 +127,11 @@ $outcsv = "CVEs_{0}.csv" -f [DateTime]::Now.ToString("yyyyMMdd")
 $CVEs | Export-Csv -NoTypeInformation -Encoding ASCII $outcsv
 $wesver = $minwesversion.ToString("0.00", [System.Globalization.CultureInfo]::InvariantCulture)
 $outversion = "Version_{0}.txt" -f $wesver
+$customcsv = gci Custom_*.csv | select -expand Name
 "[+] Writing minimum required version number to $outversion"
 New-Item $outversion -Type File -Value ("This definition file requires you to at least use wes version {0}`r`n`r`nDownload the latest version from https://github.com/bitsadmin/wesng`r`n" -f $wesver) | Out-Null
 "[+] Packing files into definitions.zip"
-Compress-Archive -LiteralPath $outcsv,$outversion -CompressionLevel Optimal -DestinationPath definitions.zip -Force
+Compress-Archive -LiteralPath $outcsv,$customcsv,$outversion -CompressionLevel Optimal -DestinationPath definitions.zip -Force
 Remove-Item $outcsv,$outversion
 
 "[+] Done!"

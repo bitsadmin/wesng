@@ -1,0 +1,146 @@
+
+Host Name:                 WINVISTASP0X64
+OS Name:                   Microsoftr Windows VistaT Enterprise 
+OS Version:                6.0.6000 N/A Build 6000
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          User
+Registered Organization:   
+Product ID:                89586-236-0200203-71844
+Original Install Date:     6/17/2017, 6:17:31 PM
+System Boot Time:          3/21/2019, 8:33:04 AM
+System Manufacturer:       VMware, Inc.
+System Model:              VMware Virtual Platform
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: EM64T Family 6 Model 78 Stepping 3 GenuineIntel ~2496 Mhz
+BIOS Version:              Phoenix Technologies LTD 6.00, 4/13/2018
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
+Total Physical Memory:     1,023 MB
+Available Physical Memory: 337 MB
+Page File: Max Size:       2,302 MB
+Page File: Available:      1,381 MB
+Page File: In Use:         921 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\WINVISTASP0X64
+Hotfix(s):                 105 Hotfix(s) Installed.
+                           [01]: {7A068575-C5DB-43D9-BE20-3895D0C69B17}
+                           [02]: 943729
+                           [03]: KB929399
+                           [04]: KB930178
+                           [05]: KB930857
+                           [06]: KB931099
+                           [07]: KB932596
+                           [08]: KB936357
+                           [09]: KB936825
+                           [10]: KB937077
+                           [11]: KB938952
+                           [12]: KB939159
+                           [13]: KB941569
+                           [14]: KB941600
+                           [15]: KB946026
+                           [16]: KB949939
+                           [17]: KB925902
+                           [18]: KB929123
+                           [19]: KB929735
+                           [20]: KB929916
+                           [21]: KB931213
+                           [22]: KB931573
+                           [23]: KB933928
+                           [24]: KB935509
+                           [25]: KB935807
+                           [26]: KB936824
+                           [27]: KB938123
+                           [28]: KB938194
+                           [29]: KB938371
+                           [30]: KB938979
+                           [31]: KB941649
+                           [32]: KB941651
+                           [33]: KB942624
+                           [34]: KB943055
+                           [35]: KB943302
+                           [36]: KB943411
+                           [37]: KB943899
+                           [38]: KB945553
+                           [39]: KB946041
+                           [40]: KB946456
+                           [41]: KB950762
+                           [42]: KB950974
+                           [43]: KB951066
+                           [44]: KB951376
+                           [45]: KB952004
+                           [46]: KB952069
+                           [47]: KB952287
+                           [48]: KB953155
+                           [49]: KB953733
+                           [50]: KB954154
+                           [51]: KB954155
+                           [52]: KB954459
+                           [53]: KB955020
+                           [54]: KB955069
+                           [55]: KB956572
+                           [56]: KB956744
+                           [57]: KB956802
+                           [58]: KB957321
+                           [59]: KB958623
+                           [60]: KB958624
+                           [61]: KB958644
+                           [62]: KB958869
+                           [63]: KB959108
+                           [64]: KB959130
+                           [65]: KB959426
+                           [66]: KB960225
+                           [67]: KB960803
+                           [68]: KB961501
+                           [69]: KB967723
+                           [70]: KB968389
+                           [71]: KB968816
+                           [72]: KB969947
+                           [73]: KB970238
+                           [74]: KB970430
+                           [75]: KB970710
+                           [76]: KB971468
+                           [77]: KB971657
+                           [78]: KB971737
+                           [79]: KB971961
+                           [80]: KB972036
+                           [81]: KB972145
+                           [82]: KB972270
+                           [83]: KB973507
+                           [84]: KB973540
+                           [85]: KB973565
+                           [86]: KB973687
+                           [87]: KB973917
+                           [88]: KB974318
+                           [89]: KB974468
+                           [90]: KB974571
+                           [91]: KB975467
+                           [92]: KB975517
+                           [93]: KB975560
+                           [94]: KB975561
+                           [95]: KB975929
+                           [96]: KB976470
+                           [97]: KB977816
+                           [98]: KB978338
+                           [99]: KB978601
+                           [100]: KB979099
+                           [101]: KB979306
+                           [102]: KB979309
+                           [103]: KB979683
+                           [104]: KB980232
+                           [105]: KB981349
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: Intel(R) PRO/1000 MT Network Connection
+                                 Connection Name: Local Area Connection
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.159.254
+                                 IP address(es)
+                                 [01]: 192.168.159.201
+                                 [02]: fe80::8c6e:b9:be88:a5d

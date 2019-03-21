@@ -1,0 +1,215 @@
+
+Host Name:                 WINVISTASP0X64
+OS Name:                   Microsoftr Windows VistaT Enterprise 
+OS Version:                6.0.6001 Service Pack 1 Build 6001
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          User
+Registered Organization:   
+Product ID:                89586-236-0200203-71844
+Original Install Date:     6/17/2017, 6:17:31 PM
+System Boot Time:          3/21/2019, 11:28:15 AM
+System Manufacturer:       VMware, Inc.
+System Model:              VMware Virtual Platform
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 78 Stepping 3 GenuineIntel ~2496 Mhz
+BIOS Version:              Phoenix Technologies LTD 6.00, 4/13/2018
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
+Total Physical Memory:     1,023 MB
+Available Physical Memory: 242 MB
+Page File: Max Size:       2,318 MB
+Page File: Available:      947 MB
+Page File: In Use:         1,371 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\WINVISTASP0X64
+Hotfix(s):                 174 Hotfix(s) Installed.
+                           [01]: {7A068575-C5DB-43D9-BE20-3895D0C69B17}
+                           [02]: KB937286
+                           [03]: KB937954
+                           [04]: 943729
+                           [05]: KB929399
+                           [06]: KB930178
+                           [07]: KB930857
+                           [08]: KB931099
+                           [09]: KB932596
+                           [10]: KB936357
+                           [11]: KB936825
+                           [12]: KB937077
+                           [13]: KB938952
+                           [14]: KB939159
+                           [15]: KB941569
+                           [16]: KB941600
+                           [17]: KB946026
+                           [18]: KB949939
+                           [19]: KB2079403
+                           [20]: KB2207566
+                           [21]: KB2281679
+                           [22]: KB2296011
+                           [23]: KB2305420
+                           [24]: KB2345886
+                           [25]: KB2347290
+                           [26]: KB2378111
+                           [27]: KB2387149
+                           [28]: KB2393802
+                           [29]: KB2412687
+                           [30]: KB2416469
+                           [31]: KB2419640
+                           [32]: KB2423089
+                           [33]: KB2442962
+                           [34]: KB2443685
+                           [35]: KB2476490
+                           [36]: KB2478657
+                           [37]: KB2478935
+                           [38]: KB2479943
+                           [39]: KB2481109
+                           [40]: KB2483185
+                           [41]: KB2492386
+                           [42]: KB2503665
+                           [43]: KB2506014
+                           [44]: KB2506212
+                           [45]: KB2507618
+                           [46]: KB2507938
+                           [47]: KB2508272
+                           [48]: KB2508429
+                           [49]: KB2509553
+                           [50]: KB2510581
+                           [51]: KB2511455
+                           [52]: KB2518863
+                           [53]: KB2524375
+                           [54]: KB2533623
+                           [55]: KB2535512
+                           [56]: KB2536275
+                           [57]: KB2536276
+                           [58]: KB2541763
+                           [59]: KB2544893
+                           [60]: KB2555917
+                           [61]: KB925902
+                           [62]: KB929123
+                           [63]: KB929735
+                           [64]: KB929916
+                           [65]: KB931213
+                           [66]: KB931573
+                           [67]: KB933928
+                           [68]: KB935509
+                           [69]: KB935807
+                           [70]: KB936824
+                           [71]: KB937287
+                           [72]: KB938123
+                           [73]: KB938194
+                           [74]: KB938371
+                           [75]: KB938979
+                           [76]: KB941649
+                           [77]: KB941651
+                           [78]: KB942624
+                           [79]: KB943055
+                           [80]: KB943302
+                           [81]: KB943411
+                           [82]: KB943899
+                           [83]: KB945553
+                           [84]: KB946041
+                           [85]: KB946456
+                           [86]: KB950762
+                           [87]: KB950974
+                           [88]: KB951066
+                           [89]: KB951376
+                           [90]: KB951978
+                           [91]: KB952004
+                           [92]: KB952069
+                           [93]: KB952287
+                           [94]: KB952709
+                           [95]: KB953155
+                           [96]: KB953733
+                           [97]: KB954154
+                           [98]: KB954155
+                           [99]: KB954459
+                           [100]: KB955020
+                           [101]: KB955069
+                           [102]: KB955302
+                           [103]: KB955430
+                           [104]: KB956572
+                           [105]: KB956744
+                           [106]: KB956802
+                           [107]: KB957200
+                           [108]: KB957321
+                           [109]: KB958623
+                           [110]: KB958624
+                           [111]: KB958644
+                           [112]: KB958869
+                           [113]: KB959108
+                           [114]: KB959130
+                           [115]: KB959426
+                           [116]: KB960225
+                           [117]: KB960803
+                           [118]: KB961501
+                           [119]: KB967723
+                           [120]: KB968389
+                           [121]: KB968816
+                           [122]: KB969947
+                           [123]: KB970238
+                           [124]: KB970430
+                           [125]: KB970710
+                           [126]: KB971029
+                           [127]: KB971468
+                           [128]: KB971657
+                           [129]: KB971737
+                           [130]: KB971961
+                           [131]: KB972036
+                           [132]: KB972145
+                           [133]: KB972270
+                           [134]: KB973507
+                           [135]: KB973540
+                           [136]: KB973565
+                           [137]: KB973687
+                           [138]: KB973917
+                           [139]: KB974318
+                           [140]: KB974468
+                           [141]: KB974571
+                           [142]: KB975467
+                           [143]: KB975517
+                           [144]: KB975558
+                           [145]: KB975560
+                           [146]: KB975561
+                           [147]: KB975562
+                           [148]: KB975929
+                           [149]: KB976470
+                           [150]: KB977816
+                           [151]: KB978338
+                           [152]: KB978542
+                           [153]: KB978601
+                           [154]: KB978886
+                           [155]: KB979099
+                           [156]: KB979306
+                           [157]: KB979309
+                           [158]: KB979482
+                           [159]: KB979683
+                           [160]: KB979687
+                           [161]: KB979688
+                           [162]: KB979913
+                           [163]: KB980232
+                           [164]: KB980248
+                           [165]: KB981322
+                           [166]: KB981349
+                           [167]: KB981997
+                           [168]: KB982132
+                           [169]: KB982665
+                           [170]: KB982799
+                           [171]: KB983587
+                           [172]: KB936330
+                           [173]: KB968930
+                           [174]: 940157
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: Intel(R) PRO/1000 MT Network Connection
+                                 Connection Name: Local Area Connection
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.159.254
+                                 IP address(es)
+                                 [01]: 192.168.159.201
+                                 [02]: fe80::8c6e:b9:be88:a5d

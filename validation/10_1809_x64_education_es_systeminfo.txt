@@ -1,0 +1,57 @@
+
+Nombre de host:                            ...
+Nombre del sistema operativo:              Microsoft Windows 10 Education
+Versi¢n del sistema operativo:             10.0.17763 N/D Compilaci¢n 17763
+Fabricante del sistema operativo:          Microsoft Corporation
+Configuraci¢n del sistema operativo:       Estaci¢n de trabajo independiente
+Tipo de compilaci¢n del sistema operativo: Multiprocessor Free
+Propiedad de:                              Windows User
+Organizaci¢n registrada:                   
+Id. del producto:                          ...
+Fecha de instalaci¢n original:             ...
+Tiempo de arranque del sistema:            ...
+Fabricante del sistema:                    ...
+Modelo el sistema:                         ...
+Tipo de sistema:                           x64-based PC
+Procesador(es):                            1 Procesadores instalados.
+                                           [01]: Intel64 Family 6 Model 78 Stepping 3 GenuineIntel ~2601 Mhz
+Versi¢n del BIOS:                          ...
+Directorio de Windows:                     C:\WINDOWS
+Directorio de sistema:                     C:\WINDOWS\system32
+Dispositivo de arranque:                   \Device\HarddiskVolume1
+Configuraci¢n regional del sistema:        es;Espa¤ol (internacional)
+Idioma de entrada:                         es;Espa¤ol (tradicional)
+Zona horaria:                              (UTC+01:00) Bruselas, Copenhague, Madrid, Par¡s
+Cantidad total de memoria f¡sica:          8.066 MB
+Memoria f¡sica disponible:                 3.021 MB
+Memoria virtual: tama¤o m ximo:            10.172 MB
+Memoria virtual: disponible:               3.629 MB
+Memoria virtual: en uso:                   6.543 MB
+Ubicaci¢n(es) de archivo de paginaci¢n:    C:\pagefile.sys
+Dominio:                                   WORKGROUP
+Servidor de inicio de sesi¢n:              ...
+Revisi¢n(es):                              9 revisi¢n(es) instaladas.
+                                           [01]: KB4486553
+                                           [02]: KB4465477
+                                           [03]: KB4465664
+                                           [04]: KB4469041
+                                           [05]: KB4470502
+                                           [06]: KB4470788
+                                           [07]: KB4480056
+                                           [08]: KB4487038
+                                           [09]: KB4482887
+Tarjeta(s) de red:                         2 Tarjetas de interfaz de red instaladas.
+                                           [01]: Realtek PCIe FE Family Controller
+                                                 Nombre de conexi¢n: Ethernet
+                                                 Estado:             Medios desconectados
+                                           [02]: Qualcomm Atheros QCA9377 Wireless Network Adapter
+                                                 Nombre de conexi¢n: Wi-Fi
+                                                 DHCP habilitado:    S¡
+                                                 Servidor DHCP:      ...
+                                                 Direcciones IP
+                                                 [01]: ...
+                                                 [02]: ...
+Requisitos Hyper-V:                        Extensiones de modo de monitor de VM: S¡
+                                           Se habilit¢ la virtualizaci¢n en el firmware: No
+                                           Traducci¢n de direcciones de segundo nivel: S¡
+                                           La prevenci¢n de ejecuci¢n de datos est  disponible: S¡

@@ -1,3 +1,23 @@
+# Version 0.95
+## wes.py
+**New features**
+- Support for manually specified updates in definitions.zip file
+- Feature to remove duplicate results in case of Windows Server
+
+**Improvements**
+- Extended debugging supersedes functionality
+- Cleanup of buildnumbers
+- Added title field to console results
+- Bugfix where in case a Windows version without Service Packs was provided, vulnerabilities of that Windows version _with_ Service Packs would be listed
+- Some minor improvements
+
+## collector
+- Added support to include manually specified updates in definitions.zip file
+- Added csv with manual improvements to the MSRC/Bulletin Excel lists containing:
+  - Services Packs
+  - MS17-010 (EternalBlue) patches for all operating systems
+
+
 # Version 0.942
 **New features**
 - Support for 'wmic qfe' output in case the list of KBs in the systeminfo output is cut off

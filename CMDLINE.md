@@ -1,12 +1,12 @@
-The following commandline options are available for WES-NG v0.94.
+The following commandline options are available for WES-NG v0.95.
 
 ```
-usage: wes.py [-u] [--update-wes] [-v] [--definitions [DEFINITIONS]]
+usage: wes.py [-u] [--update-wes] [--version] [--definitions [DEFINITIONS]]
               [-p INSTALLEDPATCH [INSTALLEDPATCH ...]] [-d] [-e]
               [--hide HIDDENVULN [HIDDENVULN ...]] [-o [OUTPUTFILE]] [-h]
               systeminfo [qfefile]
 
-Windows Exploit Suggester 0.94 ( https://github.com/bitsadmin/wesng/ )
+Windows Exploit Suggester 0.95 ( https://github.com/bitsadmin/wesng/ )
 
 positional arguments:
   systeminfo            Specify systeminfo.txt file
@@ -16,7 +16,7 @@ positional arguments:
 optional arguments:
   -u, --update          Download latest list of CVEs
   --update-wes          Download latest version of wes.py
-  -v, --version         Show version information
+  --version             Show version information
   --definitions [DEFINITIONS]
                         Definitions zip file (default: definitions.zip)
   -p INSTALLEDPATCH [INSTALLEDPATCH ...], --patches INSTALLEDPATCH [INSTALLEDPATCH ...]
