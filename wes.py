@@ -190,9 +190,9 @@ def main():
 
     # If specified, hide results containing the user-specified string
     # in the AffectedComponent and AffectedProduct attributes
-    if args.hiddenvuln or args.only_exploits:
+    if args.hiddenvuln or args.only_exploits or args.impacts:
         print('[+] Applying display filters')
-        filtered = apply_display_filters(found, args.hiddenvuln, args.only_exploits)
+        filtered = apply_display_filters(found, args.hiddenvuln, args.only_exploits, args.impacts)
     else:
         filtered = found
 
@@ -253,10 +253,13 @@ def load_definitions(definitions):
         return merged, cvesdate
 
 
-# Hide results containing the user specified string(s) in the AffectedComponent or AffectedProduct attributes
-def apply_display_filters(found, hiddenvulns, only_exploits):
+# Hide results based on filter(s) specified by the user. This can either be to only display results with
+# public exploits, results with a given impact or results containing the user specified string(s) in
+# the AffectedComponent or AffectedProduct attributes.
+def apply_display_filters(found, hiddenvulns, only_exploits, impacts):
     # --hide 'Product 1' 'Product 2'
     hiddenvulns = list(map(lambda s: s.lower(), hiddenvulns))
+    impacts = list(map(lambda s: s.lower(), impacts))
     filtered = []
     for cve in found:
         add = True
@@ -264,6 +267,12 @@ def apply_display_filters(found, hiddenvulns, only_exploits):
             if hidden in cve['AffectedComponent'].lower() or hidden in cve['AffectedProduct'].lower():
                 add = False
                 break
+
+        for impact in impacts:
+            if not impact in cve['Impact'].lower():
+                add = False
+                break
+
         if add:
             filtered.append(cve)
 
@@ -676,6 +685,10 @@ def parse_arguments():
   {0} systeminfo.txt --exploits-only --hide "Internet Explorer" Edge Flash
   {0} systeminfo.txt -e --hide "Internet Explorer" Edge Flash
 
+  Only show vulnerabilities of a certain impact (case insensitive match)
+  {0} systeminfo.txt --impact elevation
+  {0} systeminfo.txt -i elevation
+
   Download latest version of WES-NG
   {0} --update-wes
 '''.format(FILENAME)
@@ -723,6 +736,7 @@ def parse_arguments():
     parser.add_argument('-d', '--usekbdate', dest='usekbdate', action='store_true', help='Filter out vulnerabilities of KBs published before the publishing date of the most recent KB installed')
     parser.add_argument('-e', '--exploits-only', dest='only_exploits', action='store_true', help='Show only vulnerabilities with known exploits')
     parser.add_argument('--hide', dest='hiddenvuln', nargs='+', default='', help='Hide vulnerabilities of for example Adobe Flash Player and Microsoft Edge')
+    parser.add_argument('-i', '--impact', dest='impacts', nargs='+', default='', help='Only display vulnerabilities with a given impact')
     parser.add_argument('-o', '--output', action='store', dest='outputfile', nargs='?', help='Store results in a file')
     parser.add_argument('-h', '--help', action='help', help='Show this help message and exit')
 
