@@ -573,7 +573,7 @@ def print_summary(kbs, sp):
     for line in grouped.most_common():
         kb = line[0]
         number = line[1]
-        print('    - KB%s: patches %s %s' % (kb, number, 'vulnerabilty' if number == 1 else 'vulnerabilities'))
+        print('    - KB%s: patches %s %s' % (kb, number, 'vulnerability' if number == 1 else 'vulnerabilities'))
 
     # Show in case a service pack is missing
     if sp:
