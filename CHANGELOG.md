@@ -1,3 +1,8 @@
+# Version 0.96
+- Support for Windows 10 Redstone 6 (1903)
+- Added option to filter on severity 
+- Fixup for French systeminfo file
+
 # Version 0.95
 ## wes.py
 **New features**

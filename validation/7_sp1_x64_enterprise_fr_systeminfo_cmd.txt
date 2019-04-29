@@ -1,0 +1,114 @@
+
+Nom de l'h“te:                              WIN-IDKKFN87EL8
+Nom du systŠme d'exploitation:              Microsoft Windowsÿ7 Entreprise N 
+Version du systŠme:                         6.1.7601 Service Pack 1 version 7601
+Fabricant du systŠme d'exploitation:        Microsoft Corporation
+Configuration du systŠme d'exploitation:    Station de travail autonome
+Type de version du systŠme d'exploitation:  Multiprocessor Free
+Propri‚taire enregistr‚:                    Utilisateur Windows
+Organisation enregistr‚e:                   
+Identificateur de produit:                  00403-940-2250005-85085
+Date d'installation originale:              29/04/2019, 18:52:20
+Heure de d‚marrage du systŠme:              29/04/2019, 18:56:01
+Fabricant du systŠme:                       VMware, Inc.
+ModŠle du systŠme:                          VMware Virtual Platform
+Type du systŠme:                            x64-based PC
+Processeur(s):                              1 processeur(s) install‚(s).
+                                            [01]ÿ: Intel64 Family 6 Model 158 Stepping 9 GenuineIntel ~2808 MHz
+Version du BIOS:                            Phoenix Technologies LTD 6.00, 13/04/2018
+R‚pertoire Windows:                         C:\Windows
+R‚pertoire systŠme:                         C:\Windows\system32
+P‚riph‚rique d'amor‡age:                    \Device\HarddiskVolume1
+Option r‚gionale du systŠme:                fr;Fran‡ais (France)
+ParamŠtres r‚gionaux d'entr‚e:              fr;Fran‡ais (France)
+Fuseau horaire:                             (UTC+01:00) Amsterdam, Berlin, Berne, Rome, Stockholm, Vienne
+M‚moire physique totale:                    2ÿ047 Mo
+M‚moire physique disponible:                458 Mo
+M‚moire virtuelleÿ: taille maximale:        4ÿ095 Mo
+M‚moire virtuelleÿ: disponible:             886 Mo
+M‚moire virtuelleÿ: en cours d'utilisation: 3ÿ209 Mo
+Emplacements des fichiers d'‚change:        C:\pagefile.sys
+Domaine:                                    WORKGROUP
+Serveur d'ouverture de session:             \\WIN-IDKKFN87EL8
+Correctif(s):                               73 Corrections install‚es.
+                                            [01]: KB2491683
+                                            [02]: KB2506014
+                                            [03]: KB2506928
+                                            [04]: KB2534111
+                                            [05]: KB2552343
+                                            [06]: KB2564958
+                                            [07]: KB2579686
+                                            [08]: KB2598845
+                                            [09]: KB2621440
+                                            [10]: KB2653956
+                                            [11]: KB2654428
+                                            [12]: KB2685813
+                                            [13]: KB2685939
+                                            [14]: KB2690533
+                                            [15]: KB2698365
+                                            [16]: KB2705219
+                                            [17]: KB2706045
+                                            [18]: KB2726535
+                                            [19]: KB2727528
+                                            [20]: KB2729094
+                                            [21]: KB2729452
+                                            [22]: KB2736422
+                                            [23]: KB2742599
+                                            [24]: KB2761217
+                                            [25]: KB2773072
+                                            [26]: KB2786081
+                                            [27]: KB2791765
+                                            [28]: KB2799926
+                                            [29]: KB2808679
+                                            [30]: KB2813430
+                                            [31]: KB2836943
+                                            [32]: KB2852386
+                                            [33]: KB2861698
+                                            [34]: KB2888049
+                                            [35]: KB2908783
+                                            [36]: KB2911501
+                                            [37]: KB2943357
+                                            [38]: KB2973112
+                                            [39]: KB2977292
+                                            [40]: KB2978120
+                                            [41]: KB2984972
+                                            [42]: KB2991963
+                                            [43]: KB2992611
+                                            [44]: KB2999226
+                                            [45]: KB3004375
+                                            [46]: KB3006121
+                                            [47]: KB3010788
+                                            [48]: KB3011780
+                                            [49]: KB3031432
+                                            [50]: KB3035126
+                                            [51]: KB3037574
+                                            [52]: KB3045685
+                                            [53]: KB3054476
+                                            [54]: KB3097989
+                                            [55]: KB3101722
+                                            [56]: KB3108371
+                                            [57]: KB3109560
+                                            [58]: KB3110329
+                                            [59]: KB3122648
+                                            [60]: KB3124275
+                                            [61]: KB3126587
+                                            [62]: KB3138378
+                                            [63]: KB3139914
+                                            [64]: KB3140245
+                                            [65]: KB3155178
+                                            [66]: KB3156016
+                                            [67]: KB3159398
+                                            [68]: KB3161949
+                                            [69]: KB3184143
+                                            [70]: KB4019990
+                                            [71]: KB4040980
+                                            [72]: KB976902
+                                            [73]: KB4493472
+Carte(s) r‚seau:                            1 carte(s) r‚seau install‚e(s).
+                                            [01]: Connexion r‚seau Intel(R) PRO/1000 MT
+                                                  Nom de la connexionÿ: Connexion au r‚seau local
+                                                  DHCP activ‚ÿ:         Oui
+                                                  Serveur DHCPÿ:        192.168.5.254
+                                                  Adresse(s) IP
+                                                  [01]: 192.168.5.129
+                                                  [02]: fe80::705b:55d8:33f4:e9d6

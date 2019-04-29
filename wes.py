@@ -57,7 +57,7 @@ class WesException(Exception):
 
 
 # Applictation details
-VERSION = 0.95
+VERSION = 0.96
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
 BANNER = 'Windows Exploit Suggester %.2f ( %s )' % (VERSION, WEB_URL)
 FILENAME = 'wes.py'
@@ -71,7 +71,8 @@ buildnumbers = OrderedDict([
     (15063, 1703),
     (16299, 1709),
     (17134, 1803),
-    (17763, 1809)
+    (17763, 1809),
+    (18362, 1903)
 ])
 
 
@@ -190,9 +191,9 @@ def main():
 
     # If specified, hide results containing the user-specified string
     # in the AffectedComponent and AffectedProduct attributes
-    if args.hiddenvuln or args.only_exploits or args.impacts:
+    if args.hiddenvuln or args.only_exploits or args.impacts or args.severities:
         print('[+] Applying display filters')
-        filtered = apply_display_filters(found, args.hiddenvuln, args.only_exploits, args.impacts)
+        filtered = apply_display_filters(found, args.hiddenvuln, args.only_exploits, args.impacts, args.severities)
     else:
         filtered = found
 
@@ -256,10 +257,11 @@ def load_definitions(definitions):
 # Hide results based on filter(s) specified by the user. This can either be to only display results with
 # public exploits, results with a given impact or results containing the user specified string(s) in
 # the AffectedComponent or AffectedProduct attributes.
-def apply_display_filters(found, hiddenvulns, only_exploits, impacts):
+def apply_display_filters(found, hiddenvulns, only_exploits, impacts, severities):
     # --hide 'Product 1' 'Product 2'
     hiddenvulns = list(map(lambda s: s.lower(), hiddenvulns))
     impacts = list(map(lambda s: s.lower(), impacts))
+    severities = list(map(lambda s: s.lower(), severities))
     filtered = []
     for cve in found:
         add = True
@@ -271,6 +273,15 @@ def apply_display_filters(found, hiddenvulns, only_exploits, impacts):
         for impact in impacts:
             if not impact in cve['Impact'].lower():
                 add = False
+            else:
+                add = True
+                break
+
+        for severity in severities:
+            if not severity in cve['Severity'].lower():
+                add = False
+            else:
+                add = True
                 break
 
         if add:
@@ -394,8 +405,11 @@ def mark_superseeded_hotfix(filtered, superseeded, marked):
 def determine_product(systeminfo):
     systeminfo = charset_convert(systeminfo)
 
+    # Fixup for 7_sp1_x64_enterprise_fr_systeminfo_powershell.txt
+    systeminfo = systeminfo.replace('\xA0', '\x20')
+
     # OS Version
-    regex_version = re.compile(r'.*?((\d+\.?)+) ((Service Pack (\d)|N\/\w|.+) )?[ -\xa5]+ (\d+).*', re.MULTILINE | re.IGNORECASE)
+    regex_version = re.compile(r'.*?((\d+\.?){3}) ((Service Pack (\d)|N\/\w|.+) )?[ -\xa5]+ (\d+).*', re.MULTILINE | re.IGNORECASE)
     systeminfo_matches = regex_version.findall(systeminfo)
     if len(systeminfo_matches) == 0:
         raise WesException('Not able to detect OS version based on provided input file')
@@ -405,13 +419,18 @@ def determine_product(systeminfo):
     servicepack = systeminfo_matches[4]
 
     # OS Name
-    win_matches = re.findall('.*?Microsoft[\(R\)]{0,3} Windows[\(R\)]{0,3} (Serverr? )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE | re.IGNORECASE)
+    win_matches = re.findall('.*?Microsoft[\(R\)]{0,3} Windows[\(R\)?]{0,3} ?(Serverr? )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE | re.IGNORECASE)
     if len(win_matches) == 0:
         raise WesException('Not able to detect OS name based on provided input file')
     win = win_matches[0][1]
 
     # System Type
-    arch = re.findall('.*?([\w\d]+?)-based PC.*', systeminfo, re.MULTILINE | re.IGNORECASE)[0]
+    archs = re.findall('.*?([\w\d]+?)-based PC.*', systeminfo, re.MULTILINE | re.IGNORECASE)
+    if len(archs) > 0:
+        arch = archs[0]
+    else:
+        logging.warning('Cannot determine system\'s architecture. Assuming x64')
+        arch = 'x64'
 
     # Hotfix(s)
     hotfixes = get_hotfixes(systeminfo)
@@ -686,8 +705,12 @@ def parse_arguments():
   {0} systeminfo.txt -e --hide "Internet Explorer" Edge Flash
 
   Only show vulnerabilities of a certain impact (case insensitive match)
-  {0} systeminfo.txt --impact elevation
-  {0} systeminfo.txt -i elevation
+  {0} systeminfo.txt --impact "Remote Code Execution"
+  {0} systeminfo.txt -i "Remote Code Execution"
+  
+  Only show vulnerabilities of a certain severity (case insensitive match)
+  {0} systeminfo.txt --severity critical
+  {0} systeminfo.txt -s critical
 
   Download latest version of WES-NG
   {0} --update-wes
@@ -737,6 +760,7 @@ def parse_arguments():
     parser.add_argument('-e', '--exploits-only', dest='only_exploits', action='store_true', help='Show only vulnerabilities with known exploits')
     parser.add_argument('--hide', dest='hiddenvuln', nargs='+', default='', help='Hide vulnerabilities of for example Adobe Flash Player and Microsoft Edge')
     parser.add_argument('-i', '--impact', dest='impacts', nargs='+', default='', help='Only display vulnerabilities with a given impact')
+    parser.add_argument('-s', '--severity', dest='severities', nargs='+', default='', help='Only display vulnerabilities with a given severity')
     parser.add_argument('-o', '--output', action='store', dest='outputfile', nargs='?', help='Store results in a file')
     parser.add_argument('-h', '--help', action='help', help='Show this help message and exit')
 
