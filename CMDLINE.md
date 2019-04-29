@@ -1,12 +1,13 @@
-The following commandline options are available for WES-NG v0.95.
+The following commandline options are available for WES-NG v0.96.
 
 ```
 usage: wes.py [-u] [--update-wes] [--version] [--definitions [DEFINITIONS]]
               [-p INSTALLEDPATCH [INSTALLEDPATCH ...]] [-d] [-e]
-              [--hide HIDDENVULN [HIDDENVULN ...]] [-o [OUTPUTFILE]] [-h]
+              [--hide HIDDENVULN [HIDDENVULN ...]] [-i IMPACTS [IMPACTS ...]]
+              [-s SEVERITIES [SEVERITIES ...]] [-o [OUTPUTFILE]] [-h]
               systeminfo [qfefile]
 
-Windows Exploit Suggester 0.95 ( https://github.com/bitsadmin/wesng/ )
+Windows Exploit Suggester 0.96 ( https://github.com/bitsadmin/wesng/ )
 
 positional arguments:
   systeminfo            Specify systeminfo.txt file
@@ -28,6 +29,10 @@ optional arguments:
   --hide HIDDENVULN [HIDDENVULN ...]
                         Hide vulnerabilities of for example Adobe Flash Player
                         and Microsoft Edge
+  -i IMPACTS [IMPACTS ...], --impact IMPACTS [IMPACTS ...]
+                        Only display vulnerabilities with a given impact
+  -s SEVERITIES [SEVERITIES ...], --severity SEVERITIES [SEVERITIES ...]
+                        Only display vulnerabilities with a given severity
   -o [OUTPUTFILE], --output [OUTPUTFILE]
                         Store results in a file
   -h, --help            Show this help message and exit
@@ -61,6 +66,14 @@ examples:
   List only vulnerabilities with exploits, excluding Edge and Flash
   wes.py systeminfo.txt --exploits-only --hide "Internet Explorer" Edge Flash
   wes.py systeminfo.txt -e --hide "Internet Explorer" Edge Flash
+
+  Only show vulnerabilities of a certain impact (case insensitive match)
+  wes.py systeminfo.txt --impact "Remote Code Execution"
+  wes.py systeminfo.txt -i "Remote Code Execution"
+  
+  Only show vulnerabilities of a certain severity (case insensitive match)
+  wes.py systeminfo.txt --severity critical
+  wes.py systeminfo.txt -s critical
 
   Download latest version of WES-NG
   wes.py --update-wes
