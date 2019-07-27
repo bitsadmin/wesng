@@ -57,9 +57,10 @@ class WesException(Exception):
 
 
 # Applictation details
-VERSION = 0.96
+VERSION = 0.97
+RELEASE = '-beta'
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
-BANNER = 'Windows Exploit Suggester %.2f ( %s )' % (VERSION, WEB_URL)
+BANNER = 'Windows Exploit Suggester %.2f%s ( %s )' % (VERSION, RELEASE, WEB_URL)
 FILENAME = 'wes.py'
 
 # Mapping table between build numbers and versions to correctly identify
@@ -645,15 +646,21 @@ Impact: %s
 # Output results of wes.py to a .csv file
 def store_results(outputfile, results):
     print('[+] Writing %d results to %s' % (len(results), outputfile))
-    with open(outputfile, 'w', newline='') as f:
-        header = list(results[0].keys())
-        header.remove('Supersedes')
-        writer = csv.DictWriter(f, fieldnames=header, quoting=csv.QUOTE_ALL)
-        writer.writeheader()
-        for r in results:
-            if 'Supersedes' in r:
-                del r['Supersedes']
-            writer.writerow(r)
+
+    # Python 2 compatibility
+    if sys.version_info.major == 2:
+        f = open(outputfile, 'wb')
+    else:
+        f = open(outputfile, 'w', newline='')
+
+    header = list(results[0].keys())
+    header.remove('Supersedes')
+    writer = csv.DictWriter(f, fieldnames=header, quoting=csv.QUOTE_ALL)
+    writer.writeheader()
+    for r in results:
+        if 'Supersedes' in r:
+            del r['Supersedes']
+        writer.writerow(r)
 
 
 # Validate file existence for user-provided arguments
@@ -700,15 +707,15 @@ def parse_arguments():
   Determine vulnerabilities explicitly specifying definitions file
   {0} systeminfo.txt --definitions C:\tmp\mydefs.zip
 
-  List only vulnerabilities with exploits, excluding Edge and Flash
+  List only vulnerabilities with exploits, excluding IE, Edge and Flash
   {0} systeminfo.txt --exploits-only --hide "Internet Explorer" Edge Flash
   {0} systeminfo.txt -e --hide "Internet Explorer" Edge Flash
 
-  Only show vulnerabilities of a certain impact (case insensitive match)
+  Only show vulnerabilities of a certain impact
   {0} systeminfo.txt --impact "Remote Code Execution"
   {0} systeminfo.txt -i "Remote Code Execution"
   
-  Only show vulnerabilities of a certain severity (case insensitive match)
+  Only show vulnerabilities of a certain severity
   {0} systeminfo.txt --severity critical
   {0} systeminfo.txt -s critical
 
