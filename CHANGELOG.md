@@ -1,5 +1,5 @@
 # Version 0.97
-- Exception when using --output with Python 2
+- Resolved xxception when using --output with Python 2
 - Removed legacy definitions file (CVEs.zip)
 
 # Version 0.96
