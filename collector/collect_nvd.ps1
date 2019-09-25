@@ -113,14 +113,6 @@ foreach($exploit in $exploits)
 # DEBUG
 #$CVEs | Export-Clixml "CVEs.xml"
 
-# Legacy output
-"[+] Legacy: Writing enriched CVEs to CVEs.csv"
-$CVEs | Export-Csv -NoTypeInformation -Encoding ASCII "CVEs.csv"
-
-"[+] Legacy: Packing CVEs.csv to CVEs.zip"
-Compress-Archive -LiteralPath .\CVEs.csv -CompressionLevel Optimal -DestinationPath CVEs.zip -Force
-Remove-Item CVEs.csv
-
 # New output
 $outcsv = "CVEs_{0}.csv" -f [DateTime]::Now.ToString("yyyyMMdd")
 "[+] Writing enriched CVEs to $outcsv"

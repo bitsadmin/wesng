@@ -1,3 +1,7 @@
+# Version 0.97
+- Resolved exception when using --output with Python 2
+- Removed legacy definitions file (CVEs.zip)
+
 # Version 0.96
 - Support for Windows 10 Redstone 6 (1903)
 - Added option to filter on severity 
