@@ -58,7 +58,7 @@ class WesException(Exception):
 
 # Applictation details
 VERSION = 0.97
-RELEASE = '-beta'
+RELEASE = ''
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
 BANNER = 'Windows Exploit Suggester %.2f%s ( %s )' % (VERSION, RELEASE, WEB_URL)
 FILENAME = 'wes.py'
