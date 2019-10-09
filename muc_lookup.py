@@ -7,8 +7,9 @@ try:
     imp.find_module('mechanicalsoup')
     import mechanicalsoup
 except ImportError:
-    print("Python package mechanicalsoup not installed!")
-    print("Install with 'pip install mechanicalsoup' and run again")
+    print("[!] Cannot lookup superseeding KBs in the Microsoft Update Catalog!")
+    print("    Reason: Python package mechanicalsoup not installed.")
+    print("    Install with 'pip install mechanicalsoup' and run again")
     sys.exit(1)
 
 
