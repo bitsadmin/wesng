@@ -14,6 +14,9 @@ import sys, csv, re, argparse, os, zipfile, io
 import logging
 from collections import Counter, OrderedDict
 
+from muc_lookup import apply_muc_filter
+import copy
+
 
 # Python 2 compatibility
 if sys.version_info.major == 2:
@@ -162,6 +165,7 @@ def main():
 
     # Append manually specified KBs to list of hotfixes
     hotfixes = list(set(hotfixes + manual_hotfixes))
+    hotfixes_orig = copy.deepcopy(hotfixes)
 
     # Load definitions from definitions.zip (default) or user-provided location
     print('[+] Loading definitions')
@@ -197,6 +201,12 @@ def main():
         filtered = apply_display_filters(found, args.hiddenvuln, args.only_exploits, args.impacts, args.severities)
     else:
         filtered = found
+
+    # If specified, lookup superseeding KBs in the Microsoft Update Catalog
+    # and remove CVEs if a superseeding KB is installed.
+    if args.muc_lookup:
+        print("[+] Looking up superseeding hotfixes in the Microsoft Update Catalog")
+        filtered = apply_muc_filter(filtered, hotfixes_orig)
 
     # Split up list of KBs and the potential Service Packs/Cumulative updates available
     kbs, sp = get_patches_servicepacks(filtered, cves, productfilter)
@@ -769,6 +779,8 @@ def parse_arguments():
     parser.add_argument('-i', '--impact', dest='impacts', nargs='+', default='', help='Only display vulnerabilities with a given impact')
     parser.add_argument('-s', '--severity', dest='severities', nargs='+', default='', help='Only display vulnerabilities with a given severity')
     parser.add_argument('-o', '--output', action='store', dest='outputfile', nargs='?', help='Store results in a file')
+    parser.add_argument("--muc-lookup", dest="muc_lookup", action="store_true", help="Hide vulnerabilities if installed hotfixes are listed in the Microsoft Update Catalog as superseding hotfixes for the original BulletinKB",
+    )
     parser.add_argument('-h', '--help', action='help', help='Show this help message and exit')
 
     # Always show full help when no arguments are provided
