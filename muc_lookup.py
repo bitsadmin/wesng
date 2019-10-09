@@ -106,7 +106,7 @@ def lookup_supersedence(kb):
 
     kbids = set()
     p = Progress(
-        name="Looking up superseeding hotfixes for potentiall missing KB"
+        name="Looking up superseeding hotfixes for potentially missing KB"
         + kb
         + " in catalog.update.microsoft.com",
         width=len(ids),
