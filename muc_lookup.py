@@ -2,7 +2,15 @@ from __future__ import print_function
 
 import sys
 import re
-import mechanicalsoup
+import imp
+try:
+    imp.find_module('mechanicalsoup')
+    import mechanicalsoup
+except ImportError:
+    print("Python package mechanicalsoup not installed!")
+    print("Install with 'pip install mechanicalsoup' and run again")
+    sys.exit(1)
+
 
 
 # Progress is a simple progress bar

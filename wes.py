@@ -14,7 +14,6 @@ import sys, csv, re, argparse, os, zipfile, io
 import logging
 from collections import Counter, OrderedDict
 
-from muc_lookup import apply_muc_filter
 import copy
 
 
@@ -205,6 +204,8 @@ def main():
     # If specified, lookup superseeding KBs in the Microsoft Update Catalog
     # and remove CVEs if a superseeding KB is installed.
     if args.muc_lookup:
+        from muc_lookup import apply_muc_filter # ony import if necessary since it needs MechanicalSoup
+
         print("[+] Looking up superseeding hotfixes in the Microsoft Update Catalog")
         filtered = apply_muc_filter(filtered, hotfixes_orig)
 
