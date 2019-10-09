@@ -68,6 +68,12 @@ superseeded_by = {}
 # found: list of CVEs as created by the main script wes.py
 # kbs_installed: list of installed hotfixes as seen in systeminfo output
 def apply_muc_filter(found, kbs_installed):
+    if not found:
+        return []
+
+    if not kbs_installed:
+        kbs_installed = []
+
     kbs_installed = set(kbs_installed)
 
     global superseeded_by
@@ -76,11 +82,11 @@ def apply_muc_filter(found, kbs_installed):
         if kb not in superseeded_by:
             superseeded_by[kb] = set(lookup_supersedence(kb))
 
-    return {
+    return [
         cve
         for cve in found
-        if len(superseeded_by[cve["BulletinKB"]].intersection(kbs_installed)) == 0
-    }
+        if not (superseeded_by[cve["BulletinKB"]] & kbs_installed)
+    ]
 
 
 # lookup_supersedence returns a list of all KBs superseeding the given KB
@@ -106,9 +112,9 @@ def lookup_supersedence(kb):
 
     kbids = set()
     p = Progress(
-        name="Looking up superseeding hotfixes for potentially missing KB"
+        name="    - Looking up potentially missing KB"
         + kb
-        + " in catalog.update.microsoft.com",
+        + " ",
         width=len(ids),
     )
     for uid in ids:
@@ -134,11 +140,14 @@ def lookup_supersedence_by_uid(uid):
         headers=default_headers,
     )
     supers = browser.get_current_page().find_all("div", {"id": "supersededbyInfo"})
-    for s in supers:
-        kbids = re.findall("(KB[0-9]+)", s.text.strip())
-        if len(kbids) < 1:
-            kbids = []
-        return set(kbids)
+    if len(supers) != 1:
+        return set()
+
+    s = supers[0]
+    kbids = re.findall("(KB[0-9]+)", s.text.strip())
+    if len(kbids) < 1:
+        kbids = []
+    return set(kbids)
 
 
 # can also run standalone to check single KB
