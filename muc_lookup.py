@@ -1,17 +1,28 @@
+#!/usr/bin/python3
+#
+# This software is provided under under the BSD 3-Clause License.
+# See the accompanying LICENSE file for more information.
+#
+# Windows Exploit Suggester - Next Generation
+#
+# Author: Arris Huijgen (@bitsadmin)
+# Website: https://github.com/bitsadmin
+# 
+# Microsoft Update Catalog lookup feature developed by Dominic Breuker
+# Website: https://github.com/DominicBreuker
+
 from __future__ import print_function
 
 import sys
 import re
-import imp
+
 try:
-    imp.find_module('mechanicalsoup')
     import mechanicalsoup
 except ImportError:
     print("[!] Cannot lookup superseeding KBs in the Microsoft Update Catalog!")
     print("    Reason: Python package mechanicalsoup not installed.")
     print("    Install with 'pip install mechanicalsoup' and run again")
     sys.exit(1)
-
 
 
 # Progress is a simple progress bar
@@ -157,6 +168,6 @@ if __name__ == "__main__":
         print("Example: python muc_lookup.py KB4515384")
         sys.exit(1)
 
-    kb = sys.argv[1]
+    kb = re.sub('KB', '', sys.argv[1], flags=re.IGNORECASE)
     kbids = lookup_supersedence(kb)
     print("{} is superseeded by {}".format(kb, ["KB{}".format(kbid) for kbid in kbids]))

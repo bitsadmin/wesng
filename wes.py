@@ -59,7 +59,7 @@ class WesException(Exception):
 
 
 # Applictation details
-VERSION = 0.97
+VERSION = 0.98
 RELEASE = ''
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
 BANNER = 'Windows Exploit Suggester %.2f%s ( %s )' % (VERSION, RELEASE, WEB_URL)
@@ -729,6 +729,9 @@ def parse_arguments():
   Only show vulnerabilities of a certain severity
   {0} systeminfo.txt --severity critical
   {0} systeminfo.txt -s critical
+  
+  Validate supersedence against Microsoft's online Update Catalog
+  {0} systeminfo.txt --muc-lookup
 
   Download latest version of WES-NG
   {0} --update-wes

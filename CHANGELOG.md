@@ -1,3 +1,6 @@
+# Version 0.98
+- Microsoft Update Catalog lookup feature by Dominic Breuker
+
 # Version 0.97
 - Resolved exception when using --output with Python 2
 - Removed legacy definitions file (CVEs.zip)
