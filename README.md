@@ -13,7 +13,7 @@ For an overview of all available parameters, check [CMDLINE.md](https://github.c
 
 ## Collector
 This GitHub repository regularly updates the database of vulnerabilities, so running `wes.py` with the `--update` parameter gets the latest version.
-If manual generation of the .csv file with hotfix information is required, use the scripts from the [/collector](collector) folder to compile the database. Read the comments at the top of each script and execute them in the order as they are listed below. Executing these scripts will produce CVEs.csv.
+If manual generation of the .csv file with hotfix information is required, use the scripts from the [/collector](collector) folder to compile the database. Read the comments at the top of each script and execute them in the order as they are listed below. Executing these scripts will produce definitions.zip.
 The WES-NG collector pulls information from various sources:
 - Microsoft Security Bulletin Data: KBs for older systems [1]
 - MSRC: The Microsoft Security Update API of the Microsoft Security Response Center (MSRC): Standard source of information for modern Microsoft Updates [2]
