@@ -116,6 +116,8 @@ def lookup_supersedence(kb):
         headers=default_headers,
     )
     rows = browser.get_current_page().find(id="ctl00_catalogBody_updateMatches")
+    if rows is None:
+        return []
     updates = rows.find_all(
         "a", {"onclick": re.compile(r"goToDetails\(\"[a-zA-Z0-9-]+\"\)")}
     )
