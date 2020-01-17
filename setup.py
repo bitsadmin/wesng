@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
 
 from setuptools import setup
 from os import path
@@ -12,7 +11,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='wesng',
-    version='0.93',
+    version='0.98',
     description='WES-NG is a tool based on the output of Windows\' systeminfo'
     ' utility which provides the list of vulnerabilities the OS is vulnerable'
     ' to, including any exploits for these vulnerabilities.',
@@ -26,17 +25,19 @@ setup(
         'Intended Audience :: System Administrators',
         'Topic :: Security',
         'License :: OSI Approved :: BSD License',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    py_modules=["wes"],
-    python_requires='>=3.4',
-    install_requires=['chardet'],
+    py_modules=['wes', 'muc_lookup'],
+    python_requires='>=3.4, >=2.7',
+    install_requires=['chardet', 'mechanicalsoup'],
     package_data={
-        'CVE': ['CVE.zip'],
+        'definitions': ['definitions.zip']
     },
     entry_points={
         'console_scripts': [
