@@ -5,8 +5,10 @@ License: BSD 3-Clause
 #>
 
 # Instructions
-# 1. Execute the collect_bulletin.ps1 and collect_msrc.ps1 to collect the latest Microsoft patches
-# 2. Execute the script to enrich the BulletinSearch.xlsx and MSRC CVEs with Exploit-DB links
+# 1. Execute collect_bulletin.ps1, this only needs to be performed once as this source is not updated anymore
+# 2. Execute collect_msrc.ps1 to collect the latest Microsoft patches from MSRC
+# 2. Execute collect_nvd.ps1 to enrich the BulletinSearch.xlsx and MSRC CVEs with exploit links
+
 $minwesversion = 0.94
 
 "Start: {0}" -f [DateTime]::Now
@@ -20,8 +22,8 @@ New-Item -ItemType Directory $NVDPath -ErrorAction SilentlyContinue | Out-Null
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 for($year = 2002; $year -le [DateTime]::Now.Year; $year++)
 {
-    $outfile = "$NVDPath\nvdcve-1.0-$year.json.zip"
-    wget "https://nvd.nist.gov/feeds/json/cve/1.0/nvdcve-1.0-$year.json.zip" -OutFile $outfile
+    $outfile = "$NVDPath\nvdcve-1.1-$year.json.zip"
+    wget "https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-$year.json.zip" -OutFile $outfile
     Expand-Archive $outfile -DestinationPath $NVDPath -Force
     Remove-Item $outfile
 }
@@ -34,14 +36,23 @@ for($year = 2002; $year -le [DateTime]::Now.Year; $year++)
     "- $year"
 
     # Load JSON in memory
-    $json = (gc "$NVDPath\nvdcve-1.0-$year.json" | ConvertFrom-Json)
+    $json = (gc "$NVDPath\nvdcve-1.1-$year.json" | ConvertFrom-Json)
 
     # Iterate over CVEs
     foreach($cve in $json.CVE_Items)
     {
         # Only focus on Microsoft vulnerabilities
-        $vendors = ($cve.cve.affects.vendor.vendor_data.vendor_name) -split "`r`n"
-        if($vendors -notcontains "microsoft")
+        $mscve = $false
+        $cpes = $cve.configurations.nodes.cpe_match.cpe23Uri + $cve.configurations.nodes.children.cpe_match.cpe23Uri
+        foreach($cpe in $cpes)
+        {
+            if($cpe -like '*microsoft*')
+            {
+                $mscve = $true
+                break
+            }
+        }
+        if(-not $mscve)
             { continue }
 
         # Extract Exploit-DB and other exploit links
@@ -58,7 +69,7 @@ for($year = 2002; $year -le [DateTime]::Now.Year; $year++)
     }
 
     # Cleanup json
-    Remove-Item "$NVDPath\nvdcve-1.0-$year.json"
+    Remove-Item "$NVDPath\nvdcve-1.1-$year.json"
 }
 
 # Remove NVD directory
@@ -80,8 +91,7 @@ $CVEs = $cves_bulletin + $cves_msrc # TODO, check for overlapping records
 $CVEs | Add-Member -NotePropertyName "Exploits" -NotePropertyValue $null
 
 # Filter CVEs that have corresponding exploits
-$exploits = $exploits | ? Exploits -ne $null
-$total = $exploits | measure | select -expand Count
+$total = $exploits | measure | % Count
 $counter = 1
 
 foreach($exploit in $exploits)
@@ -92,8 +102,8 @@ foreach($exploit in $exploits)
     # Add exploit link(s) to matching CVEs
     $matches | % { $_.Exploits = $exploit.Exploits }
 
-    $exploitcount = $exploit.Exploits -split ", " | measure | select -expand Count
-    $matchcount = $matches | measure | select -expand Count
+    $exploitcount = $exploit.Exploits -split ", " | measure | % Count
+    $matchcount = $matches | measure | % Count
 
     # Report status
     $status = "[{0:0000}/{1:0000}] {2} - " -f $counter,$total,$exploit.CVE
@@ -113,7 +123,7 @@ foreach($exploit in $exploits)
 # DEBUG
 #$CVEs | Export-Clixml "CVEs.xml"
 
-# New output
+# Output
 $outcsv = "CVEs_{0}.csv" -f [DateTime]::Now.ToString("yyyyMMdd")
 "[+] Writing enriched CVEs to $outcsv"
 $CVEs | Export-Csv -NoTypeInformation -Encoding ASCII $outcsv
