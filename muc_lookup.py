@@ -15,13 +15,14 @@ from __future__ import print_function
 
 import sys
 import re
+from termcolor import colored
 
 try:
     import mechanicalsoup
 except ImportError:
-    print("[!] Cannot lookup superseeding KBs in the Microsoft Update Catalog!")
-    print("    Reason: Python package mechanicalsoup not installed.")
-    print("    Install with 'pip install mechanicalsoup' and run again")
+    print(colored("[!] Cannot lookup superseded KBs in the Microsoft Update Catalog!", "yellow"))
+    print("\tReason: Python package mechanicalsoup not installed.")
+    print("\tInstall with 'pip install mechanicalsoup' and run again")
     sys.exit(1)
 
 
@@ -70,11 +71,11 @@ default_headers = {
 # global browser used to scrape the Microsoft Update Catalog
 browser = mechanicalsoup.StatefulBrowser()
 
-# global dict of KBs with their superseeding KBs
-superseeded_by = {}
+# global dict of KBs with their superseding KBs
+superseded_by = {}
 
-# apply_muc_filter filters the CVEs found by looking up superseeding hotfixes in the
-# Microsoft Update Catalog. It returns the CVE iff no superseeding hotfixes are installed.
+# apply_muc_filter filters the CVEs found by looking up superseded hotfixes in the
+# Microsoft Update Catalog. It returns the CVE iff no superseded hotfixes are installed.
 #
 # found: list of CVEs as created by the main script wes.py
 # kbs_installed: list of installed hotfixes as seen in systeminfo output
@@ -87,20 +88,20 @@ def apply_muc_filter(found, kbs_installed):
 
     kbs_installed = set(kbs_installed)
 
-    global superseeded_by
+    global superseded_by
     for cve in found:
         kb = cve["BulletinKB"]
-        if kb not in superseeded_by:
-            superseeded_by[kb] = set(lookup_supersedence(kb))
+        if kb not in superseded_by:
+            superseded_by[kb] = set(lookup_supersedence(kb))
 
     return [
         cve
         for cve in found
-        if not (superseeded_by[cve["BulletinKB"]] & kbs_installed)
+        if not (superseded_by[cve["BulletinKB"]] & kbs_installed)
     ]
 
 
-# lookup_supersedence returns a list of all KBs superseeding the given KB
+# lookup_supersedence returns a list of all KBs superseded the given KB
 # iterates over entries for all Mirosoft products. That is, it does not
 # attempt to identify the product. My assumption is that if we return KBs
 # that do not apply to the system under anaylsis then this KB will not be
@@ -111,35 +112,40 @@ def apply_muc_filter(found, kbs_installed):
 #
 # kb: the KB to be looked up
 def lookup_supersedence(kb):
-    browser.open(
-        "https://www.catalog.update.microsoft.com/Search.aspx?q={}".format(kb),
-        headers=default_headers,
-    )
-    rows = browser.get_current_page().find(id="ctl00_catalogBody_updateMatches")
-    if rows is None:
-        return []
-    updates = rows.find_all(
-        "a", {"onclick": re.compile(r"goToDetails\(\"[a-zA-Z0-9-]+\"\)")}
-    )
-    ids = [a["id"].split("_")[0] for a in updates]
+    try:
+        browser.open(
+            "https://www.catalog.update.microsoft.com/Search.aspx?q={}".format(kb),
+            headers=default_headers,
+        )
+        rows = browser.get_current_page().find(id="ctl00_catalogBody_updateMatches")
+        if rows is None:
+            return []
+        updates = rows.find_all(
+            "a", {"onclick": re.compile(r"goToDetails\(\"[a-zA-Z0-9-]+\"\)")}
+        )
+        ids = [a["id"].split("_")[0] for a in updates]
 
-    kbids = set()
-    p = Progress(
-        name="    - Looking up potentially missing KB"
-        + kb
-        + " ",
-        width=len(ids),
-    )
-    for uid in ids:
-        kbids = kbids.union(lookup_supersedence_by_uid(uid))
-        p.step()
+        kbids = set()
+        p = Progress(
+            name = "\t- Looking up potentially missing KB%s " % (kb),
+            width = len(ids),
+        )
+        for uid in ids:
+            kbids = kbids.union(lookup_supersedence_by_uid(uid))
+            p.step()
+        found_kbids = colored("[" + ", ".join(kbids) + "]", "yellow")
+        if len(kbids) == 0:
+            p.finish(msg=colored("No superseded KB's found", "cyan"))
+        else:
+            p.finish(msg=colored("\n\t\tFound: ", "green") + "%s" % (found_kbids))
 
-    p.finish(msg="found: [" + ", ".join(kbids) + "]")
+        return [kbid.lstrip("KB") for kbid in kbids]
+    except KeyboardInterrupt:
+        print(colored("\nKeyboardInterrupt caught.  Exiting!", "cyan"))
+        exit()
 
-    return [kbid.lstrip("KB") for kbid in kbids]
 
-
-# lookup_supersedence_by_uid looks up a list of superseeding KBs for a
+# lookup_supersedence_by_uid looks up a list of superseded KBs for a
 # Microsoft Update ID. The Microsoft Update Catalog seems to close over
 # transitive supersedence relationships so there is not need for recursive
 # lookups.
@@ -172,4 +178,4 @@ if __name__ == "__main__":
 
     kb = re.sub('KB', '', sys.argv[1], flags=re.IGNORECASE)
     kbids = lookup_supersedence(kb)
-    print("{} is superseeded by {}".format(kb, ["KB{}".format(kbid) for kbid in kbids]))
+    print("{} is superseded by {}".format(kb, ["KB{}".format(kbid) for kbid in kbids]))
