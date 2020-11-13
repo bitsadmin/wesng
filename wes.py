@@ -13,6 +13,7 @@ from __future__ import print_function
 import sys, csv, re, argparse, os, zipfile, io
 import logging
 from collections import Counter, OrderedDict
+from termcolor import colored
 
 import copy
 
@@ -59,10 +60,11 @@ class WesException(Exception):
 
 
 # Applictation details
+TITLE = 'Windows Exploit Suggester'
 VERSION = 0.98
 RELEASE = ''
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
-BANNER = 'Windows Exploit Suggester %.2f%s ( %s )' % (VERSION, RELEASE, WEB_URL)
+BANNER = '%s %s ( %s )' % (colored(TITLE, "green"), colored(VERSION, "yellow"), colored(WEB_URL, "blue"))
 FILENAME = 'wes.py'
 
 # Mapping table between build numbers and versions to correctly identify
@@ -89,10 +91,10 @@ def main():
 
     # Update definitions
     if hasattr(args, 'perform_update') and args.perform_update:
-        print('[+] Updating definitions')
+        print(colored('[+] Updating definitions', "green"))
         urlretrieve('https://raw.githubusercontent.com/bitsadmin/wesng/master/definitions.zip', 'definitions.zip')
         cves, date = load_definitions('definitions.zip')
-        print('[+] Obtained definitions created at %s' % date)
+        print(colored('[+] Obtained definitions created at ', "green") + '%s' % colored(date, "yellow"))
         return
 
     # Update application
@@ -125,7 +127,7 @@ def main():
         return
 
     # Parse encoding of systeminfo.txt input
-    print('[+] Parsing systeminfo output')
+    print(colored('[+] Parsing systeminfo output', "green"))
     systeminfo_data = open(args.systeminfo, 'rb').read()
     try:
         productfilter, win, mybuild, version, arch, hotfixes = determine_product(systeminfo_data)
@@ -135,7 +137,7 @@ def main():
 
     # Parse optional qfe.txt input file
     if args.qfefile:
-        print('[+] Parsing quick fix engineering (qfe) output')
+        print(colored('[+] Parsing quick fix engineering (qfe) output', "green"))
         qfe_data = open(args.qfefile, 'rb').read()
         try:
             qfe_data = charset_convert(qfe_data)
@@ -169,12 +171,12 @@ def main():
     hotfixes_orig = copy.deepcopy(hotfixes)
 
     # Load definitions from definitions.zip (default) or user-provided location
-    print('[+] Loading definitions')
+    print(colored('[+] Loading definitions', "green"))
     try:
         cves, date = load_definitions(args.definitions)
         print('    - Creation date of definitions: %s' % date)
 
-        print('[+] Determining missing patches')
+        print(colored('[+] Determining missing patches', "green"))
         filtered, found = determine_missing_patches(productfilter, cves, hotfixes)
     except WesException as e:
         print('[-] ' + str(e))
@@ -183,7 +185,7 @@ def main():
     # If -d parameter is specified, use the most recent patch installed as
     # reference point for the system's patching status
     if args.usekbdate:
-        print('[+] Filtering old vulnerabilities')
+        print(colored('[!] Filtering old vulnerabilities', "yellow"))
         recentkb = get_most_recent_kb(found)
         if recentkb:
             print('    - Most recent KB installed is KB%s released at %s\n'
@@ -192,23 +194,23 @@ def main():
             found = list(filter(lambda kb: int(kb['DatePosted']) >= recentdate, found))
 
     if 'Windows Server' in productfilter:
-        print('[+] Filtering duplicate vulnerabilities')
+        print(colored('[!] Filtering duplicate vulnerabilities', "yellow"))
         found = filter_duplicates(found)
 
     # If specified, hide results containing the user-specified string
     # in the AffectedComponent and AffectedProduct attributes
     if args.hiddenvuln or args.only_exploits or args.impacts or args.severities:
-        print('[+] Applying display filters')
+        print(colored('[+] Applying display filters', "green"))
         filtered = apply_display_filters(found, args.hiddenvuln, args.only_exploits, args.impacts, args.severities)
     else:
         filtered = found
 
-    # If specified, lookup superseeding KBs in the Microsoft Update Catalog
-    # and remove CVEs if a superseeding KB is installed.
+    # If specified, lookup superseded KBs in the Microsoft Update Catalog
+    # and remove CVEs if a superseded KB is installed.
     if args.muc_lookup:
         from muc_lookup import apply_muc_filter # ony import if necessary since it needs MechanicalSoup
 
-        print("[+] Looking up superseeding hotfixes in the Microsoft Update Catalog")
+        print(colored('[!] Looking up superseded hotfixes in the Microsoft Update Catalog', "yellow"))
         filtered = apply_muc_filter(filtered, hotfixes_orig)
 
     # Split up list of KBs and the potential Service Packs/Cumulative updates available
@@ -216,7 +218,7 @@ def main():
 
     # Display results
     if len(filtered) > 0:
-        print('[+] Found vulnerabilities')
+        print(colored('[!] Found vulnerabilities!', "yellow"))
         verb = 'Displaying'
         if args.outputfile:
             store_results(args.outputfile, filtered)
@@ -226,7 +228,7 @@ def main():
             print_results(filtered)
             print_summary(kbs, sp)
             print()
-        print('[+] Done. %s %d of the %d vulnerabilities found.' % (verb, len(filtered), len(found)))
+        print(colored('[+] Done. ', "green") + '%s %s of the %s vulnerabilities found.' % (verb, colored(len(filtered), "yellow"), colored(len(found), "yellow")))
     else:
         print('[-] No vulnerabilities found\n')
 
@@ -280,7 +282,7 @@ def apply_display_filters(found, hiddenvulns, only_exploits, impacts, severities
     for cve in found:
         add = True
         for hidden in hiddenvulns:
-            if hidden in cve['AffectedComponent'].lower() or hidden in cve['AffectedProduct'].lower():
+            if hidden in cve['AffectedComponent'].lower() or hidden in cve['AffectedProduct'].lower() or hidden in cve['Title'].lower():
                 add = False
                 break
 
@@ -602,7 +604,7 @@ def get_last_patch(servicepacks, kb):
 def print_summary(kbs, sp):
     # Show missing KBs with number of vulnerabilites per KB
     grouped = Counter([r['BulletinKB'] for r in kbs])
-    print('[+] Missing patches: %d' % len(grouped))
+    print(colored('[-] Missing patches: ', "red") + '%s' % colored(len(grouped), "yellow"))
     for line in grouped.most_common():
         kb = line[0]
         number = line[1]
@@ -610,16 +612,17 @@ def print_summary(kbs, sp):
 
     # Show in case a service pack is missing
     if sp:
-        print('[+] Missing service pack')
+        print(colored('[-] Missing service pack', "red"))
         print('    - %s' % sp['Title'])
 
     # Latest KB
     if not kbs:
         return
     foundkb = get_most_recent_kb(kbs)
-    print('''[+] KB with the most recent release date
+    message = colored('[!] KB with the most recent release date', "yellow")
+    print('''%s
     - ID: KB%s
-    - Release date: %s''' % (foundkb['BulletinKB'], foundkb['DatePosted']))
+    - Release date: %s''' % (message, foundkb['BulletinKB'], foundkb['DatePosted']))
 
 
 # Obtain most recent KB from a dictionary of results
@@ -640,9 +643,19 @@ def print_results(results):
         label = 'Exploit'
         value = 'n/a'
         if len(exploits) > 0:
-            value = exploits
+            value = colored(exploits, "blue")
         if ',' in exploits:
             label = 'Exploits'
+
+        if res['Severity'] == 'Critical':
+            highlight = 'red'
+        if res['Severity'] == 'Important':
+            highlight = 'yellow'
+        if res['Severity'] == 'Low':
+            highlight = 'green'
+        if res['Severity'] == 'Moderate':
+            highlight = 'blue'
+
 
         print('''Date: %s
 CVE: %s
@@ -653,7 +666,7 @@ Affected component: %s
 Severity: %s
 Impact: %s
 %s: %s
-''' % (res['DatePosted'], res['CVE'], res['BulletinKB'], res['Title'], res['AffectedProduct'], res['AffectedComponent'], res['Severity'], res['Impact'], label, value))
+''' % (res['DatePosted'], res['CVE'], res['BulletinKB'], res['Title'], res['AffectedProduct'], res['AffectedComponent'], colored(res['Severity'], highlight), res['Impact'], label, value))
 
 
 # Output results of wes.py to a .csv file
