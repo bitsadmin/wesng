@@ -13,8 +13,6 @@ from __future__ import print_function
 import sys, csv, re, argparse, os, zipfile, io
 import logging
 from collections import Counter, OrderedDict
-from termcolor import colored
-
 import copy
 
 
@@ -55,16 +53,36 @@ except (ImportError, ModuleNotFoundError):
         'errors, install chardet using: pip{} install chardet'.format(sys.version_info.major))
 
 
+# By default show plain output without color
+def colored(text, color):
+    return text
+
+def configure_color():
+    # Check availability of the termcolor library
+    try:
+        global colored
+        from termcolor import colored
+        if os.name == 'nt':
+            import colorama
+            colorama.init()
+
+    except (ImportError, ModuleNotFoundError):
+        logging.warning(
+        'termcolor module not installed. To show colored output, '
+        'install termcolor using: pip{} install termcolor'.format(sys.version_info.major))
+        pass
+
+
 class WesException(Exception):
     pass
 
 
-# Applictation details
+# Application details
 TITLE = 'Windows Exploit Suggester'
-VERSION = 0.98
+VERSION = 0.99
 RELEASE = ''
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
-BANNER = '%s %s ( %s )' % (colored(TITLE, "green"), colored(VERSION, "yellow"), colored(WEB_URL, "blue"))
+BANNER = '%s %s ( %s )'
 FILENAME = 'wes.py'
 
 # Mapping table between build numbers and versions to correctly identify
@@ -79,22 +97,27 @@ buildnumbers = OrderedDict([
     (17763, 1809),
     (18362, 1903),
     (18363, 1909),
-    (19041, 2004)
+    (19041, 2004),
+    #(19042, 2009) # Or will this become '20H2' instead?
 ])
 
 
 def main():
     args = parse_arguments()
+    
+    # Configure output coloring
+    if hasattr(args, 'showcolor') and args.showcolor:
+        configure_color()
 
     # Application banner
-    print(BANNER)
+    print(BANNER % (colored(TITLE, 'green'), colored(VERSION, 'yellow'), colored(WEB_URL, 'blue')))
 
     # Update definitions
     if hasattr(args, 'perform_update') and args.perform_update:
-        print(colored('[+] Updating definitions', "green"))
+        print(colored('[+] Updating definitions', 'green'))
         urlretrieve('https://raw.githubusercontent.com/bitsadmin/wesng/master/definitions.zip', 'definitions.zip')
         cves, date = load_definitions('definitions.zip')
-        print(colored('[+] Obtained definitions created at ', "green") + '%s' % colored(date, "yellow"))
+        print(colored('[+] Obtained definitions created at ', 'green') + '%s' % colored(date, 'yellow'))
         return
 
     # Update application
@@ -127,7 +150,7 @@ def main():
         return
 
     # Parse encoding of systeminfo.txt input
-    print(colored('[+] Parsing systeminfo output', "green"))
+    print(colored('[+] Parsing systeminfo output', 'green'))
     systeminfo_data = open(args.systeminfo, 'rb').read()
     try:
         productfilter, win, mybuild, version, arch, hotfixes = determine_product(systeminfo_data)
@@ -137,7 +160,7 @@ def main():
 
     # Parse optional qfe.txt input file
     if args.qfefile:
-        print(colored('[+] Parsing quick fix engineering (qfe) output', "green"))
+        print(colored('[+] Parsing quick fix engineering (qfe) output', 'green'))
         qfe_data = open(args.qfefile, 'rb').read()
         try:
             qfe_data = charset_convert(qfe_data)
@@ -171,12 +194,12 @@ def main():
     hotfixes_orig = copy.deepcopy(hotfixes)
 
     # Load definitions from definitions.zip (default) or user-provided location
-    print(colored('[+] Loading definitions', "green"))
+    print(colored('[+] Loading definitions', 'green'))
     try:
         cves, date = load_definitions(args.definitions)
         print('    - Creation date of definitions: %s' % date)
 
-        print(colored('[+] Determining missing patches', "green"))
+        print(colored('[+] Determining missing patches', 'green'))
         filtered, found = determine_missing_patches(productfilter, cves, hotfixes)
     except WesException as e:
         print('[-] ' + str(e))
@@ -185,7 +208,7 @@ def main():
     # If -d parameter is specified, use the most recent patch installed as
     # reference point for the system's patching status
     if args.usekbdate:
-        print(colored('[!] Filtering old vulnerabilities', "yellow"))
+        print(colored('[!] Filtering old vulnerabilities', 'yellow'))
         recentkb = get_most_recent_kb(found)
         if recentkb:
             print('    - Most recent KB installed is KB%s released at %s\n'
@@ -194,13 +217,13 @@ def main():
             found = list(filter(lambda kb: int(kb['DatePosted']) >= recentdate, found))
 
     if 'Windows Server' in productfilter:
-        print(colored('[!] Filtering duplicate vulnerabilities', "yellow"))
+        print(colored('[!] Filtering duplicate vulnerabilities', 'yellow'))
         found = filter_duplicates(found)
 
     # If specified, hide results containing the user-specified string
     # in the AffectedComponent and AffectedProduct attributes
     if args.hiddenvuln or args.only_exploits or args.impacts or args.severities:
-        print(colored('[+] Applying display filters', "green"))
+        print(colored('[+] Applying display filters', 'green'))
         filtered = apply_display_filters(found, args.hiddenvuln, args.only_exploits, args.impacts, args.severities)
     else:
         filtered = found
@@ -210,7 +233,7 @@ def main():
     if args.muc_lookup:
         from muc_lookup import apply_muc_filter # ony import if necessary since it needs MechanicalSoup
 
-        print(colored('[!] Looking up superseded hotfixes in the Microsoft Update Catalog', "yellow"))
+        print(colored('[!] Looking up superseded hotfixes in the Microsoft Update Catalog', 'yellow'))
         filtered = apply_muc_filter(filtered, hotfixes_orig)
 
     # Split up list of KBs and the potential Service Packs/Cumulative updates available
@@ -218,7 +241,7 @@ def main():
 
     # Display results
     if len(filtered) > 0:
-        print(colored('[!] Found vulnerabilities!', "yellow"))
+        print(colored('[!] Found vulnerabilities!', 'yellow'))
         verb = 'Displaying'
         if args.outputfile:
             store_results(args.outputfile, filtered)
@@ -228,7 +251,7 @@ def main():
             print_results(filtered)
             print_summary(kbs, sp)
             print()
-        print(colored('[+] Done. ', "green") + '%s %s of the %s vulnerabilities found.' % (verb, colored(len(filtered), "yellow"), colored(len(found), "yellow")))
+        print(colored('[+] Done. ', 'green') + '%s %s of the %s vulnerabilities found.' % (verb, colored(len(filtered), 'yellow'), colored(len(found), 'yellow')))
     else:
         print('[-] No vulnerabilities found\n')
 
@@ -604,7 +627,7 @@ def get_last_patch(servicepacks, kb):
 def print_summary(kbs, sp):
     # Show missing KBs with number of vulnerabilites per KB
     grouped = Counter([r['BulletinKB'] for r in kbs])
-    print(colored('[-] Missing patches: ', "red") + '%s' % colored(len(grouped), "yellow"))
+    print(colored('[-] Missing patches: ', 'red') + '%s' % colored(len(grouped), 'yellow'))
     for line in grouped.most_common():
         kb = line[0]
         number = line[1]
@@ -612,14 +635,14 @@ def print_summary(kbs, sp):
 
     # Show in case a service pack is missing
     if sp:
-        print(colored('[-] Missing service pack', "red"))
+        print(colored('[-] Missing service pack', 'red'))
         print('    - %s' % sp['Title'])
 
     # Latest KB
     if not kbs:
         return
     foundkb = get_most_recent_kb(kbs)
-    message = colored('[!] KB with the most recent release date', "yellow")
+    message = colored('[!] KB with the most recent release date', 'yellow')
     print('''%s
     - ID: KB%s
     - Release date: %s''' % (message, foundkb['BulletinKB'], foundkb['DatePosted']))
@@ -643,7 +666,7 @@ def print_results(results):
         label = 'Exploit'
         value = 'n/a'
         if len(exploits) > 0:
-            value = colored(exploits, "blue")
+            value = colored(exploits, 'blue')
         if ',' in exploits:
             label = 'Exploits'
 
@@ -745,6 +768,10 @@ def parse_arguments():
   {0} systeminfo.txt --severity critical
   {0} systeminfo.txt -s critical
   
+  Show colored output 
+  {0} systeminfo.txt --color
+  {0} systeminfo.txt -c
+
   Validate supersedence against Microsoft's online Update Catalog
   {0} systeminfo.txt --muc-lookup
 
@@ -798,8 +825,8 @@ def parse_arguments():
     parser.add_argument('-i', '--impact', dest='impacts', nargs='+', default='', help='Only display vulnerabilities with a given impact')
     parser.add_argument('-s', '--severity', dest='severities', nargs='+', default='', help='Only display vulnerabilities with a given severity')
     parser.add_argument('-o', '--output', action='store', dest='outputfile', nargs='?', help='Store results in a file')
-    parser.add_argument("--muc-lookup", dest="muc_lookup", action="store_true", help="Hide vulnerabilities if installed hotfixes are listed in the Microsoft Update Catalog as superseding hotfixes for the original BulletinKB",
-    )
+    parser.add_argument('--muc-lookup', dest='muc_lookup', action='store_true', help='Hide vulnerabilities if installed hotfixes are listed in the Microsoft Update Catalog as superseding hotfixes for the original BulletinKB')
+    parser.add_argument('-c', '--color', dest='showcolor', action='store_true', help='Show console output in color (requires termcolor library)')
     parser.add_argument('-h', '--help', action='help', help='Show this help message and exit')
 
     # Always show full help when no arguments are provided
@@ -812,3 +839,4 @@ def parse_arguments():
 
 if __name__ == '__main__':
     main()
+
