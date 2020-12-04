@@ -98,13 +98,13 @@ buildnumbers = OrderedDict([
     (18362, 1903),
     (18363, 1909),
     (19041, 2004),
-    #(19042, 2009) # Or will this become '20H2' instead?
+    (19042, '20H2')
 ])
 
 
 def main():
     args = parse_arguments()
-    
+
     # Configure output coloring
     if hasattr(args, 'showcolor') and args.showcolor:
         configure_color()
@@ -155,51 +155,57 @@ def main():
         print('[+] Loading definitions')
         cves, date = load_definitions('definitions.zip')
 
-        # Missing patches
+        # Determine IDs of missing patches
         print('[+] Loading missing patches from file')
         missingpatches = []
         with open(mp_file, 'r') as f:
             missingpatches = f.read()
         missingpatches = list(filter(None, [mp.upper().replace('KB', '') for mp in missingpatches.split('\n')]))
 
+        # Obtain all records matching the IDs of the missing patches
         found = list(filter(lambda c: c['BulletinKB'] in missingpatches, cves))
-        outfound = [dict(t) for t in {tuple([t for t in d.items() if t[0] != 'AffectedProduct']) for d in found}]
-        uniquekbs = list(set(p['BulletinKB'] for p in found))
 
-        # Determine affected product string to merge
-        for kb in uniquekbs:
-            # Filter products on a specific KB ID
-            affectedproducts = list(set([t['AffectedProduct'] for t in filter(lambda c: c['BulletinKB'] == kb, found)]))
-            checkprds = [prd.split(' ') for prd in affectedproducts]
-            minlen = min(len(p) for p in checkprds)
+        # Compile the list of operating systems available from the results of above filter
+        # This list is provided to the user to further filter down the specific vulnerabilities
+        allproducts = list(set(t['AffectedProduct'] for t in found))
+        regex_wp = re.compile('.*(Windows (Server|(\d+.?)+|XP).*)')
+        os_names = list(set([wp[0] for wp in regex_wp.findall('\n'.join(allproducts))]))
+        os_names.sort()
 
-            affectedprod = 'Various products'
-            for i in range(0, minlen):
-                # Check per position if there is a unique string
-                currchk = list(set([p[i] for p in checkprds]))
+        # If --os parameter is provided, filter results on OS
+        if hasattr(args, 'operating_system') and args.operating_system:
+            os_name = args.operating_system
 
-                # If the position is not unique (anymore), close the string
-                if len(currchk) > 1:
-                    if i == 0:
-                        break
+            # Support for providing an index in stead of the full OS string
+            if os_name.isdigit():
+                if int(os_name) >= len(os_names):
+                    print('[-] Invalid operating system index specified with the --os parameter')
+                    exit(1)
+                os_name = os_names[int(os_name)]
 
-                    # Remove any connecting words at the end
-                    affectedprodarr = checkprds[0][0:i]
-                    if affectedprodarr[-1].upper() in ('AND', 'IN'):
-                        affectedprodarr = affectedprodarr[:-1]
+            # Perform filter on operating system
+            print('[+] Filtering vulnerabilities for "%s"' % os_name)
+            found = list(filter(lambda c: os_name in c['AffectedProduct'], found))
 
-                    # Convert to string
-                    affectedprod = ' '.join(checkprds[0][:i])
-                    break
+        # Deduplicate results ignoring differences in the Supersedes attribute
+        for f in found:
+            f['Supersedes'] = ''
+        found = [dict(t) for t in {tuple([t for t in d.items()]) for d in found}]
 
-            # Assign productname to all relevant records
-            for t in filter(lambda c: c['BulletinKB'] == kb, outfound):
-                t['AffectedProduct'] = affectedprod
+        # Append missing patches which are not included in the definitions.zip
+        foundkbs = set([kb['BulletinKB'] for kb in found])
+        difference = foundkbs.symmetric_difference(missingpatches)
+        for diff in difference:
+            found.append({'DatePosted': '', 'CVE': '', 'BulletinKB': diff, 'Title': '', 'AffectedProduct': '',
+                          'AffectedComponent': '', 'Severity': '', 'Impact': '', 'Supersedes': '', 'Exploits': ''})
 
-        found = outfound
+        # Prepare variables for summary
+        sp = None
+        kbs = found
 
     # Using systeminfo.txt with list of installed patches as a base
     else:
+        missingpatches = None
         # Parse encoding of systeminfo.txt input
         print(colored('[+] Parsing systeminfo output', 'green'))
         systeminfo_data = open(args.systeminfo, 'rb').read()
@@ -271,6 +277,7 @@ def main():
             print(colored('[!] Filtering duplicate vulnerabilities', 'yellow'))
             found = filter_duplicates(found)
 
+
     # If specified, hide results containing the user-specified string
     # in the AffectedComponent and AffectedProduct attributes
     if args.hiddenvuln or args.only_exploits or args.impacts or args.severities:
@@ -279,6 +286,8 @@ def main():
     else:
         filtered = found
 
+    # In case the list of missing patches is specified,
+    # we don't need to search for supersedes in the MS Update Catalog
     if not args.missingpatches:
         # If specified, lookup superseded KBs in the Microsoft Update Catalog
         # and remove CVEs if a superseded KB is installed.
@@ -291,27 +300,30 @@ def main():
         # Split up list of KBs and the potential Service Packs/Cumulative updates available
         kbs, sp = get_patches_servicepacks(filtered, cves, productfilter)
 
-        # Display results
-        if len(filtered) > 0:
-            print(colored('[!] Found vulnerabilities!', 'yellow'))
-            verb = 'Displaying'
-            if args.outputfile:
-                store_results(args.outputfile, filtered)
-                verb = 'Saved'
-                print_summary(kbs, sp)
-            else:
-                print_results(filtered)
-                print_summary(kbs, sp)
-                print()
-            print(colored('[+] Done. ', 'green') + '%s %s of the %s vulnerabilities found.' % (verb, colored(len(filtered), 'yellow'), colored(len(found), 'yellow')))
-        else:
-            print('[-] No vulnerabilities found\n')
-    else:
+    # Display results
+    if len(filtered) > 0:
+        print(colored('[!] Found vulnerabilities!', 'yellow'))
         if args.outputfile:
             store_results(args.outputfile, filtered)
+            verb = 'Saved'
+            print_summary(kbs, sp)
         else:
             print_results(filtered)
+            verb = 'Displaying'
+            print_summary(kbs, sp)
+            print()
 
+        # Show operating systems to allow further filtering
+        if missingpatches and len(os_names) > 0 and not args.operating_system:
+            print('[I] Vulnerabilities for the following operating systems are found,\n    use the --os parameter to filter down further.')
+            i = 0
+            for name in os_names:
+                print('    [%d] %s' % (i, name))
+                i += 1
+
+        print(colored('[+] Done. ', 'green') + '%s %s of the %s vulnerabilities found.' % (verb, colored(len(filtered), 'yellow'), colored(len(found), 'yellow')))
+    else:
+        print('[-] No vulnerabilities found\n')
 
 # Load definitions.zip containing a CSV with vulnerabilities collected by the WES collector module
 # and a file determining the minimum wes.py version the definitions are compatible with.
@@ -506,7 +518,7 @@ def determine_product(systeminfo):
     regex_version = re.compile(r'.*?((\d+\.?){3}) ((Service Pack (\d)|N\/\w|.+) )?[ -\xa5]+ (\d+).*', re.MULTILINE | re.IGNORECASE)
     systeminfo_matches = regex_version.findall(systeminfo)
     if len(systeminfo_matches) == 0:
-        raise WesException('Not able to detect OS version based on provided input file')
+        raise WesException('Not able to detect OS version based on provided input file\n    In case you used the missingpatches script, use: wes.py -m missing.txt')
 
     systeminfo_matches = systeminfo_matches[0]
     mybuild = int(systeminfo_matches[5])
@@ -582,7 +594,7 @@ def determine_product(systeminfo):
         productfilter = 'Microsoft Windows Server %s%s%s' % (win, arch, pversion)
     # elif win == '2003 R2':
     # Not possible to distinguish between Windows Server 2003 and Windows Server 2003 R2 based on the systeminfo output
-    # See: https://serverfault.com/questions/634149/will-systeminfos-os-name-line-distinguish-between-windows-2003-and-2003-r2
+    # See: https://serverfault.com/q/634149
     # Even though in the definitions there is a distinction though between 2003 and 2003 R2, there are only around 50
     # KBs specificly for 2003 R2 (x86/x64) and almost 6000 KBs for 2003 (x86/x64)
     elif win == '2008':
@@ -680,10 +692,14 @@ def get_last_patch(servicepacks, kb):
 
 # Show summary at the end of results containing the number of patches and the most recent patch installed
 def print_summary(kbs, sp):
+    # Collect unique BulletinKBs
+    missingpatches = set(r['BulletinKB'] for r in kbs)
+    print(colored('[-] Missing patches: ', 'red') + '%s' % colored(len(missingpatches), 'yellow'))
+
     # Show missing KBs with number of vulnerabilites per KB
-    grouped = Counter([r['BulletinKB'] for r in kbs])
-    print(colored('[-] Missing patches: ', 'red') + '%s' % colored(len(grouped), 'yellow'))
-    for line in grouped.most_common():
+    grouped = Counter([r['BulletinKB'] for r in kbs if r['DatePosted']])
+    foundmissing = grouped.most_common()
+    for line in foundmissing:
         kb = line[0]
         number = line[1]
         print('    - KB%s: patches %s %s' % (kb, number, 'vulnerability' if number == 1 else 'vulnerabilities'))
@@ -693,8 +709,16 @@ def print_summary(kbs, sp):
         print(colored('[-] Missing service pack', 'red'))
         print('    - %s' % sp['Title'])
 
-    # Latest KB
-    if not kbs:
+    # Show additional missing KBs when the --missing parameter is used
+    if len(missingpatches) > len(grouped):
+        difference = missingpatches.symmetric_difference([r[0] for r in foundmissing])
+        for kb in difference:
+            print('    - KB%s: patches an unknown number of vulnerabilities' % kb)
+        print('[I] Check the details of the unknown patches at https://support.microsoft.com/help/KBID,\n    for example https://support.microsoft.com/help/890830 in case of KB890830')
+
+    # Show date of most recent KB
+    # Skip if no most recent KB available
+    if len(grouped) == 0:
         return
     foundkb = get_most_recent_kb(kbs)
     message = colored('[!] KB with the most recent release date', 'yellow')
@@ -705,7 +729,7 @@ def print_summary(kbs, sp):
 
 # Obtain most recent KB from a dictionary of results
 def get_most_recent_kb(results):
-    dates = [int(r['DatePosted']) for r in results]
+    dates = [int(r['DatePosted']) for r in results if r['DatePosted']]
     if dates:
         date = str(max(dates))
         return list(filter(lambda kb: kb['DatePosted'] == date, results))[0]
@@ -717,6 +741,10 @@ def get_most_recent_kb(results):
 def print_results(results):
     print()
     for res in results:
+        # Don't print KBs which are supplied through the --missing parameter but are not included in the definitions.zip
+        if not res['DatePosted']:
+            continue
+
         exploits = res['Exploits'] if 'Exploits' in res else ''
         label = 'Exploit'
         value = 'n/a'
@@ -727,13 +755,14 @@ def print_results(results):
 
         if res['Severity'] == 'Critical':
             highlight = 'red'
-        if res['Severity'] == 'Important':
+        elif res['Severity'] == 'Important':
             highlight = 'yellow'
-        if res['Severity'] == 'Low':
+        elif res['Severity'] == 'Low':
             highlight = 'green'
-        if res['Severity'] == 'Moderate':
+        elif res['Severity'] == 'Moderate':
             highlight = 'blue'
-
+        else:
+            highlight = 'red'
 
         print('''Date: %s
 CVE: %s
@@ -826,6 +855,10 @@ def parse_arguments():
   Show vulnerabilities based on missing patches 
   {0} --missing missing.txt
   {0} -m missing.txt
+  
+  Show vulnerabilities based on missing patches specifying OS
+  {0} --missing missing.txt --os "Windows 10 Version 1809 for x64-based Systems"
+  {0} -m missing.txt --os 2
 
   Show colored output 
   {0} systeminfo.txt --color
@@ -855,6 +888,7 @@ def parse_arguments():
     parser.add_argument('-s', '--severity', dest='severities', nargs='+', default='', help='Only display vulnerabilities with a given severity')
     parser.add_argument('-o', '--output', action='store', dest='outputfile', nargs='?', help='Store results in a file')
     parser.add_argument('--muc-lookup', dest='muc_lookup', action='store_true', help='Hide vulnerabilities if installed hotfixes are listed in the Microsoft Update Catalog as superseding hotfixes for the original BulletinKB')
+    parser.add_argument('--os', action='store', dest='operating_system', nargs='?', help='Specify operating system or ID from list when running without this parameter')
     parser.add_argument('-c', '--color', dest='showcolor', action='store_true', help='Show console output in color (requires termcolor library)')
     parser.add_argument('-h', '--help', action='help', help='Show this help message and exit')
 
