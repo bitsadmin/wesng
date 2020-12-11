@@ -57,18 +57,26 @@ except (ImportError, ModuleNotFoundError):
 def colored(text, color):
     return text
 
+
 def configure_color():
     # Check availability of the termcolor library
     try:
         global colored
         from termcolor import colored
-        if os.name == 'nt':
-            import colorama
-            colorama.init()
 
     except (ImportError, ModuleNotFoundError):
         logging.warning('termcolor module not installed. To show colored output, '
                         'install termcolor using: pip{} install termcolor'.format(sys.version_info.major))
+        pass
+
+    # Also check availability of the colorama library in case of Windows
+    try:
+        if os.name == 'nt':
+            import colorama
+            colorama.init()
+    except (ImportError, ModuleNotFoundError):
+        logging.warning('colorama module not installed. To show colored output in Windows, '
+                        'install colorama using: pip{} install colorama'.format(sys.version_info.major))
         pass
 
 
@@ -78,7 +86,7 @@ class WesException(Exception):
 
 # Application details
 TITLE = 'Windows Exploit Suggester'
-VERSION = 0.99
+VERSION = 1.00
 RELEASE = ''
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
 BANNER = '%s %s ( %s )'
@@ -109,7 +117,7 @@ def main():
         configure_color()
 
     # Application banner
-    print(BANNER % (colored(TITLE, 'green'), colored(VERSION, 'yellow'), colored(WEB_URL, 'blue')))
+    print(BANNER % (colored(TITLE, 'green'), colored('%.2f' % VERSION, 'yellow'), colored(WEB_URL, 'blue')))
 
     # Update definitions
     if hasattr(args, 'perform_update') and args.perform_update:
@@ -144,7 +152,7 @@ def main():
     # Show version
     if hasattr(args, 'showversion') and args.showversion:
         cves, date = load_definitions('definitions.zip')
-        print('Wes.py version: %.3f' % VERSION)
+        print('Wes.py version: %.2f' % VERSION)
         print('Database version: %s' % date)
         return
 
@@ -854,7 +862,7 @@ def check_definitions_exists(value):
 
 # Specify arguments using for the argparse library
 def parse_arguments():
-    examples = r'''examples:
+    examples = r'''Examples:
   Download latest definitions
   {0} --update
   {0} -u
@@ -863,8 +871,8 @@ def parse_arguments():
   {0} systeminfo.txt
   
   Determine vulnerabilities using the qfe file. List the OS by first running the command without the --os parameter
-  {0} systeminfo.txt --qfe qfe.txt --os 'Windows 10 Version 20H2 for x64-based Systems'
-  {0} systeminfo.txt -q qfe.txt --os 9
+  {0} --qfe qfe.txt --os 'Windows 10 Version 20H2 for x64-based Systems'
+  {0} -q qfe.txt --os 9
 
   Determine vulnerabilities and output to file
   {0} systeminfo.txt --output vulns.csv
@@ -901,23 +909,29 @@ def parse_arguments():
   {0} --missing missing.txt --os "Windows 10 Version 1809 for x64-based Systems"
   {0} -m missing.txt --os 2
 
+  Validate supersedence against Microsoft's online Update Catalog
+  {0} systeminfo.txt --muc-lookup
+
   Show colored output 
   {0} systeminfo.txt --color
   {0} systeminfo.txt -c
-
-  Validate supersedence against Microsoft's online Update Catalog
-  {0} systeminfo.txt --muc-lookup
 
   Download latest version of WES-NG
   {0} --update-wes
 '''.format(FILENAME)
 
     parser = argparse.ArgumentParser(
-        description=BANNER % (TITLE, VERSION, WEB_URL),
+        description=BANNER % (TITLE, '%.2f' % VERSION, WEB_URL),
         add_help=False,
         epilog=examples,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
+
+    # Update definitions
+    parser.add_argument('-u', '--update', dest='perform_update', action='store_true', help='Download latest list of CVEs')
+    args, xx = parser.parse_known_args()
+    if args.perform_update:
+        return parser.parse_args()
 
     # General options
     parser.add_argument('--definitions', action='store', nargs='?', type=check_definitions_exists, default='definitions.zip', help='Definitions zip file (default: definitions.zip)')
@@ -933,13 +947,7 @@ def parse_arguments():
     parser.add_argument('-c', '--color', dest='showcolor', action='store_true', help='Show console output in color (requires termcolor library)')
     parser.add_argument('-h', '--help', action='help', help='Show this help message and exit')
 
-    # Update definitions
-    parser.add_argument('-u', '--update', dest='perform_update', action='store_true', help='Download latest list of CVEs')
-    args, xx = parser.parse_known_args()
-    if args.perform_update:
-        return parser.parse_args()
-
-    # Update application
+   # Update application
     parser.add_argument('--update-wes', dest='perform_wesupdate', action='store_true', help='Download latest version of wes.py')
     args, xx = parser.parse_known_args()
     if args.perform_wesupdate:
