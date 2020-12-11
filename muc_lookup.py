@@ -21,6 +21,10 @@ import re
 if sys.version_info.major == 2:
     ModuleNotFoundError = ImportError
 
+# By default show plain output without color
+def colored(text, color):
+    return text
+
 # Check availability of the termcolor library
 try:
     global colored
