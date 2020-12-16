@@ -2,7 +2,7 @@
 ' See the accompanying LICENSE file for more information.
 '
 ' Windows Exploit Suggester - Next Generation
-' Missing Patches Identifyer utility
+' Missing Patches Identifier utility
 '
 ' Author: Arris Huijgen (@bitsadmin)
 ' Website: https://github.com/bitsadmin
