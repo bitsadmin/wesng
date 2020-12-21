@@ -54,7 +54,8 @@ class Progress:
     # finish terminates the progress bar
     #
     # msg: a message to append to the output
-    def finish(self, msg=""):
+    @staticmethod
+    def finish(msg=""):
         sys.stdout.write("] " + msg + "\n")
 
 
