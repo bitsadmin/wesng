@@ -595,8 +595,7 @@ def get_last_patch(servicepacks, kb):
 
     if results:
         return get_last_patch(servicepacks, results[0])
-    else:
-        return kb
+    return kb
 
 
 # Show summary at the end of results containing the number of patches and the most recent patch installed
@@ -629,8 +628,7 @@ def get_most_recent_kb(results):
     if dates:
         date = str(max(dates))
         return list(filter(lambda kb: kb['DatePosted'] == date, results))[0]
-    else:
-        return None
+    return None
 
 
 # Output results of wes.py to screen
