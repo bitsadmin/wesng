@@ -241,7 +241,7 @@ def load_definitions(definitions):
         # Version_X.XX.txt
         versions = list(filter(lambda f: f.startswith('Version'), files))
         versionsfile = versions[0]
-        dbversion = float(re.search('Version_(.*)\.txt', versionsfile, re.MULTILINE | re.IGNORECASE).group(1))
+        dbversion = float(re.search(r'Version_(.*)\.txt', versionsfile, re.MULTILINE | re.IGNORECASE).group(1))
 
         if dbversion > VERSION:
             raise WesException(
@@ -434,13 +434,13 @@ def determine_product(systeminfo):
     servicepack = systeminfo_matches[4]
 
     # OS Name
-    win_matches = re.findall('.*?Microsoft[\(R\)]{0,3} Windows[\(R\)?]{0,3} ?(Serverr? )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE | re.IGNORECASE)
+    win_matches = re.findall(r'.*?Microsoft[\(R\)]{0,3} Windows[\(R\)?]{0,3} ?(Serverr? )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE | re.IGNORECASE)
     if len(win_matches) == 0:
         raise WesException('Not able to detect OS name based on provided input file')
     win = win_matches[0][1]
 
     # System Type
-    archs = re.findall('.*?([\w\d]+?)-based PC.*', systeminfo, re.MULTILINE | re.IGNORECASE)
+    archs = re.findall(r'.*?([\w\d]+?)-based PC.*', systeminfo, re.MULTILINE | re.IGNORECASE)
     if len(archs) > 0:
         arch = archs[0]
     else:
@@ -528,10 +528,10 @@ def determine_product(systeminfo):
 
 # Extract hotfixes from provided text file
 def get_hotfixes(text):
-    hotfix_matches = re.findall('.*KB\d+.*', text, re.MULTILINE | re.IGNORECASE)
+    hotfix_matches = re.findall(r'.*KB\d+.*', text, re.MULTILINE | re.IGNORECASE)
     hotfixes = []
     for match in hotfix_matches:
-        hotfixes.append(re.search('.*KB(\d+).*', match, re.MULTILINE | re.IGNORECASE).group(1))
+        hotfixes.append(re.search(r'.*KB(\d+).*', match, re.MULTILINE | re.IGNORECASE).group(1))
 
     return hotfixes
 
@@ -575,7 +575,7 @@ def get_patches_servicepacks(results, cves, productfilter):
         sp = sp[0]  # There should only be one result
 
         # Only focus on OS + architecure, current service pack is not relevant
-        productfilter = re.sub(' Service Pack \d', '', productfilter)
+        productfilter = re.sub(r' Service Pack \d', r'', productfilter)
 
         # Determine service packs available for the OS and determine the latest version available
         servicepacks = list(filter(lambda c: c['CVE'].startswith('SP') and productfilter in c['AffectedProduct'], cves))
