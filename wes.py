@@ -264,7 +264,7 @@ def load_definitions(definitions):
         custom = csv.DictReader(filter(lambda row: row[0]!='#', f), delimiter=str(','), quotechar=str('"'))
 
         # Merge official and custom list of CVEs
-        merged = [cve for cve in cves] + [c for c in custom]
+        merged = list(cves) + list(custom)
 
         return merged, cvesdate
 
