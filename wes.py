@@ -132,7 +132,7 @@ def main():
         productfilter, win, mybuild, version, arch, hotfixes = determine_product(systeminfo_data)
     except WesException as e:
         print('[-] ' + str(e))
-        exit(1)
+        sys.exit(1)
 
     # Parse optional qfe.txt input file
     if args.qfefile:
@@ -144,7 +144,7 @@ def main():
             hotfixes = list(set(hotfixes + qfe_patches))
         except WesException as e:
             print('[-] ' + str(e))
-            exit(1)
+            sys.exit(1)
 
     # Add explicitly specified patches
     manual_hotfixes = list(set([patch.upper().replace('KB', '') for patch in args.installedpatch]))
@@ -179,7 +179,7 @@ def main():
         filtered, found = determine_missing_patches(productfilter, cves, hotfixes)
     except WesException as e:
         print('[-] ' + str(e))
-        exit(1)
+        sys.exit(1)
 
     # If -d parameter is specified, use the most recent patch installed as
     # reference point for the system's patching status
@@ -793,7 +793,7 @@ def parse_arguments():
     # Always show full help when no arguments are provided
     if len(sys.argv) == 1:
         parser.print_help()
-        exit(1)
+        sys.exit(1)
 
     return parser.parse_args()
 
