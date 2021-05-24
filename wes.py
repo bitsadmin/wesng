@@ -57,19 +57,26 @@ except (ImportError, ModuleNotFoundError):
 def colored(text, color):
     return text
 
+
 def configure_color():
     # Check availability of the termcolor library
     try:
         global colored
         from termcolor import colored
+
+    except (ImportError, ModuleNotFoundError):
+        logging.warning('termcolor module not installed. To show colored output, '
+                        'install termcolor using: pip{} install termcolor'.format(sys.version_info.major))
+        pass
+
+    # Also check availability of the colorama library in case of Windows
+    try:
         if os.name == 'nt':
             import colorama
             colorama.init()
-
     except (ImportError, ModuleNotFoundError):
-        logging.warning(
-        'termcolor module not installed. To show colored output, '
-        'install termcolor using: pip{} install termcolor'.format(sys.version_info.major))
+        logging.warning('colorama module not installed. To show colored output in Windows, '
+                        'install colorama using: pip{} install colorama'.format(sys.version_info.major))
         pass
 
 
@@ -79,7 +86,7 @@ class WesException(Exception):
 
 # Application details
 TITLE = 'Windows Exploit Suggester'
-VERSION = 0.99
+VERSION = 1.00
 RELEASE = ''
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
 BANNER = '%s %s ( %s )'
@@ -98,19 +105,19 @@ buildnumbers = OrderedDict([
     (18362, 1903),
     (18363, 1909),
     (19041, 2004),
-    #(19042, 2009) # Or will this become '20H2' instead?
+    (19042, '20H2')
 ])
 
 
 def main():
     args = parse_arguments()
-    
+
     # Configure output coloring
     if hasattr(args, 'showcolor') and args.showcolor:
         configure_color()
 
     # Application banner
-    print(BANNER % (colored(TITLE, 'green'), colored(VERSION, 'yellow'), colored(WEB_URL, 'blue')))
+    print(BANNER % (colored(TITLE, 'green'), colored('%.2f' % VERSION, 'yellow'), colored(WEB_URL, 'blue')))
 
     # Update definitions
     if hasattr(args, 'perform_update') and args.perform_update:
@@ -122,9 +129,9 @@ def main():
 
     # Update application
     if hasattr(args, 'perform_wesupdate') and args.perform_wesupdate:
-        print('[+] Updating wes.py')
+        print(colored('[+] Updating wes.py', 'green'))
         urlretrieve('https://raw.githubusercontent.com/bitsadmin/wesng/master/wes.py', 'wes.py')
-        print('[+] Updated to the latest version. Relaunch wes.py to use.')
+        print(colored('[+] Updated to the latest version. Relaunch wes.py to use.', 'green'))
         return
 
     # Show tree of supersedes (for debugging purposes)
@@ -145,92 +152,111 @@ def main():
     # Show version
     if hasattr(args, 'showversion') and args.showversion:
         cves, date = load_definitions('definitions.zip')
-        print('Wes.py version: %.3f' % VERSION)
+        print('Wes.py version: %.2f' % VERSION)
         print('Database version: %s' % date)
         return
 
     # Using the list of missing patches as a base
     if hasattr(args, 'missingpatches') and args.missingpatches:
-        mp_file = args.missingpatches
-        print('[+] Loading definitions')
+        print(colored('[+] Loading definitions', 'green'))
         cves, date = load_definitions('definitions.zip')
 
-        # Missing patches
-        print('[+] Loading missing patches from file')
+        # Obtain IDs of missing patches from file
+        print(colored('[+] Loading missing patches from file', 'green'))
         missingpatches = []
-        with open(mp_file, 'r') as f:
+        with open(args.missingpatches, 'r') as f:
             missingpatches = f.read()
-        missingpatches = list(filter(None, [mp.upper().replace('KB', '') for mp in missingpatches.split('\n')]))
+        missingpatches = list(filter(None, [mp.upper().replace('KB', '') for mp in missingpatches.splitlines()]))
 
+        # Obtain all records matching the IDs of the missing patches
         found = list(filter(lambda c: c['BulletinKB'] in missingpatches, cves))
-        outfound = [dict(t) for t in {tuple([t for t in d.items() if t[0] != 'AffectedProduct']) for d in found}]
-        uniquekbs = list(set(p['BulletinKB'] for p in found))
+        os_names, os_name = get_operatingsystems(found, args.operating_system)
 
-        # Determine affected product string to merge
-        for kb in uniquekbs:
-            # Filter products on a specific KB ID
-            affectedproducts = list(set([t['AffectedProduct'] for t in filter(lambda c: c['BulletinKB'] == kb, found)]))
-            checkprds = [prd.split(' ') for prd in affectedproducts]
-            minlen = min(len(p) for p in checkprds)
+        # Perform filter on operating system
+        if os_name:
+            print(colored('[+] Filtering vulnerabilities for "%s"' % os_name, 'green'))
+            found = list(filter(lambda c: os_name in c['AffectedProduct'], found))
 
-            affectedprod = 'Various products'
-            for i in range(0, minlen):
-                # Check per position if there is a unique string
-                currchk = list(set([p[i] for p in checkprds]))
+        # Deduplicate results ignoring differences in the Supersedes attribute
+        for f in found:
+            f['Supersedes'] = ''
+        found = [dict(t) for t in {tuple([t for t in d.items()]) for d in found}]
 
-                # If the position is not unique (anymore), close the string
-                if len(currchk) > 1:
-                    if i == 0:
-                        break
+        # Append missing patches from missing.txt which are not included in the definitions.zip
+        foundkbs = set([kb['BulletinKB'] for kb in found])
+        difference = foundkbs.symmetric_difference(missingpatches)
+        for diff in difference:
+            found.append({'DatePosted': '', 'CVE': '', 'BulletinKB': diff, 'Title': '', 'AffectedProduct': '',
+                          'AffectedComponent': '', 'Severity': '', 'Impact': '', 'Supersedes': '', 'Exploits': ''})
 
-                    # Remove any connecting words at the end
-                    affectedprodarr = checkprds[0][0:i]
-                    if affectedprodarr[-1].upper() in ('AND', 'IN'):
-                        affectedprodarr = affectedprodarr[:-1]
+        # Prepare variables for summary
+        sp = None
+        kbs = found
 
-                    # Convert to string
-                    affectedprod = ' '.join(checkprds[0][:i])
-                    break
-
-            # Assign productname to all relevant records
-            for t in filter(lambda c: c['BulletinKB'] == kb, outfound):
-                t['AffectedProduct'] = affectedprod
-
-        found = outfound
-
-    # Using systeminfo.txt with list of installed patches as a base
+    # Using systeminfo.txt or qfe.txt with list of installed patches as a base
     else:
-        # Parse encoding of systeminfo.txt input
-        print(colored('[+] Parsing systeminfo output', 'green'))
-        systeminfo_data = open(args.systeminfo, 'rb').read()
-        try:
-            productfilter, win, mybuild, version, arch, hotfixes = determine_product(systeminfo_data)
-        except WesException as e:
-            print('[-] ' + str(e))
-            exit(1)
+        missingpatches = None
+        cves = None
+        os_names = None
 
-        # Parse optional qfe.txt input file
-        if args.qfefile:
+        # Use input from qfe
+        if hasattr(args, 'qfefile') and args.qfefile:
+            # If an operating_system digit is provided or no OS has been provided, load defitions to
+            # respectively retrieve the OS or show the list of OSs
+            if (hasattr(args, 'operating_system') and args.operating_system and args.operating_system.isdigit()) or \
+                    (not hasattr(args, 'operating_system') or not args.operating_system):
+
+                # Load definitions to compile list of OSs
+                print(colored('[+] Loading definitions', 'green'))
+                cves, date = load_definitions(args.definitions)
+                print('    - Creation date of definitions: %s' % date)
+
+            # Propose/select OS name
+            os_names, os_name = get_operatingsystems(cves, args.operating_system)
+            if not args.operating_system:
+                # Print possible operating systems
+                list_operatingsystems(os_names)
+
+                # Quit script
+                print(colored('[I] Rerun the script providing the --os parameter and the index or name of the OS you want to filter on.', 'yellow'))
+                exit(0)
+            else:
+                productfilter = os_name
+
+            # Read KBs from QFE file
             print(colored('[+] Parsing quick fix engineering (qfe) output', 'green'))
-            qfe_data = open(args.qfefile, 'rb').read()
+            with open(args.qfefile, 'rb') as f:
+                qfe_data = f.read()
+            qfe_data = charset_convert(qfe_data)
+            hotfixes = get_hotfixes(qfe_data)
+
+        # Parse encoding of systeminfo.txt input
+        else:
+            print(colored('[+] Parsing systeminfo output', 'green'))
+            systeminfo_data = open(args.systeminfo, 'rb').read()
             try:
-                qfe_data = charset_convert(qfe_data)
-                qfe_patches = get_hotfixes(qfe_data)
-                hotfixes = list(set(hotfixes + qfe_patches))
+                productfilter, win, mybuild, version, arch, hotfixes = determine_product(systeminfo_data)
             except WesException as e:
-                print('[-] ' + str(e))
+                print(colored('[-] ' + str(e), 'red'))
                 exit(1)
 
         # Add explicitly specified patches
         manual_hotfixes = list(set([patch.upper().replace('KB', '') for patch in args.installedpatch]))
 
         # Display summary
-        info = '''[+] Operating System
-        - Name: %s
-        - Generation: %s
-        - Build: %s
-        - Version: %s
-        - Architecture: %s''' % (productfilter, win, mybuild, version, arch)
+        # OS info
+        info = colored('[+] Operating System', 'green')
+        if hasattr(args, 'systeminfo') and args.systeminfo:
+            info += ('\n'
+                     '    - Name: %s\n'
+                     '    - Generation: %s\n'
+                     '    - Build: %s\n'
+                     '    - Version: %s\n'
+                     '    - Architecture: %s') % (productfilter, win, mybuild, version, arch)
+        elif os_name:
+            info += '\n    - Selected Operating System: %s' % os_name
+
+        # Hotfixes
         if hotfixes:
             info += '\n    - Installed hotfixes (%d): %s' % (len(hotfixes), ', '.join(['KB%s' % kb for kb in hotfixes]))
         else:
@@ -245,21 +271,24 @@ def main():
         hotfixes_orig = copy.deepcopy(hotfixes)
 
         # Load definitions from definitions.zip (default) or user-provided location
-        print(colored('[+] Loading definitions', 'green'))
-        try:
+        # Only in case they haven't been loaded yet when the --qfe parameter has been provided
+        if not cves:
+            print(colored('[+] Loading definitions', 'green'))
             cves, date = load_definitions(args.definitions)
             print('    - Creation date of definitions: %s' % date)
 
+        # Determine missing patches
+        try:
             print(colored('[+] Determining missing patches', 'green'))
             filtered, found = determine_missing_patches(productfilter, cves, hotfixes)
         except WesException as e:
-            print('[-] ' + str(e))
+            print(colored('[-] ' + str(e), 'red'))
             exit(1)
 
         # If -d parameter is specified, use the most recent patch installed as
         # reference point for the system's patching status
         if args.usekbdate:
-            print(colored('[!] Filtering old vulnerabilities', 'yellow'))
+            print(colored('[+] Filtering old vulnerabilities', 'green'))
             recentkb = get_most_recent_kb(found)
             if recentkb:
                 print('    - Most recent KB installed is KB%s released at %s\n'
@@ -268,7 +297,7 @@ def main():
                 found = list(filter(lambda kb: int(kb['DatePosted']) >= recentdate, found))
 
         if 'Windows Server' in productfilter:
-            print(colored('[!] Filtering duplicate vulnerabilities', 'yellow'))
+            print(colored('[+] Filtering duplicate vulnerabilities', 'green'))
             found = filter_duplicates(found)
 
     # If specified, hide results containing the user-specified string
@@ -279,6 +308,8 @@ def main():
     else:
         filtered = found
 
+    # In case the list of missing patches is specified,
+    # we don't need to search for supersedes in the MS Update Catalog
     if not args.missingpatches:
         # If specified, lookup superseded KBs in the Microsoft Update Catalog
         # and remove CVEs if a superseded KB is installed.
@@ -291,26 +322,27 @@ def main():
         # Split up list of KBs and the potential Service Packs/Cumulative updates available
         kbs, sp = get_patches_servicepacks(filtered, cves, productfilter)
 
-        # Display results
-        if len(filtered) > 0:
-            print(colored('[!] Found vulnerabilities!', 'yellow'))
-            verb = 'Displaying'
-            if args.outputfile:
-                store_results(args.outputfile, filtered)
-                verb = 'Saved'
-                print_summary(kbs, sp)
-            else:
-                print_results(filtered)
-                print_summary(kbs, sp)
-                print()
-            print(colored('[+] Done. ', 'green') + '%s %s of the %s vulnerabilities found.' % (verb, colored(len(filtered), 'yellow'), colored(len(found), 'yellow')))
-        else:
-            print('[-] No vulnerabilities found\n')
-    else:
+    # Display results
+    if len(filtered) > 0:
+        print(colored('[!] Found vulnerabilities!', 'yellow'))
         if args.outputfile:
             store_results(args.outputfile, filtered)
+            verb = 'Saved'
+            print_summary(kbs, sp)
         else:
             print_results(filtered)
+            verb = 'Displaying'
+            print_summary(kbs, sp)
+
+        if not args.operating_system and os_names and len(os_names) > 1:
+            # Print possible operating systems
+            list_operatingsystems(os_names)
+
+            print(colored('[I] Additional filter can be applied using the --os parameter', 'yellow'))
+
+        print(colored('[+] Done. ', 'green') + '%s %s of the %s vulnerabilities found.' % (verb, colored(len(filtered), 'yellow'), colored(len(found), 'yellow')))
+    else:
+        print(colored('[-] Done. No vulnerabilities found\n', 'green'))
 
 
 # Load definitions.zip containing a CSV with vulnerabilities collected by the WES collector module
@@ -506,7 +538,7 @@ def determine_product(systeminfo):
     regex_version = re.compile(r'.*?((\d+\.?){3}) ((Service Pack (\d)|N\/\w|.+) )?[ -\xa5]+ (\d+).*', re.MULTILINE | re.IGNORECASE)
     systeminfo_matches = regex_version.findall(systeminfo)
     if len(systeminfo_matches) == 0:
-        raise WesException('Not able to detect OS version based on provided input file')
+        raise WesException('Not able to detect OS version based on provided input file\n    In case you used the missingpatches script, use: wes.py -m missing.txt')
 
     systeminfo_matches = systeminfo_matches[0]
     mybuild = int(systeminfo_matches[5])
@@ -582,7 +614,7 @@ def determine_product(systeminfo):
         productfilter = 'Microsoft Windows Server %s%s%s' % (win, arch, pversion)
     # elif win == '2003 R2':
     # Not possible to distinguish between Windows Server 2003 and Windows Server 2003 R2 based on the systeminfo output
-    # See: https://serverfault.com/questions/634149/will-systeminfos-os-name-line-distinguish-between-windows-2003-and-2003-r2
+    # See: https://serverfault.com/q/634149
     # Even though in the definitions there is a distinction though between 2003 and 2003 R2, there are only around 50
     # KBs specificly for 2003 R2 (x86/x64) and almost 6000 KBs for 2003 (x86/x64)
     elif win == '2008':
@@ -668,6 +700,35 @@ def get_patches_servicepacks(results, cves, productfilter):
     return results, None
 
 
+def get_operatingsystems(found, os_name):
+    # Compile the list of operating systems available from the results of above filter
+    # This list is provided to the user to further filter down the specific vulnerabilities
+    allproducts = list(set(t['AffectedProduct'] for t in found))
+    regex_wp = re.compile('.*(Windows (Server|(\d+.?)+|XP).*)')
+    os_names = list(set([wp[0] for wp in regex_wp.findall('\n'.join(allproducts))]))
+    os_names.sort()
+
+    # If --os parameter is provided, filter results on OS
+    if os_name:
+        # Support for providing an index in stead of the full OS string
+        if os_name.isdigit():
+            if int(os_name) >= len(os_names):
+                print(colored('[-] Invalid operating system index specified with the --os parameter', 'red'))
+                exit(1)
+            os_name = os_names[int(os_name)]
+
+    return os_names, os_name
+
+
+def list_operatingsystems(os_names):
+    # List operating systems
+    print(colored('[I] List of operating systems:', 'green'))
+    i = 0
+    for name in os_names:
+        print('    [%d] %s' % (i, name))
+        i += 1
+
+
 # Obtain most recent patch tracing back recursively locating records which superseeded the provided record
 def get_last_patch(servicepacks, kb):
     results = list(filter(lambda c: c['Supersedes'] == kb['BulletinKB'], servicepacks))
@@ -680,10 +741,14 @@ def get_last_patch(servicepacks, kb):
 
 # Show summary at the end of results containing the number of patches and the most recent patch installed
 def print_summary(kbs, sp):
+    # Collect unique BulletinKBs
+    missingpatches = set(r['BulletinKB'] for r in kbs)
+    print(colored('[-] Missing patches: ', 'red') + '%s' % colored(len(missingpatches), 'yellow'))
+
     # Show missing KBs with number of vulnerabilites per KB
-    grouped = Counter([r['BulletinKB'] for r in kbs])
-    print(colored('[-] Missing patches: ', 'red') + '%s' % colored(len(grouped), 'yellow'))
-    for line in grouped.most_common():
+    grouped = Counter([r['BulletinKB'] for r in kbs if r['DatePosted']])
+    foundmissing = grouped.most_common()
+    for line in foundmissing:
         kb = line[0]
         number = line[1]
         print('    - KB%s: patches %s %s' % (kb, number, 'vulnerability' if number == 1 else 'vulnerabilities'))
@@ -693,19 +758,27 @@ def print_summary(kbs, sp):
         print(colored('[-] Missing service pack', 'red'))
         print('    - %s' % sp['Title'])
 
-    # Latest KB
-    if not kbs:
+    # Show additional missing KBs when the --missing parameter is used
+    if len(missingpatches) > len(grouped):
+        difference = missingpatches.symmetric_difference([r[0] for r in foundmissing])
+        for kb in difference:
+            print('    - KB%s: patches an unknown number of vulnerabilities' % kb)
+        print(colored('[I] Check the details of the unknown patches at https://support.microsoft.com/help/KBID,\n    for example https://support.microsoft.com/help/890830 in case of KB890830', 'yellow'))
+
+    # Show date of most recent KB
+    # Skip if no most recent KB available
+    if len(grouped) == 0:
         return
     foundkb = get_most_recent_kb(kbs)
-    message = colored('[!] KB with the most recent release date', 'yellow')
-    print('''%s
-    - ID: KB%s
-    - Release date: %s''' % (message, foundkb['BulletinKB'], foundkb['DatePosted']))
+    message = colored('[I] KB with the most recent release date', 'yellow')
+    print('%s\n'
+          '    - ID: KB%s\n'
+          '    - Release date: %s' % (message, foundkb['BulletinKB'], foundkb['DatePosted']))
 
 
 # Obtain most recent KB from a dictionary of results
 def get_most_recent_kb(results):
-    dates = [int(r['DatePosted']) for r in results]
+    dates = [int(r['DatePosted']) for r in results if r['DatePosted']]
     if dates:
         date = str(max(dates))
         return list(filter(lambda kb: kb['DatePosted'] == date, results))[0]
@@ -717,6 +790,10 @@ def get_most_recent_kb(results):
 def print_results(results):
     print()
     for res in results:
+        # Don't print KBs which are supplied through the --missing parameter but are not included in the definitions.zip
+        if not res['DatePosted']:
+            continue
+
         exploits = res['Exploits'] if 'Exploits' in res else ''
         label = 'Exploit'
         value = 'n/a'
@@ -727,29 +804,29 @@ def print_results(results):
 
         if res['Severity'] == 'Critical':
             highlight = 'red'
-        if res['Severity'] == 'Important':
+        elif res['Severity'] == 'Important':
             highlight = 'yellow'
-        if res['Severity'] == 'Low':
+        elif res['Severity'] == 'Low':
             highlight = 'green'
-        if res['Severity'] == 'Moderate':
+        elif res['Severity'] == 'Moderate':
             highlight = 'blue'
+        else:
+            highlight = 'red'
 
-
-        print('''Date: %s
-CVE: %s
-KB: KB%s
-Title: %s
-Affected product: %s
-Affected component: %s
-Severity: %s
-Impact: %s
-%s: %s
-''' % (res['DatePosted'], res['CVE'], res['BulletinKB'], res['Title'], res['AffectedProduct'], res['AffectedComponent'], colored(res['Severity'], highlight), res['Impact'], label, value))
+        print('Date: %s\n'
+              'CVE: %s\n'
+              'KB: KB%s\n'
+              'Title: %s\n'
+              'Affected product: %s\n'
+              'Affected component: %s\n'
+              'Severity: %s\n'
+              'Impact: %s\n'
+              '%s: %s\n' % (res['DatePosted'], res['CVE'], res['BulletinKB'], res['Title'], res['AffectedProduct'], res['AffectedComponent'], colored(res['Severity'], highlight), res['Impact'], label, value))
 
 
 # Output results of wes.py to a .csv file
 def store_results(outputfile, results):
-    print('[+] Writing %d results to %s' % (len(results), outputfile))
+    print(colored('[+] Writing %d results to %s' % (len(results), outputfile), 'green'))
 
     # Python 2 compatibility
     if sys.version_info.major == 2:
@@ -785,7 +862,7 @@ def check_definitions_exists(value):
 
 # Specify arguments using for the argparse library
 def parse_arguments():
-    examples = r'''examples:
+    examples = r'''Examples:
   Download latest definitions
   {0} --update
   {0} -u
@@ -793,8 +870,9 @@ def parse_arguments():
   Determine vulnerabilities
   {0} systeminfo.txt
   
-  Determine vulnerabilities using both systeminfo and qfe files
-  {0} systeminfo.txt qfe.txt
+  Determine vulnerabilities using the qfe file. List the OS by first running the command without the --os parameter
+  {0} --qfe qfe.txt --os 'Windows 10 Version 20H2 for x64-based Systems'
+  {0} -q qfe.txt --os 9
 
   Determine vulnerabilities and output to file
   {0} systeminfo.txt --output vulns.csv
@@ -826,24 +904,34 @@ def parse_arguments():
   Show vulnerabilities based on missing patches 
   {0} --missing missing.txt
   {0} -m missing.txt
+  
+  Show vulnerabilities based on missing patches specifying OS
+  {0} --missing missing.txt --os "Windows 10 Version 1809 for x64-based Systems"
+  {0} -m missing.txt --os 2
+
+  Validate supersedence against Microsoft's online Update Catalog
+  {0} systeminfo.txt --muc-lookup
 
   Show colored output 
   {0} systeminfo.txt --color
   {0} systeminfo.txt -c
-
-  Validate supersedence against Microsoft's online Update Catalog
-  {0} systeminfo.txt --muc-lookup
 
   Download latest version of WES-NG
   {0} --update-wes
 '''.format(FILENAME)
 
     parser = argparse.ArgumentParser(
-        description=BANNER,
+        description=BANNER % (TITLE, '%.2f' % VERSION, WEB_URL),
         add_help=False,
         epilog=examples,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
+
+    # Update definitions
+    parser.add_argument('-u', '--update', dest='perform_update', action='store_true', help='Download latest list of CVEs')
+    args, xx = parser.parse_known_args()
+    if args.perform_update:
+        return parser.parse_args()
 
     # General options
     parser.add_argument('--definitions', action='store', nargs='?', type=check_definitions_exists, default='definitions.zip', help='Definitions zip file (default: definitions.zip)')
@@ -855,32 +943,33 @@ def parse_arguments():
     parser.add_argument('-s', '--severity', dest='severities', nargs='+', default='', help='Only display vulnerabilities with a given severity')
     parser.add_argument('-o', '--output', action='store', dest='outputfile', nargs='?', help='Store results in a file')
     parser.add_argument('--muc-lookup', dest='muc_lookup', action='store_true', help='Hide vulnerabilities if installed hotfixes are listed in the Microsoft Update Catalog as superseding hotfixes for the original BulletinKB')
+    parser.add_argument('--os', action='store', dest='operating_system', nargs='?', help='Specify operating system or ID from list when running without this parameter')
     parser.add_argument('-c', '--color', dest='showcolor', action='store_true', help='Show console output in color (requires termcolor library)')
     parser.add_argument('-h', '--help', action='help', help='Show this help message and exit')
 
-    # Update definitions
-    parser.add_argument('-u', '--update', dest='perform_update', action='store_true', help='Download latest list of CVEs')
-    args, xx = parser.parse_known_args()
-    if args.perform_update:
-        return args
-
-    # Update application
+   # Update application
     parser.add_argument('--update-wes', dest='perform_wesupdate', action='store_true', help='Download latest version of wes.py')
     args, xx = parser.parse_known_args()
     if args.perform_wesupdate:
-        return args
+        return parser.parse_args()
 
     # Show version
     parser.add_argument('--version', dest='showversion', action='store_true', help='Show version information')
     args, xx = parser.parse_known_args()
     if args.showversion:
-        return args
+        return parser.parse_args()
 
     # Use missing patches input file
     parser.add_argument('-m', '--missing', dest='missingpatches', nargs='?', type=check_file_exists, help='Provide file with the list of patches missing from the system. This file can be generated using the WES-NG\'s missingpatches.vbs utility')
     args, xx = parser.parse_known_args()
     if args.missingpatches:
-        return args
+        return parser.parse_args()
+
+    # Use qfe input file
+    parser.add_argument('-q', '--qfe', dest='qfefile', nargs='?', type=check_file_exists, help='Specify the file containing the output of the \'wmic qfe\' command')
+    args, xx = parser.parse_known_args()
+    if args.qfefile:
+        return parser.parse_args()
 
     # Debug supersedes: perform a check on the supersedence tree according to the definitions.zip
     # First argument is OS (as listed in the definitions) or an empty string for no filter, next arguments are 1 or more KBs.
@@ -890,11 +979,10 @@ def parse_arguments():
     parser.add_argument('--verbose', dest='verbosesupersedes', action='store_true', help=argparse.SUPPRESS)
     args, xx = parser.parse_known_args()
     if args.debugsupersedes:
-        return args
+        return parser.parse_args()
 
     # Mandatory input files, in case no other flow has been chosen
     parser.add_argument('systeminfo', action='store', type=check_file_exists, help='Specify systeminfo.txt file')
-    parser.add_argument('qfefile', action='store', nargs='?', type=check_file_exists, help='Specify the file containing the output of the \'wmic qfe\' command')
 
     # Always show full help when no arguments are provided
     if len(sys.argv) == 1:

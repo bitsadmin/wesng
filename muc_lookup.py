@@ -13,16 +13,44 @@
 
 from __future__ import print_function
 
-import sys
+import sys, os
+import logging
 import re
-from termcolor import colored
 
+# Python 2 compatibility
+if sys.version_info.major == 2:
+    ModuleNotFoundError = ImportError
+
+# By default show plain output without color
+def colored(text, color):
+    return text
+
+# Check availability of the termcolor library
+try:
+    global colored
+    from termcolor import colored
+
+except (ImportError, ModuleNotFoundError):
+    logging.warning('termcolor module not installed. To show colored output, '
+                    'install termcolor using: pip{} install termcolor'.format(sys.version_info.major))
+    pass
+
+# Also check availability of the colorama library in case of Windows
+try:
+    if os.name == 'nt':
+        import colorama
+        colorama.init()
+except (ImportError, ModuleNotFoundError):
+    logging.warning('colorama module not installed. To show colored output in Windows, '
+                    'install colorama using: pip{} install colorama'.format(sys.version_info.major))
+    pass
+
+# Check availability of mechanicalsoup library
 try:
     import mechanicalsoup
 except ImportError:
     print(colored("[!] Cannot lookup superseded KBs in the Microsoft Update Catalog!", "yellow"))
-    print("\tReason: Python package mechanicalsoup not installed.")
-    print("\tInstall with 'pip install mechanicalsoup' and run again")
+    logging.warning('mechanicalsoup module not installed. Install mechanicalsoup using: pip{} install mechanicalsoup'.format(sys.version_info.major))
     sys.exit(1)
 
 

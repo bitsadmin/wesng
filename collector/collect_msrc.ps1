@@ -74,6 +74,10 @@ foreach($doc in $docs)
                 $Impact = ($threats | ? Type -EQ 0).Description.Value
                 $AffectedProduct = $doc.ProductTree.FullProductName | ? ProductId -EQ $productid | select -expand Value
                 
+                # Fix-up for mistakes in the AffectedProduct and AffectedComponent fields
+                $AffectedProduct = $AffectedProduct.TrimEnd() -replace '  ', ' '
+                $AffectedComponent = $AffectedComponent.TrimEnd() -replace '  ', ' '
+                
                 $cves_msrc += [PSCustomObject]@{
                     DatePosted=$DatePosted;
                     CVE=$CveID;
