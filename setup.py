@@ -35,7 +35,7 @@ setup(
     ],
     py_modules=['wes', 'muc_lookup'],
     python_requires='>=3.4, >=2.7',
-    install_requires=['chardet', 'mechanicalsoup'],
+    install_requires=['chardet', 'mechanicalsoup', 'termcolor'],
     package_data={
         'definitions': ['definitions.zip']
     },
