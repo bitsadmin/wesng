@@ -1,24 +1,17 @@
-The following commandline options are available for WES-NG v0.98.
+The following commandline options are available for WES-NG v1.0.
 
 ```
-usage: wes.py [-u] [--update-wes] [--version] [--definitions [DEFINITIONS]]
+usage: wes.py [-u] [--definitions [DEFINITIONS]]
               [-p INSTALLEDPATCH [INSTALLEDPATCH ...]] [-d] [-e]
               [--hide HIDDENVULN [HIDDENVULN ...]] [-i IMPACTS [IMPACTS ...]]
               [-s SEVERITIES [SEVERITIES ...]] [-o [OUTPUTFILE]]
-              [--muc-lookup] [-h]
-              systeminfo [qfefile]
+              [--muc-lookup] [--os [OPERATING_SYSTEM]] [-c] [-h]
+              [--update-wes]
 
-Windows Exploit Suggester 0.98 ( https://github.com/bitsadmin/wesng/ )
-
-positional arguments:
-  systeminfo            Specify systeminfo.txt file
-  qfefile               Specify the file containing the output of the 'wmic
-                        qfe' command
+Windows Exploit Suggester 1.00 ( https://github.com/bitsadmin/wesng/ )
 
 optional arguments:
   -u, --update          Download latest list of CVEs
-  --update-wes          Download latest version of wes.py
-  --version             Show version information
   --definitions [DEFINITIONS]
                         Definitions zip file (default: definitions.zip)
   -p INSTALLEDPATCH [INSTALLEDPATCH ...], --patches INSTALLEDPATCH [INSTALLEDPATCH ...]
@@ -39,9 +32,15 @@ optional arguments:
   --muc-lookup          Hide vulnerabilities if installed hotfixes are listed
                         in the Microsoft Update Catalog as superseding
                         hotfixes for the original BulletinKB
+  --os [OPERATING_SYSTEM]
+                        Specify operating system or ID from list when running
+                        without this parameter
+  -c, --color           Show console output in color (requires termcolor
+                        library)
   -h, --help            Show this help message and exit
+  --update-wes          Download latest version of wes.py
 
-examples:
+Examples:
   Download latest definitions
   wes.py --update
   wes.py -u
@@ -49,8 +48,9 @@ examples:
   Determine vulnerabilities
   wes.py systeminfo.txt
   
-  Determine vulnerabilities using both systeminfo and qfe files
-  wes.py systeminfo.txt qfe.txt
+  Determine vulnerabilities using the qfe file. List the OS by first running the command without the --os parameter
+  wes.py --qfe qfe.txt --os 'Windows 10 Version 20H2 for x64-based Systems'
+  wes.py -q qfe.txt --os 9
 
   Determine vulnerabilities and output to file
   wes.py systeminfo.txt --output vulns.csv
@@ -79,9 +79,46 @@ examples:
   wes.py systeminfo.txt --severity critical
   wes.py systeminfo.txt -s critical
   
+  Show vulnerabilities based on missing patches 
+  wes.py --missing missing.txt
+  wes.py -m missing.txt
+  
+  Show vulnerabilities based on missing patches specifying OS
+  wes.py --missing missing.txt --os "Windows 10 Version 1809 for x64-based Systems"
+  wes.py -m missing.txt --os 2
+
   Validate supersedence against Microsoft's online Update Catalog
   wes.py systeminfo.txt --muc-lookup
+
+  Show colored output 
+  wes.py systeminfo.txt --color
+  wes.py systeminfo.txt -c
 
   Download latest version of WES-NG
   wes.py --update-wes
 ```
+
+# missingpatches.vbs
+```
+Windows Exploit Suggester: Missing Patches Identifier v1.0
+https://github.com/bitsadmin/wesng/
+
+Usage: missingpatches.vbs [/F] [/I:[filename]] [/P] [/O:[filename]]
+
+Description:
+    Compiles a list of missing patches on the current system.
+    These missing patches are determined based either the online
+    Windows Update service or WSUS if configured, or on an offline
+    scanfile (wsusscn2.cab). This scanfile is either provided in the
+    commandline or downloaded from the Windows Update site.
+    By default the online Windows Update service or WSUS if configured is used.
+
+Parameter List:
+    /F or /Offline  Perform an offline scan using a scanfile.
+    /I:[filename]   Specify path to the scanfile (wsusscn2.cab). Implies /F and /P.
+    /P              Preserve the scanfile.
+    /O:[filename]   Specify filename to store the results in. By default the
+                    file missing.txt in the current directory will be used.
+    /? or /Help     Displays this help message.
+```
+
