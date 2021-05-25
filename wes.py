@@ -11,6 +11,7 @@
 from __future__ import print_function
 
 import sys, csv, re, argparse, os, zipfile, io
+from json import dump
 import logging
 from collections import Counter, OrderedDict
 import copy
@@ -107,6 +108,9 @@ buildnumbers = OrderedDict([
     (19041, 2004),
     (19042, '20H2')
 ])
+
+# Supported extentions for output. Default is : .csv
+SUPPORTED_OUTFILE = [".csv", ".json"]
 
 
 def main():
@@ -826,22 +830,23 @@ def print_results(results):
 
 # Output results of wes.py to a .csv file
 def store_results(outputfile, results):
+    _, file_ext = os.path.splitext(outputfile)
+
     print(colored('[+] Writing %d results to %s' % (len(results), outputfile), 'green'))
 
-    # Python 2 compatibility
-    if sys.version_info.major == 2:
-        f = open(outputfile, 'wb')
+    f = open(outputfile, 'w') if sys.version_info.major == 2 else open(outputfile, 'w', newline='') # Python 2 compatibility
+    if file_ext == ".json": 
+        dump(results, f)
     else:
-        f = open(outputfile, 'w', newline='')
-
-    header = list(results[0].keys())
-    header.remove('Supersedes')
-    writer = csv.DictWriter(f, fieldnames=header, quoting=csv.QUOTE_ALL)
-    writer.writeheader()
-    for r in results:
-        if 'Supersedes' in r:
-            del r['Supersedes']
-        writer.writerow(r)
+        # Default on .csv
+        header = list(results[0].keys())
+        header.remove('Supersedes')
+        writer = csv.DictWriter(f, fieldnames=header, quoting=csv.QUOTE_ALL)
+        writer.writeheader()
+        for r in results:
+            if 'Supersedes' in r:
+                del r['Supersedes']
+            writer.writerow(r)
 
 
 # Validate file existence for user-provided arguments
@@ -859,6 +864,14 @@ def check_definitions_exists(value):
 
     return value
 
+# Validate file output extention 
+def check_out_ext(value):
+    _, file_ext = os.path.splitext(value)
+
+    if file_ext not in SUPPORTED_OUTFILE:
+        raise argparse.ArgumentTypeError(f"output file on {file_ext} is not supported, try one of these {SUPPORTED_OUTFILE}")
+    
+    return value
 
 # Specify arguments using for the argparse library
 def parse_arguments():
@@ -941,7 +954,7 @@ def parse_arguments():
     parser.add_argument('--hide', dest='hiddenvuln', nargs='+', default='', help='Hide vulnerabilities of for example Adobe Flash Player and Microsoft Edge')
     parser.add_argument('-i', '--impact', dest='impacts', nargs='+', default='', help='Only display vulnerabilities with a given impact')
     parser.add_argument('-s', '--severity', dest='severities', nargs='+', default='', help='Only display vulnerabilities with a given severity')
-    parser.add_argument('-o', '--output', action='store', dest='outputfile', nargs='?', help='Store results in a file')
+    
     parser.add_argument('--muc-lookup', dest='muc_lookup', action='store_true', help='Hide vulnerabilities if installed hotfixes are listed in the Microsoft Update Catalog as superseding hotfixes for the original BulletinKB')
     parser.add_argument('--os', action='store', dest='operating_system', nargs='?', help='Specify operating system or ID from list when running without this parameter')
     parser.add_argument('-c', '--color', dest='showcolor', action='store_true', help='Show console output in color (requires termcolor library)')
@@ -980,6 +993,9 @@ def parse_arguments():
     args, xx = parser.parse_known_args()
     if args.debugsupersedes:
         return parser.parse_args()
+    
+    # Store output 
+    parser.add_argument('-o', '--output', action='store', dest='outputfile', nargs='?', help='Store results in a file', type=check_out_ext)
 
     # Mandatory input files, in case no other flow has been chosen
     parser.add_argument('systeminfo', action='store', type=check_file_exists, help='Specify systeminfo.txt file')
