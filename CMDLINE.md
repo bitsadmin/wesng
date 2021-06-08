@@ -1,5 +1,6 @@
 The following commandline options are available for WES-NG v1.0.
 
+# wes.py
 ```
 usage: wes.py [-u] [--definitions [DEFINITIONS]]
               [-p INSTALLEDPATCH [INSTALLEDPATCH ...]] [-d] [-e]

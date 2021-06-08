@@ -2,7 +2,7 @@
 WES-NG is a tool based on the output of Windows' `systeminfo` utility which provides the list of vulnerabilities the OS is vulnerable to, including any exploits for these vulnerabilities. Every Windows OS between Windows XP and Windows 10, including their Windows Server counterparts, is supported.
 
 ## Usage
-1. Download WES-NG using the following commandline: `git clone https://github.com/bitsadmin/wesng --depth 1`
+1. Download WES-NG using `pip install wesng` or obtain it using the following commandline: `git clone https://github.com/bitsadmin/wesng --depth 1`
 2. Obtain the latest database of vulnerabilities by executing the command `wes.py --update`
 3. There are two options to check for missing patches:
     a. Launch `missingpatches.vbs` on the host to have Windows determine which patches are missing

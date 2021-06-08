@@ -1,8 +1,9 @@
 # Version 1.00
-- Added missingpatches.vbs to use Windows Update to identify missing patches
+- Added missingkbs.vbs to use Windows Update to identify missing patches
 - Added support for 'wmic qfe' output
 - Added option to manually specify the Operating System
-- Added support for colored output using --color or -c
+- Added support for colored output using --color or -c (thanks to wrighterase)
+- Various minor improvements
 
 # Version 0.98
 - Microsoft Update Catalog lookup feature by Dominic Breuker

@@ -189,6 +189,10 @@ def main():
             found.append({'DatePosted': '', 'CVE': '', 'BulletinKB': diff, 'Title': '', 'AffectedProduct': '',
                           'AffectedComponent': '', 'Severity': '', 'Impact': '', 'Supersedes': '', 'Exploits': ''})
 
+        if 'Windows Server' in os_name:
+            print(colored('[+] Filtering duplicate vulnerabilities', 'green'))
+            found = filter_duplicates(found)
+
         # Prepare variables for summary
         sp = None
         kbs = found
