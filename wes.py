@@ -189,7 +189,7 @@ def main():
             found.append({'DatePosted': '', 'CVE': '', 'BulletinKB': diff, 'Title': '', 'AffectedProduct': '',
                           'AffectedComponent': '', 'Severity': '', 'Impact': '', 'Supersedes': '', 'Exploits': ''})
 
-        if 'Windows Server' in os_name:
+        if os_name and 'Windows Server' in os_name:
             print(colored('[+] Filtering duplicate vulnerabilities', 'green'))
             found = filter_duplicates(found)
 
@@ -998,3 +998,4 @@ def parse_arguments():
 
 if __name__ == '__main__':
     main()
+
