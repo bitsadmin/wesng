@@ -1,4 +1,4 @@
-' This software is provided under under the BSD 3-Clause License.
+ This software is provided under under the BSD 3-Clause License.
 ' See the accompanying LICENSE file for more information.
 '
 ' Windows Exploit Suggester - Next Generation
@@ -214,6 +214,14 @@ End If
 ' Skip checking the current system for missing KBs if the /D parameter is provided
 If justDownload Then
     stdOut.Write "[+] Done!" & vbCrLf
+    WScript.Quit
+End If
+
+' Validate whether Windows Update (wuauserv) service is not disabled
+Dim wmi: Set wmi = GetObject("winmgmts://./ROOT/CIMv2")
+Dim wuauserv: Set wuauserv = wmi.Get("Win32_Service.Name='wuauserv'")
+If wuauserv.StartMode = "Disabled" Then
+    stdErr.Write "[-] The ""Windows Update"" service is disabled" & vbCrLf
     WScript.Quit
 End If
 
