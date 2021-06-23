@@ -25,27 +25,7 @@ if sys.version_info.major == 2:
 def colored(text, color):
     return text
 
-# Check availability of the termcolor library
-try:
-    global colored
-    from termcolor import colored
-
-except (ImportError, ModuleNotFoundError):
-    logging.warning('termcolor module not installed. To show colored output, '
-                    'install termcolor using: pip{} install termcolor'.format(sys.version_info.major))
-    pass
-
-# Also check availability of the colorama library in case of Windows
-try:
-    if os.name == 'nt':
-        import colorama
-        colorama.init()
-except (ImportError, ModuleNotFoundError):
-    logging.warning('colorama module not installed. To show colored output in Windows, '
-                    'install colorama using: pip{} install colorama'.format(sys.version_info.major))
-    pass
-
-# Check availability of mechanicalsoup library
+ Check availability of mechanicalsoup library
 try:
     import mechanicalsoup
 except ImportError:
