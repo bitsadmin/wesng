@@ -25,7 +25,7 @@ if sys.version_info.major == 2:
 def colored(text, color):
     return text
 
- Check availability of mechanicalsoup library
+# Check availability of mechanicalsoup library
 try:
     import mechanicalsoup
 except ImportError:
