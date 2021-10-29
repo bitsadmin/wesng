@@ -86,14 +86,14 @@ class WesException(Exception):
 
 # Application details
 TITLE = 'Windows Exploit Suggester'
-VERSION = 1.00
+VERSION = 1.02
 RELEASE = ''
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
 BANNER = '%s %s ( %s )'
 FILENAME = 'wes.py'
 
 # Mapping table between build numbers and versions to correctly identify
-# the Windows 10/Server 2016 version specified in the systeminfo output
+# the Windows 10/11/Server 2016/2019/2022 version specified in the systeminfo output
 buildnumbers = OrderedDict([
     (10240, 1507),
     (10586, 1511),
@@ -105,7 +105,9 @@ buildnumbers = OrderedDict([
     (18362, 1903),
     (18363, 1909),
     (19041, 2004),
-    (19042, '20H2')
+    (19042, '20H2'),
+    (19043, '21H1'),
+    (22000, '21H2') # Windows 11
 ])
 
 
@@ -607,6 +609,9 @@ def determine_product(systeminfo):
         productfilter = 'Windows %s for %s Systems' % (win, arch)
     elif win == '10':
         productfilter = 'Windows %s Version %s for %s Systems' % (win, version, arch)
+    elif win == '11':
+        productfilter = 'Windows %s for %s Systems' % (win, arch)
+
 
     # Server OSs
     elif win == '2003':
@@ -634,6 +639,8 @@ def determine_product(systeminfo):
     elif win == '2016':
         productfilter = 'Windows Server %s' % win
     elif win == '2019':
+        productfilter = 'Windows Server %s' % win
+    elif win == '2022':
         productfilter = 'Windows Server %s' % win
     else:
         raise WesException('Failed assessing Windows version {}'.format(win))

@@ -11,7 +11,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='wesng',
-    version='1.0.1',
+    version='1.0.2',
     description='WES-NG is a tool based on the output of Windows\' systeminfo'
     ' utility which provides the list of vulnerabilities the OS is vulnerable'
     ' to, including any exploits for these vulnerabilities.',

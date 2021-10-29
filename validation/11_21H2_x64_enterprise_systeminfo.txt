@@ -1,0 +1,46 @@
+
+Host Name:                 WINXI21H2
+OS Name:                   Microsoft Windows 11 Enterprise
+OS Version:                10.0.22000 N/A Build 22000
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          User
+Registered Organization:   
+Product ID:                00329-00000-00003-AA654
+Original Install Date:     10/12/2021, 10:45:19 PM
+System Boot Time:          10/22/2021, 8:23:14 AM
+System Manufacturer:       Microsoft Corporation
+System Model:              Virtual Machine
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 158 Stepping 9 GenuineIntel ~2808 Mhz
+BIOS Version:              Microsoft Corporation Hyper-V UEFI Release v4.0, 12/17/2019
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC-08:00) Pacific Time (US & Canada)
+Total Physical Memory:     4,095 MB
+Available Physical Memory: 1,880 MB
+Virtual Memory: Max Size:  4,799 MB
+Virtual Memory: Available: 2,712 MB
+Virtual Memory: In Use:    2,087 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\WINXI21H2
+Hotfix(s):                 4 Hotfix(s) Installed.
+                           [01]: KB5004342
+                           [02]: KB5007040
+                           [03]: KB5005635
+                           [04]: KB5005703
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: Microsoft Hyper-V Network Adapter
+                                 Connection Name: Ethernet
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.254.254
+                                 IP address(es)
+                                 [01]: 192.168.254.173
+                                 [02]: fe80::4cdd:ebd9:c422:2348
+Hyper-V Requirements:      A hypervisor has been detected. Features required for Hyper-V will not be displayed.
