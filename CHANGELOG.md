@@ -1,3 +1,7 @@
+# Version 1.02
+- Support for Windows 11 and Windows Server 2022
+- Various minor improvements
+
 # Version 1.00
 - Added missingkbs.vbs to use Windows Update to identify missing patches
 - Added support for 'wmic qfe' output
