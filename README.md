@@ -1,11 +1,13 @@
 # Windows Exploit Suggester - Next Generation (WES-NG)
 WES-NG is a tool based on the output of Windows' `systeminfo` utility which provides the list of vulnerabilities the OS is vulnerable to, including any exploits for these vulnerabilities. Every Windows OS between Windows XP and Windows 10, including their Windows Server counterparts, is supported.
 
+On the bitsadm.in website an in-depth blog on WES-NG is available on this tool: [Windows Security Updates for Hackers](https://bitsadm.in/blog/windows-security-updates-for-hackers).
+
 ## Usage
-1. Download WES-NG using `pip install wesng` or obtain it using the following commandline: `git clone https://github.com/bitsadmin/wesng --depth 1`
+1. Download WES-NG using `pip install wesng` or using the following commandline: `git clone https://github.com/bitsadmin/wesng --depth 1`
 2. Obtain the latest database of vulnerabilities by executing the command `wes.py --update`
 3. There are two options to check for missing patches:
-    a. Launch `missingpatches.vbs` on the host to have Windows determine which patches are missing
+    a. Launch `missingkbs.vbs` on the host to have Windows determine which patches are missing
     b. Use Windows' built-in `systeminfo.exe` tool to obtain the system information of the local system, or from a remote system using `systeminfo /S MyRemoteHost`, and redirect this to a file: `systeminfo > systeminfo.txt`
 4. Depending on the method chosen in step 3 execute WES-NG:
     a. With the `missing.txt` file as input: `wes.py --missing missing.txt` (or `wes.py -m missing.txt`)

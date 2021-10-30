@@ -1,4 +1,4 @@
- This software is provided under under the BSD 3-Clause License.
+' This software is provided under under the BSD 3-Clause License.
 ' See the accompanying LICENSE file for more information.
 '
 ' Windows Exploit Suggester - Next Generation

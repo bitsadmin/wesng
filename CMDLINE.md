@@ -99,20 +99,20 @@ Examples:
   wes.py --update-wes
 ```
 
-# missingpatches.vbs
+# missingkbs.vbs
 ```
-Windows Exploit Suggester: Missing Patches Identifier v1.0
+Windows Exploit Suggester: Missing KBs Identifier v1.0
 https://github.com/bitsadmin/wesng/
 
-Usage: missingpatches.vbs [/F] [/I:[filename]] [/P] [/O:[filename]]
+Usage: missingkbs.vbs [/F] [/I:[filename]] [/P] [/O:[filename]]
 
 Description:
-    Compiles a list of missing patches on the current system.
-    These missing patches are determined based either the online
-    Windows Update service or WSUS if configured, or on an offline
+    Compiles a list of missing KBs on the current system.
+    These missing KBs are determined based either the online
+    Microsoft Update service or WSUS if configured, or on an offline
     scanfile (wsusscn2.cab). This scanfile is either provided in the
-    commandline or downloaded from the Windows Update site.
-    By default the online Windows Update service or WSUS if configured is used.
+    commandline or downloaded from the Microsoft Update site.
+    By default the online Microsoft Update service is used (or WSUS if configured).
 
 Parameter List:
     /F or /Offline  Perform an offline scan using a scanfile.
@@ -120,6 +120,24 @@ Parameter List:
     /P              Preserve the scanfile.
     /O:[filename]   Specify filename to store the results in. By default the
                     file missing.txt in the current directory will be used.
+    /D:[directory]  Just download the scanfile (don't check for missing KBs).
+                    By default the file will be downloaded to the current directory.
     /? or /Help     Displays this help message.
+
+Examples:
+    Determine missing KBs using online Microsoft Update service (or WSUS if configured)
+    cscript.exe missingkbs.vbs
+
+    Determine missing KBs downloading the wsusscn2.cab scanfile and preserving it
+    cscript.exe missingkbs.vbs /F /P
+
+    Determine missing KBs using the offline wsusscn2.cab scanfile
+    cscript.exe missingkbs.vbs /F /I:E:\tmp\wsusscn2.cab
+
+    Determine missing KBs downloading the wsusscn2.cab scanfile saving results in out.txt
+    cscript.exe missingkbs.vbs /F /O:E:\tmp\out.txt
+
+    Download the scanfile to E:\tmp\
+    cscript.exe missingkbs.vbs /D:E:\tmp
 ```
 
