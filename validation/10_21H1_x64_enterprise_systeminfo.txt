@@ -1,0 +1,42 @@
+
+Host Name:                 DESKTOP-92B51CV
+OS Name:                   Microsoft Windows 10 Enterprise
+OS Version:                10.0.19043 N/A Build 19043
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          User
+Registered Organization:   
+Product ID:                00329-00000-00003-AA837
+Original Install Date:     10/22/2021, 5:43:46 PM
+System Boot Time:          10/22/2021, 9:07:40 AM
+System Manufacturer:       Microsoft Corporation
+System Model:              Virtual Machine
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 158 Stepping 9 GenuineIntel ~2808 Mhz
+BIOS Version:              Microsoft Corporation Hyper-V UEFI Release v4.0, 12/17/2019
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC-08:00) Pacific Time (US & Canada)
+Total Physical Memory:     2,047 MB
+Available Physical Memory: 1,000 MB
+Virtual Memory: Max Size:  3,199 MB
+Virtual Memory: Available: 2,190 MB
+Virtual Memory: In Use:    1,009 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\DESKTOP-92B51CV
+Hotfix(s):                 4 Hotfix(s) Installed.
+                           [01]: KB4601554
+                           [02]: KB5000736
+                           [03]: KB5004945
+                           [04]: KB5003742
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: Microsoft Hyper-V Network Adapter
+                                 Connection Name: Ethernet
+                                 Status:          Media disconnected
+Hyper-V Requirements:      A hypervisor has been detected. Features required for Hyper-V will not be displayed.
