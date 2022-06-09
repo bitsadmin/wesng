@@ -1,3 +1,6 @@
+# Version 1.03
+- Support for 21H2 of Windows 10, Windows 11 and Windows Server 2022
+
 # Version 1.02
 - Support for Windows 11 and Windows Server 2022
 - Various minor improvements
