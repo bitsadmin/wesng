@@ -35,6 +35,7 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
     ],
     py_modules=['wes', 'muc_lookup'],
     python_requires='>=3.4, >=2.7',
