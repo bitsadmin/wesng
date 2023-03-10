@@ -108,8 +108,10 @@ buildnumbers = OrderedDict([
     (19042, '20H2'),
     (19043, '21H1'),
     (19044, '21H2'), # Windows 10
+    (19045, '22H2'),
     (20348, '21H2'), # Windows Server 2022
-    (22000, '21H2')  # Windows 11
+    (22000, '21H2'),  # Windows 11
+    (22621, '22H2')
 ])
 
 

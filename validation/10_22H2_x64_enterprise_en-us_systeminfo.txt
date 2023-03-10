@@ -1,0 +1,44 @@
+Host Name:                 DESKTOP-92B51CV
+OS Name:                   Microsoft Windows 10 Enterprise
+OS Version:                10.0.19045 N/A Build 19045
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          User
+Registered Organization:   
+Product ID:                00329-00000-00003-AA837
+Original Install Date:     1999-01-01, 1:00:00 PM
+System Boot Time:          1999-01-01, 2:00:00 AM
+System Manufacturer:       Dell Inc.
+System Model:              OptiPlex SX280
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 158 Stepping 9 GenuineIntel ~3600 Mhz
+BIOS Version:              Dell Inc. 1.00.0, 1991-01-01
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume3
+System Locale:             zh-cn;Chinese (China)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC+08:00) Beijing, Chongqing, Hong Kong, Urumqi
+Total Physical Memory:     32,631 MB
+Available Physical Memory: 13,910 MB
+Virtual Memory: Max Size:  58,231 MB
+Virtual Memory: Available: 27,495 MB
+Virtual Memory: In Use:    30,736 MB
+Page File Location(s):     D:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\DESKTOP-92B51CV
+Hotfix(s):                 1 Hotfix(s) Installed.
+                           [01]: KB5022502
+Network Card(s):           2 NIC(s) Installed.
+                           [01]: Wintun Userspace Tunnel
+                                 Connection Name: OpenVPN Wintun
+                                 Status:          Media disconnected
+                           [02]: TAP-Windows Adapter V9
+                                 Connection Name: OpenVPN TAP-Windows6
+                                 Status:          Media disconnected
+Hyper-V Requirements:      VM Monitor Mode Extensions: Yes
+                           Virtualization Enabled In Firmware: Yes
+                           Second Level Address Translation: Yes
+                           Data Execution Prevention Available: Yes
