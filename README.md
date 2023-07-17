@@ -1,7 +1,7 @@
 # Windows Exploit Suggester - Next Generation (WES-NG)
 WES-NG is a tool based on the output of Windows' `systeminfo` utility which provides the list of vulnerabilities the OS is vulnerable to, including any exploits for these vulnerabilities. Every Windows OS between Windows XP and Windows 11, including their Windows Server counterparts, is supported.
 
-At the BITSADMIN blog an in-depth article on WES-NG is available: [Windows Security Updates for Hackers](https://blog.bitsadmin.com/blog/windows-security-updates-for-hackers).
+At the BITSADMIN blog an in-depth article on WES-NG is available: [Windows Security Updates for Hackers](https://blog.bitsadmin.com/windows-security-updates-for-hackers).
 
 ## Usage
 1. Download WES-NG using `pip install wesng` or using the following commandline: `git clone https://github.com/bitsadmin/wesng --depth 1`
