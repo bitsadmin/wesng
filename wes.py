@@ -86,7 +86,7 @@ class WesException(Exception):
 
 # Application details
 TITLE = 'Windows Exploit Suggester'
-VERSION = 1.03
+VERSION = 1.04
 RELEASE = ''
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
 BANNER = '%s %s ( %s )'
@@ -110,8 +110,9 @@ buildnumbers = OrderedDict([
     (19044, '21H2'), # Windows 10
     (19045, '22H2'),
     (20348, '21H2'), # Windows Server 2022
-    (22000, '21H2'),  # Windows 11
-    (22621, '22H2')
+    (22000, '21H2'), # Windows 11
+    (22621, '22H2'),
+    (22631, '23H2')
 ])
 
 
@@ -614,8 +615,7 @@ def determine_product(systeminfo):
     elif win == '10':
         productfilter = 'Windows %s Version %s for %s Systems' % (win, version, arch)
     elif win == '11':
-        productfilter = 'Windows %s for %s Systems' % (win, arch)
-
+        productfilter = 'Windows %s Version %s for %s Systems' % (win, version, arch)
 
     # Server OSs
     elif win == '2003':

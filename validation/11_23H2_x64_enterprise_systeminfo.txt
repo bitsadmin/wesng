@@ -1,0 +1,46 @@
+
+Host Name:                 DESKTOP-JNEKK9U
+OS Name:                   Microsoft Windows 11 Enterprise
+OS Version:                10.0.22631 N/A Build 22631
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          User
+Registered Organization:   
+Product ID:                00329-00000-00003-AA345
+Original Install Date:     11/3/2023, 8:10:27 AM
+System Boot Time:          12/9/2023, 7:14:06 AM
+System Manufacturer:       VMware, Inc.
+System Model:              VMware20,1
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 141 Stepping 1 GenuineIntel ~2496 Mhz
+BIOS Version:              VMware, Inc. VMW201.00V.20904234.B64.2212051119, 12/5/2022
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC-08:00) Pacific Time (US & Canada)
+Total Physical Memory:     4,095 MB
+Available Physical Memory: 2,003 MB
+Virtual Memory: Max Size:  5,503 MB
+Virtual Memory: Available: 3,597 MB
+Virtual Memory: In Use:    1,906 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\DESKTOP-JNEKK9U
+Hotfix(s):                 4 Hotfix(s) Installed.
+                           [01]: KB5029921
+                           [02]: KB5027397
+                           [03]: KB5031354
+                           [04]: KB5031592
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: Intel(R) 82574L Gigabit Network Connection
+                                 Connection Name: Ethernet0
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     192.168.216.254
+                                 IP address(es)
+                                 [01]: 192.168.216.144
+                                 [02]: fe80::1b9e:efa3:1f40:c8b3
+Hyper-V Requirements:      A hypervisor has been detected. Features required for Hyper-V will not be displayed.

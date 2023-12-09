@@ -1,0 +1,58 @@
+Host Name:                 test
+OS Name:                   Microsoft Windows 11 Home Single Language
+OS Version:                10.0.22621 N/A Build 22621
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Workstation
+OS Build Type:             Multiprocessor Free
+Registered Owner:          test@example.com
+Registered Organization:   
+Product ID:                00327-35877-13349-AAOEM
+Original Install Date:     7/2/2023, 4:47:10 PM
+System Boot Time:          10/2/2023, 3:58:12 PM
+System Manufacturer:       HUAWEI
+System Model:              NBLB-WAX9N
+System Type:               x64-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: Intel64 Family 6 Model 142 Stepping 12 GenuineIntel ~2304 Mhz
+BIOS Version:              HUAWEI 1.45, 1/17/2023
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC+07:00) Bangkok, Hanoi, Jakarta
+Total Physical Memory:     16,217 MB
+Available Physical Memory: 3,901 MB
+Virtual Memory: Max Size:  46,064 MB
+Virtual Memory: Available: 4,433 MB
+Virtual Memory: In Use:    41,631 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              \\TEST
+Hotfix(s):                 1 Hotfix(s) Installed.
+                           [01]: KB5008215
+Network Card(s):           5 NIC(s) Installed.
+                           [01]: Intel(R) Wireless-AC 9560 160MHz
+                                 Connection Name: Wi-Fi
+                                 Status:          Media disconnected
+                           [02]: Bluetooth Device (Personal Area Network)
+                                 Connection Name: Bluetooth Network Connection
+                                 Status:          Media disconnected
+                           [03]: VirtualBox Host-Only Ethernet Adapter
+                                 Connection Name: Ethernet
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     255.255.255.255
+                                 IP address(es)
+                                 [01]: 169.254.168.86
+                                 [02]: fe80::1131:f63e:16b:474c
+                           [04]: Private Internet Access Network Adapter
+                                 Connection Name: Local Area Connection
+                                 Status:          Media disconnected
+                           [05]: Realtek USB FE Family Controller
+                                 Connection Name: Ethernet 2
+                                 DHCP Enabled:    Yes
+                                 DHCP Server:     10.0.100.1
+                                 IP address(es)
+                                 [01]: 10.0.100.121
+                                 [02]: fe80::77a7:b504:12a0:b785
+Hyper-V Requirements:      A hypervisor has been detected. Features required for Hyper-V will not be displayed.
