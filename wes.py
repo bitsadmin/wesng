@@ -556,7 +556,7 @@ def determine_product(systeminfo):
     servicepack = systeminfo_matches[4]
 
     # OS Name
-    win_matches = re.findall('.*?Microsoft[\(R\)]{0,3} Windows[\(R\)?]{0,3} ?(Serverr? )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE | re.IGNORECASE)
+    win_matches = re.findall('.*?Microsoft[\(R\)]{0,3} Windows[\(R\)?]{0,3} ?(Server? )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE | re.IGNORECASE)
     if len(win_matches) == 0:
         raise WesException('Not able to detect OS name based on provided input file')
     win = win_matches[0][1]
