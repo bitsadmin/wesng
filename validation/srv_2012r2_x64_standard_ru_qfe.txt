@@ -1,0 +1,9 @@
+cat q
+Caption                                     CSName  Description  FixComments  HotFixID   InstallDate  InstalledBy                               InstalledOn  Name  ServicePackInEffect  Status  
+http://support.microsoft.com/?kbid=2919355  DC      Update                    KB2919355               TEST_dc\Администратор  3/18/2014                                       
+http://support.microsoft.com/?kbid=2919442  DC      Update                    KB2919442               TEST_dc\Администратор  3/18/2014                                       
+http://support.microsoft.com/?kbid=2937220  DC      Update                    KB2937220               TEST_dc\Администратор  3/18/2014                                       
+http://support.microsoft.com/?kbid=2938772  DC      Update                    KB2938772               TEST_dc\Администратор  3/18/2014                                       
+http://support.microsoft.com/?kbid=2939471  DC      Update                    KB2939471               TEST_dc\Администратор  3/18/2014                                       
+http://support.microsoft.com/?kbid=2949621  DC      Hotfix                    KB2949621               TEST_dc\Администратор  3/18/2014                                       
+http://support.microsoft.com/?kbid=2999226  DC      Update                    KB2999226               TEST_dc\Администратор  4/17/2020

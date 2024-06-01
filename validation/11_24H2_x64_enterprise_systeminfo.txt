@@ -1,0 +1,49 @@
+
+Host Name:                     WINXI24H2LTSC
+OS Name:                       Microsoft Windows 11 Enterprise LTSC
+OS Version:                    10.0.26100 N/A Build 26100
+OS Manufacturer:               Microsoft Corporation
+OS Configuration:              Standalone Workstation
+OS Build Type:                 Multiprocessor Free
+Registered Owner:              User
+Registered Organization:       N/A
+Product ID:                    00425-00000-00002-AA799
+Original Install Date:         24-05-2024, 03:20:28
+System Boot Time:              01-06-2024, 02:51:44
+System Manufacturer:           Microsoft Corporation
+System Model:                  Virtual Machine
+System Type:                   x64-based PC
+Processor(s):                  1 Processor(s) Installed.
+                               [01]: Intel64 Family 6 Model 158 Stepping 9 GenuineIntel ~2808 Mhz
+BIOS Version:                  Microsoft Corporation Hyper-V UEFI Release v4.1, 03-12-2020
+Windows Directory:             C:\WINDOWS
+System Directory:              C:\WINDOWS\system32
+Boot Device:                   \Device\HarddiskVolume1
+System Locale:                 en-us;English (United States)
+Input Locale:                  en-us;English (United States)
+Time Zone:                     (UTC-08:00) Pacific Time (US & Canada)
+Total Physical Memory:         4,095 MB
+Available Physical Memory:     2,145 MB
+Virtual Memory: Max Size:      5,503 MB
+Virtual Memory: Available:     3,765 MB
+Virtual Memory: In Use:        1,738 MB
+Page File Location(s):         C:\pagefile.sys
+Domain:                        WORKGROUP
+Logon Server:                  \\WINXI24H2LTSC
+Hotfix(s):                     3 Hotfix(s) Installed.
+                               [01]: KB5037589
+                               [02]: KB5037783
+                               [03]: KB5039449
+Network Card(s):               1 NIC(s) Installed.
+                               [01]: Microsoft Hyper-V Network Adapter
+                                     Connection Name: Ethernet
+                                     DHCP Enabled:    Yes
+                                     DHCP Server:     192.168.254.254
+                                     IP address(es)
+                                     [01]: 192.168.254.191
+                                     [02]: fe80::aa84:bb25:99aa:66d4
+Virtualization-based security: Status: Not enabled
+                               App Control for Business policy: Enforced
+                               App Control for Business user mode policy: Audit
+                               Security Features Enabled:
+Hyper-V Requirements:          A hypervisor has been detected. Features required for Hyper-V will not be displayed.
