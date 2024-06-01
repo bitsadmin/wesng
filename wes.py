@@ -550,7 +550,7 @@ def determine_product(systeminfo):
     regex_version = re.compile(r'.*?((\d+\.?){3}) ((Service Pack (\d)|N\/\w|.+) )?[ -\xa5]+ (\d+).*', re.MULTILINE | re.IGNORECASE)
     systeminfo_matches = regex_version.findall(systeminfo)
     if len(systeminfo_matches) == 0:
-        raise WesException('Not able to detect OS version based on provided input file\n    In case you used the missingpatches script, use: wes.py -m missing.txt')
+        raise WesException('Not able to detect OS version based on provided input file\n    In case you used the missingkbs script, use: wes.py -m missing.txt')
 
     systeminfo_matches = systeminfo_matches[0]
     mybuild = int(systeminfo_matches[5])
