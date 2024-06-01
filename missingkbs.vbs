@@ -1,8 +1,8 @@
-' This software is provided under under the BSD 3-Clause License.
+' This software is provided under the BSD 3-Clause License.
 ' See the accompanying LICENSE file for more information.
 '
 ' Windows Exploit Suggester - Next Generation
-' Missing KBs Identifyer utility
+' Missing KBs Identifier utility
 '
 ' Author: Arris Huijgen (@bitsadmin)
 ' Website: https://github.com/bitsadmin
@@ -25,7 +25,7 @@ Dim shell: Set shell = CreateObject("WScript.Shell")
 Dim args: Set args = WScript.Arguments.Named
 
 ' Check if script is running in cscript (-1) or wscript (0)
-Dim scriptHost: scriptHost = (InStrRev(UCase(WScript.FullName), "CSCRIPT") <> 0)
+Dim scriptHost: scriptHost = InStrRev(UCase(WScript.FullName), "CSCRIPT") <> 0
 
 ' Show message if running in GUI mode
 If scriptHost = 0 Then
@@ -158,7 +158,7 @@ If offlineMode Then
 
     ' Only download if file doesn't exist yet
     If Not fs.FileExists(scanFile) Then
-        stdOut.Write "[+] Downloading wsusscn2.cab (+/- 1GB), depending on your Internet speed this may take a while" & vbCrLf
+        stdOut.Write "[+] Downloading wsusscn2.cab (+/- 600 MB), depending on your Internet speed this may take a while" & vbCrLf
 
         ' Initialize HTTP object
         Dim stream
@@ -265,7 +265,6 @@ Dim SearchResult: Set SearchResult = UpdateSearcher.Search("IsInstalled=0")
 Dim updateCount: updateCount = searchResult.Updates.Count
 
 ' List updates
-Dim Updates: Set Updates = SearchResult.Updates
 If updateCount = 0 Then
     If specifiedScanfile Then
         stdOut.Write "[+] Based on the provided scanfile no missing KBs were found"
@@ -307,7 +306,7 @@ Next
 ' Store list of missing KBs
 Dim missingFile: Set missingFile = fs.CreateTextFile(outputFile, True)
 missingFile.Write Join(missingUpdates, vbCrLf)
-missingFile.Close2
+missingFile.Close
 stdOut.Write "[+] Saved list of missing updates in """ & outputFile & """" & vbCrLf
 
 ' Cleanup scanfile
