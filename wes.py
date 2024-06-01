@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #
-# This software is provided under under the BSD 3-Clause License.
+# This software is provided under the BSD 3-Clause License.
 # See the accompanying LICENSE file for more information.
 #
 # Windows Exploit Suggester - Next Generation
@@ -86,7 +86,7 @@ class WesException(Exception):
 
 # Application details
 TITLE = 'Windows Exploit Suggester'
-VERSION = 1.04
+VERSION = 1.05
 RELEASE = ''
 WEB_URL = 'https://github.com/bitsadmin/wesng/'
 BANNER = '%s %s ( %s )'
@@ -112,7 +112,8 @@ buildnumbers = OrderedDict([
     (20348, '21H2'), # Windows Server 2022
     (22000, '21H2'), # Windows 11
     (22621, '22H2'),
-    (22631, '23H2')
+    (22631, '23H2'),
+    (26100, '24H2')
 ])
 
 
@@ -365,7 +366,7 @@ def load_definitions(definitions):
         # Version_X.XX.txt
         versions = list(filter(lambda f: f.startswith('Version'), files))
         versionsfile = versions[0]
-        dbversion = float(re.search('Version_(.*)\.txt', versionsfile, re.MULTILINE | re.IGNORECASE).group(1))
+        dbversion = float(re.search(r'Version_(.*)\.txt', versionsfile, re.MULTILINE | re.IGNORECASE).group(1))
 
         if dbversion > VERSION:
             raise WesException(
@@ -556,13 +557,13 @@ def determine_product(systeminfo):
     servicepack = systeminfo_matches[4]
 
     # OS Name
-    win_matches = re.findall('.*?Microsoft[\(R\)]{0,3} Windows[\(R\)?]{0,3} ?(Serverr? )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE | re.IGNORECASE)
+    win_matches = re.findall(r'.*?Microsoft[\(R\)]{0,3} Windows[\(R\)?]{0,3} ?(Serverr? )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE | re.IGNORECASE)
     if len(win_matches) == 0:
         raise WesException('Not able to detect OS name based on provided input file')
     win = win_matches[0][1]
 
     # System Type
-    archs = re.findall('.*?([\w\d]+?)-based PC.*', systeminfo, re.MULTILINE | re.IGNORECASE)
+    archs = re.findall(r'.*?([\w\d]+?)-based PC.*', systeminfo, re.MULTILINE | re.IGNORECASE)
     if len(archs) > 0:
         arch = archs[0]
     else:
@@ -572,7 +573,7 @@ def determine_product(systeminfo):
     # Hotfix(s)
     hotfixes = get_hotfixes(systeminfo)
 
-    # Determine Windows 10 version based on build
+    # Determine Windows 10/11 version based on build
     version = None
     for build in buildnumbers:
         if mybuild == build:
@@ -654,10 +655,10 @@ def determine_product(systeminfo):
 
 # Extract hotfixes from provided text file
 def get_hotfixes(text):
-    hotfix_matches = re.findall('.*KB\d+.*', text, re.MULTILINE | re.IGNORECASE)
+    hotfix_matches = re.findall(r'.*KB\d+.*', text, re.MULTILINE | re.IGNORECASE)
     hotfixes = []
     for match in hotfix_matches:
-        hotfixes.append(re.search('.*KB(\d+).*', match, re.MULTILINE | re.IGNORECASE).group(1))
+        hotfixes.append(re.search(r'.*KB(\d+).*', match, re.MULTILINE | re.IGNORECASE).group(1))
 
     return hotfixes
 
@@ -701,7 +702,7 @@ def get_patches_servicepacks(results, cves, productfilter):
         sp = sp[0]  # There should only be one result
 
         # Only focus on OS + architecure, current service pack is not relevant
-        productfilter = re.sub(' Service Pack \d', '', productfilter)
+        productfilter = re.sub(r' Service Pack \d', '', productfilter)
 
         # Determine service packs available for the OS and determine the latest version available
         servicepacks = list(filter(lambda c: c['CVE'].startswith('SP') and productfilter in c['AffectedProduct'], cves))
@@ -719,7 +720,7 @@ def get_operatingsystems(found, os_name):
     # Compile the list of operating systems available from the results of above filter
     # This list is provided to the user to further filter down the specific vulnerabilities
     allproducts = list(set(t['AffectedProduct'] for t in found))
-    regex_wp = re.compile('.*(Windows (Server|(\d+.?)+|XP).*)')
+    regex_wp = re.compile(r'.*(Windows (Server|(\d+.?)+|XP).*)')
     os_names = list(set([wp[0] for wp in regex_wp.findall('\n'.join(allproducts))]))
     os_names.sort()
 

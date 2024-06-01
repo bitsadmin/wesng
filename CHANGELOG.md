@@ -1,3 +1,11 @@
+# Version 1.05
+- Support for Windows 11 24H2
+- Fixed regex strings errors running wes.py with Python3 on Windows
+
+# Version 1.04
+- Support for Windows 11 23H2
+- Fix for Windows 11 22H2
+
 # Version 1.03
 - Support for 21H2 of Windows 10, Windows 11 and Windows Server 2022
 
