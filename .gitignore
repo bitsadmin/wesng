@@ -128,3 +128,10 @@ dmypy.json
 
 # Visual Studio Code
 .vscode/
+
+# MSRC API key
+apikey.txt
+
+# Temporary files created by the collector
+MSRC.csv
+NVD.csv
