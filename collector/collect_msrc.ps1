@@ -6,8 +6,13 @@ License: BSD 3-Clause
 
 # Instructions
 # 1. Install the MSRC module using: Install-Module MSRCSecurityUpdates -Force
-# 2. Request your own API key via https://portal.msrc.microsoft.com/en-us/developer and paste it here:
-$apikey = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+# 2. Request your own API key via https://portal.msrc.microsoft.com/en-us/developer and store it in apikey.txt
+$apikey = Get-Content apikey.txt
+if(-not $apikey)
+{
+	Write-Error 'Make sure your MSRC API key is stored in apikey.txt'
+	Exit
+}
 # 3. Execute the script and wait for the MSRC.csv file to be created
 
 # Import module
@@ -16,7 +21,7 @@ Import-Module MSRCSecurityUpdates
 # Fetch MSRC CVRF documents
 $dateformat = "hh:mm"
 Set-MSRCApiKey -ApiKey $apikey
-$msu = Get-MsrcSecurityUpdate
+$msu = (Get-MsrcSecurityUpdate).value
 $docs = @()
 
 "Start: {0}" -f [DateTime]::Now
@@ -24,7 +29,7 @@ $docs = @()
 $i=1
 foreach($secupdate in $msu)
 {
-    "- [{0:00}/{1:00}]: {2}" -f $i,$msu.Length,$secupdate.DocumentTitle
+    "- [{0:000}/{1:000}]: {2}" -f $i,$msu.Length,$secupdate.DocumentTitle
     $docs += Get-MsrcCvrfDocument -id $secupdate.ID
     $i++
 }
@@ -45,7 +50,7 @@ $i = 1
 foreach($doc in $docs)
 {
     # Print current month to screen
-    "- [{0:00}/{1:00}]: {2}" -f $i,$docs.Length,$doc.DocumentTitle.Value
+    "- [{0:000}/{1:000}]: {2}" -f $i,$docs.Length,$doc.DocumentTitle.Value
 
     # Compile list of all products
     $allProductIDS += $doc.ProductTree.FullProductName
@@ -101,6 +106,6 @@ foreach($doc in $docs)
 #$cve_bulletin = Import-Clixml "MSRC.xml"
 
 "[+] {{{0}}} Writing CVEs from MSRC to file" -f [DateTime]::Now.ToString($dateformat)
-$cves_msrc | Export-Csv -NoTypeInformation -Encoding ASCII "MSRC.csv"
+$cves_msrc | Export-Csv -NoTypeInformation -Encoding utf8 "MSRC.csv"
 "[+] Done!"
 "End: {0}" -f [DateTime]::Now

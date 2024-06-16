@@ -71,7 +71,7 @@ foreach($line in $xlsx)
 #$cve_bulletin = Import-Clixml "Bulletin.xml"
 
 "[+] Writing Bulletin CVEs to file"
-$cve_bulletin | Export-Csv -NoTypeInformation -Encoding ASCII "Bulletin.csv"
+$cve_bulletin | Export-Csv -NoTypeInformation -Encoding utf8 "Bulletin.csv"
 
 "[+] Cleanup"
 Remove-Item $bulletinxlsx

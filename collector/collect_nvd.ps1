@@ -13,6 +13,18 @@ $minwesversion = 0.94
 
 "Start: {0}" -f [DateTime]::Now
 
+# Prerequisites
+if(-not (Test-Path "Bulletin.csv"))
+{
+	"[-] Bulletin.csv is missing. Execute collect_bulletin.ps1 first."
+	exit
+}
+if(-not (Test-Path "MSRC.csv"))
+{
+	"[-] MSRC.csv is missing. Execute collect_msrc.ps1 first."
+	exit
+}
+
 # Create temporary directory for JSON files
 $NVDPath = "$env:TMP\NVD"
 New-Item -ItemType Directory $NVDPath -ErrorAction SilentlyContinue | Out-Null
@@ -81,8 +93,8 @@ Remove-Item -Recurse $NVDPath
 $exploits | Export-Csv -NoTypeInformation -Encoding ASCII "NVD.csv"
 
 "[+] Merging BulletinSearch and MSRC CSVs"
-$cves_bulletin = Import-Csv "Bulletin.csv"
-$cves_msrc = Import-Csv "MSRC.csv"
+$cves_bulletin = Import-Csv -Encoding utf8 "Bulletin.csv"
+$cves_msrc = Import-Csv -Encoding utf8 "MSRC.csv"
 $CVEs = $cves_bulletin + $cves_msrc # TODO, check for overlapping records
 
 "[+] Complementing Bulletin/MSRC dataset"
