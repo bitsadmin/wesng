@@ -7,14 +7,14 @@ At the BITSADMIN blog an in-depth article on WES-NG is available: [Windows Secur
 1. Download WES-NG using `pip install wesng` or using the following commandline: `git clone https://github.com/bitsadmin/wesng --depth 1`
 2. Obtain the latest database of vulnerabilities by executing the command `wes.py --update`
 3. There are two options to check for missing patches:
-    a. Launch `missingkbs.vbs` on the host to have Windows determine which patches are missing
+    a. Launch `missingkbs.vbs` or `missingkbs.ps1` on the host to have Windows determine which patches are missing
     b. Use Windows' built-in `systeminfo.exe` tool to obtain the system information of the local system, or from a remote system using `systeminfo /S MyRemoteHost`, and redirect this to a file: `systeminfo > systeminfo.txt`
 4. Depending on the method chosen in step 3 execute WES-NG:
     a. With the `missing.txt` file as input: `wes.py --missing missing.txt` (or `wes.py -m missing.txt`)
     b. With the `systeminfo.txt` file as the parameter: `wes.py systeminfo.txt`
 WES-NG then uses the database to determine which patches are applicable to the system and to which vulnerabilities are currently exposed, including exploits if available.
 5. As the data provided by Microsoft's MSRC feed is frequently incomplete and false positives are reported by `wes.py`, @DominicBreuker contributed the `--muc-lookup` parameter to validate identified missing patches from the `systeminfo.txt` file against Microsoft's Update Catalog. Additionally, make sure to check the [Eliminating false positives](https://github.com/bitsadmin/wesng/wiki/Eliminating-false-positives) page at the Wiki on how to interpret the results.
-For an overview of all available parameters for both `missingpatches.vbs` and `wes.py`, check [CMDLINE.md](https://github.com/bitsadmin/wesng/blob/master/CMDLINE.md).
+For an overview of all available parameters for `missingkbs.vbs`, `missingkbs.ps1` and `wes.py`, check [CMDLINE.md](https://github.com/bitsadmin/wesng/blob/master/CMDLINE.md).
 
 ## Demo
 ![Gif animation showing usage of Windows Exploit Suggester - Next Generation](https://raw.githubusercontent.com/bitsadmin/wesng/master/demo.gif)

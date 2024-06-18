@@ -141,3 +141,50 @@ Examples:
     cscript.exe missingkbs.vbs /D:E:\tmp
 ```
 
+# missingkbs.ps1
+```
+NAME
+    missingkbs.ps1
+
+SYNOPSIS
+    Compiles a list of missing KBs on the current system.
+
+
+SYNTAX
+    missingkbs.ps1 [-Online] [-OutputFile <String>] [<CommonParameters>]
+
+    missingkbs.ps1 [-Offline] [-ScanFile <String>] [-Preserve] [-OutputFile <String>] [<CommonParameters>]
+
+    missingkbs.ps1 [-DownloadOnly] [-TargetPath <String>] [<CommonParameters>]
+
+
+DESCRIPTION
+    These missing KBs are determined based either on the online Microsoft Update service or WSUS if configured, or on an offline scanfile (wsusscn2.cab). This scanfile is either provided in the command line or downloaded from the Microsoft Update
+    site. By default, the online Microsoft Update service is used (or WSUS if configured).
+
+
+NOTES
+    On Windows, it may be required to enable this Activate.ps1 script by setting the execution policy for the user. You can do this by issuing the following PowerShell command:
+
+    PS C:\> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+    For more information on Execution Policies:
+    https://go.microsoft.com/fwlink/?LinkID=135170
+
+
+EXAMPLES
+    PS > missingkbs.ps1
+    Determine missing KBs using the online Microsoft Update service (or WSUS if configured)
+
+    PS > missingkbs.ps1 -Offline -Preserve
+    Determine missing KBs downloading the wsusscn2.cab scanfile and preserving it
+
+    PS > missingkbs.ps1 -Offline -ScanFile E:\tmp\wsusscn2.cab
+    Determine missing KBs using the offline wsusscn2.cab scanfile
+
+    PS > missingkbs.ps1 -Offline -OutputFile E:\tmp\out.txt
+    Determine missing KBs downloading the wsusscn2.cab scanfile saving results in out.txt
+
+    PS > missingkbs.ps1 -DownloadOnly E:\tmp
+    Download the scanfile to E:\tmp\
+```
