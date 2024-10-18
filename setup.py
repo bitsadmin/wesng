@@ -39,7 +39,7 @@ setup(
     ],
     py_modules=['wes', 'muc_lookup'],
     python_requires='>=3.4, >=2.7',
-    install_requires=[chardet],
+    install_requires=['chardet'],
     package_data={
         'definitions': ['definitions.zip']
     },
