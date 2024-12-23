@@ -19,7 +19,7 @@ $xlsx = Import-Excel $bulletinxlsx -HeaderName DatePosted,BulletinId,BulletinKB,
 
 "[+] Processing Excel file"
 $cve_bulletin = @()
-$total = $xlsx | measure | select -expand Count
+$total = $xlsx | Measure-Object | Select-Object -expand Count
 $counter = 1
 
 # Parse all lines in xlsx
@@ -39,9 +39,9 @@ foreach($line in $xlsx)
     $AffectedComponent = $line.AffectedComponent
     $Severity = $line.Severity
     $Impact = $line.Impact
-    $Supersedes = $line.Supersedes -split { $_ -eq ";" -or $_ -eq "," } | % { $_ -replace '.*?(\d{6,}).*','$1' }
+    $Supersedes = $line.Supersedes -split { $_ -eq ";" -or $_ -eq "," } | ForEach-Object { $_ -replace '.*?(\d{6,}).*','$1' }
 
-    if($Supersedes -eq $null)
+    if($null -eq $Supersedes)
     {
         $Supersedes = @("")
     }

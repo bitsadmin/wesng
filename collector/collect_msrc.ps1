@@ -35,7 +35,7 @@ foreach($secupdate in $msu)
 }
 
 # Sort documents chronologically
-$docs = $docs | sort @{Expression={$_.DocumentTracking.InitialReleaseDate}}
+$docs = $docs | Sort-Object @{Expression={$_.DocumentTracking.InitialReleaseDate}}
 
 # DEBUG
 #$docs | Export-Clixml "MSRCdocs.xml"
@@ -58,26 +58,26 @@ foreach($doc in $docs)
     # Iterate over CVEs per monthly release
     foreach($cve in $doc.Vulnerability)
     {
-        $DatePosted = [System.Convert]::ToDateTime(($cve.RevisionHistory | select -Last 1).Date).ToString("yyyyMMdd")
+        $DatePosted = [System.Convert]::ToDateTime(($cve.RevisionHistory | Select-Object -Last 1).Date).ToString("yyyyMMdd")
         $CveID = $cve.CVE
         $Title = $cve.Title.Value
-        $AffectedComponent = ($cve.Notes | select -Last 1).Title
+        $AffectedComponent = ($cve.Notes | Select-Object -Last 1).Title
         #$description = ($cve.Notes | ? Title -eq "Description" | select -expand Value) -replace "<p>","" -replace "</p>`n", " " -replace "`r", ""
 
         # Iterate over KBs per CVE
         foreach($kb in $cve.Remediations)
         {
             $BulletinKB = $kb.Description.Value
-            $Supersedes = $kb.Supercedence -split {$_ -eq ";" -or $_ -eq "," -or $_ -eq " "} | ? { $_ -and $_ -inotlike '*MS*' }
-            if($Supersedes -eq $null) { $Supersedes = @("") }
+            $Supersedes = $kb.Supercedence -split {$_ -eq ";" -or $_ -eq "," -or $_ -eq " "} | Where-Object { $_ -and $_ -inotlike '*MS*' }
+            if($null -eq $Supersedes) { $Supersedes = @("") }
 
             # Iterate over products patched by the KB
             foreach($productid in $kb.ProductID)
             {
-                $threats = $cve.Threats | ? ProductID -Contains $productid
-                $Severity = ($threats | ? Type -EQ 3).Description.Value
-                $Impact = ($threats | ? Type -EQ 0).Description.Value
-                $AffectedProduct = $doc.ProductTree.FullProductName | ? ProductId -EQ $productid | select -expand Value
+                $threats = $cve.Threats | Where-Object ProductID -Contains $productid
+                $Severity = ($threats | Where-Object Type -EQ 3).Description.Value
+                $Impact = ($threats | Where-Object Type -EQ 0).Description.Value
+                $AffectedProduct = $doc.ProductTree.FullProductName | Where-Object ProductId -EQ $productid | Select-Object -expand Value
                 
                 # Fix-up for mistakes in the AffectedProduct and AffectedComponent fields
                 $AffectedProduct = $AffectedProduct.TrimEnd() -replace '  ', ' '
@@ -105,7 +105,7 @@ foreach($doc in $docs)
 #$cve_bulletin | Export-Clixml "MSRC.xml"
 #$cve_bulletin = Import-Clixml "MSRC.xml"
 
-"[+] {{{0}}} Writing CVEs from MSRC to file" -f [DateTime]::Now.ToString($dateformat)
+"[+] {0} Writing CVEs from MSRC to file" -f [DateTime]::Now.ToString($dateformat)
 $cves_msrc | Export-Csv -NoTypeInformation -Encoding utf8 "MSRC.csv"
 "[+] Done!"
 "End: {0}" -f [DateTime]::Now

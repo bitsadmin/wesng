@@ -35,7 +35,7 @@ New-Item -ItemType Directory $NVDPath -ErrorAction SilentlyContinue | Out-Null
 for($year = 2002; $year -le [DateTime]::Now.Year; $year++)
 {
     $outfile = "$NVDPath\nvdcve-1.1-$year.json.zip"
-    wget "https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-$year.json.zip" -OutFile $outfile
+    Invoke-WebRequest "https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-$year.json.zip" -OutFile $outfile
     Expand-Archive $outfile -DestinationPath $NVDPath -Force
     Remove-Item $outfile
 }
@@ -48,7 +48,7 @@ for($year = 2002; $year -le [DateTime]::Now.Year; $year++)
     "- $year"
 
     # Load JSON in memory
-    $json = (gc "$NVDPath\nvdcve-1.1-$year.json" | ConvertFrom-Json)
+    $json = (Get-Content "$NVDPath\nvdcve-1.1-$year.json" | ConvertFrom-Json)
 
     # Iterate over CVEs
     foreach($cve in $json.CVE_Items)
@@ -68,7 +68,7 @@ for($year = 2002; $year -le [DateTime]::Now.Year; $year++)
             { continue }
 
         # Extract Exploit-DB and other exploit links
-        $edb = @($cve.cve.references.reference_data | ? { $_.refsource -EQ "EXPLOIT-DB" -or $_.tags -contains 'Exploit' } | select -expand url) -join ", "
+        $edb = @($cve.cve.references.reference_data | Where-Object { $_.refsource -EQ "EXPLOIT-DB" -or $_.tags -contains 'Exploit' } | Select-Object -expand url) -join ", "
         
         # Skip if no exploit available
         if($edb -eq "")
@@ -103,19 +103,19 @@ $CVEs = $cves_bulletin + $cves_msrc # TODO, check for overlapping records
 $CVEs | Add-Member -NotePropertyName "Exploits" -NotePropertyValue $null
 
 # Filter CVEs that have corresponding exploits
-$total = $exploits | measure | % Count
+$total = ($exploits | Measure-Object).Count
 $counter = 1
 
 foreach($exploit in $exploits)
 {
     # Find Bulletin/MSRC matches that have a matching CVE
-    $matches = $CVEs | ? CVE -eq $exploit.CVE
+    $found = $CVEs | Where-Object CVE -eq $exploit.CVE
 
     # Add exploit link(s) to matching CVEs
-    $matches | % { $_.Exploits = $exploit.Exploits }
+    $found | ForEach-Object { $_.Exploits = $exploit.Exploits }
 
-    $exploitcount = $exploit.Exploits -split ", " | measure | % Count
-    $matchcount = $matches | measure | % Count
+    $exploitcount = ($exploit.Exploits -split ", " | Measure-Object).Count
+    $matchcount = ($found | Measure-Object).Count
 
     # Report status
     $status = "[{0:0000}/{1:0000}] {2} - " -f $counter,$total,$exploit.CVE
@@ -141,11 +141,11 @@ $outcsv = "CVEs_{0}.csv" -f [DateTime]::Now.ToString("yyyyMMdd")
 $CVEs | Export-Csv -NoTypeInformation -Encoding ASCII $outcsv
 $wesver = $minwesversion.ToString("0.00", [System.Globalization.CultureInfo]::InvariantCulture)
 $outversion = "Version_{0}.txt" -f $wesver
-$customcsv = gci Custom_*.csv | select -expand Name
+$customcsv = Get-ChildItem Custom_*.csv | Select-Object -expand Name
 "[+] Writing minimum required version number to $outversion"
 New-Item $outversion -Type File -Value ("This definition file requires you to at least use wes version {0}`r`n`r`nDownload the latest version from https://github.com/bitsadmin/wesng`r`n" -f $wesver) | Out-Null
 "[+] Packing files into definitions.zip"
-Compress-Archive -LiteralPath $outcsv,$customcsv,$outversion -CompressionLevel Optimal -DestinationPath definitions.zip -Force
+Compress-Archive -LiteralPath $outcsv,$customcsv,$outversion -CompressionLevel Optimal -DestinationPath ..\definitions.zip -Force
 Remove-Item $outcsv,$outversion
 
 "[+] Done!"
