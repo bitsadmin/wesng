@@ -61,8 +61,7 @@ foreach($doc in $docs)
         $DatePosted = [System.Convert]::ToDateTime(($cve.RevisionHistory | Select-Object -Last 1).Date).ToString("yyyyMMdd")
         $CveID = $cve.CVE
         $Title = $cve.Title.Value
-        $AffectedComponent = ($cve.Notes | Select-Object -Last 1).Title
-        #$description = ($cve.Notes | ? Title -eq "Description" | select -expand Value) -replace "<p>","" -replace "</p>`n", " " -replace "`r", ""
+        $AffectedComponent = ($cve.Notes | Where-Object Type -EQ 7).Title
 
         # Iterate over KBs per CVE
         foreach($kb in $cve.Remediations)
@@ -80,8 +79,8 @@ foreach($doc in $docs)
                 $AffectedProduct = $doc.ProductTree.FullProductName | Where-Object ProductId -EQ $productid | Select-Object -expand Value
                 
                 # Fix-up for mistakes in the AffectedProduct and AffectedComponent fields
-                $AffectedProduct = $AffectedProduct.TrimEnd() -replace '  ', ' '
-                $AffectedComponent = $AffectedComponent.TrimEnd() -replace '  ', ' '
+                $AffectedProduct = if($AffectedProduct){$AffectedProduct.TrimEnd() -replace '  ', ' '} else { $null }
+                $AffectedComponent = if($AffectedComponent){$AffectedComponent.TrimEnd() -replace '  ', ' '} else { $null }
                 
                 $cves_msrc += [PSCustomObject]@{
                     DatePosted=$DatePosted;
