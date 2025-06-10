@@ -606,7 +606,7 @@ def determine_product(systeminfo):
         if servicepack:
             productfilter += ' Service Pack %s' % servicepack
     elif win == '7' or win == 'Embedded Standard':
-        productfilter = 'Windows %s for %s Systems' % (win, arch)
+        productfilter = 'Windows 7 for %s Systems' % (arch)
         if servicepack:
             productfilter += ' Service Pack %s' % servicepack
     elif win == '8':
