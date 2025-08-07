@@ -557,7 +557,7 @@ def determine_product(systeminfo):
     servicepack = systeminfo_matches[4]
 
     # OS Name
-    win_matches = re.findall(r'.*?Microsoft[\(R\)]{0,3} Windows[\(R\)?]{0,3} ?(Serverr? )?(\d+\.?\d?( R2)?|XP|VistaT).*', systeminfo, re.MULTILINE | re.IGNORECASE)
+    win_matches = re.findall(r'.*?Microsoft[\(R\)]{0,3} Windows[\(R\)?]{0,3} ?(Serverr? )?(\d+\.?\d?( R2)?|XP|VistaT|Embedded Standard).*', systeminfo, re.MULTILINE | re.IGNORECASE)
     if len(win_matches) == 0:
         raise WesException('Not able to detect OS name based on provided input file')
     win = win_matches[0][1]
@@ -605,8 +605,8 @@ def determine_product(systeminfo):
             productfilter += ' %s Edition' % arch
         if servicepack:
             productfilter += ' Service Pack %s' % servicepack
-    elif win == '7':
-        productfilter = 'Windows %s for %s Systems' % (win, arch)
+    elif win == '7' or win == 'Embedded Standard':
+        productfilter = 'Windows 7 for %s Systems' % (arch)
         if servicepack:
             productfilter += ' Service Pack %s' % servicepack
     elif win == '8':
