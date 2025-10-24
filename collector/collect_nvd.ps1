@@ -31,11 +31,10 @@ New-Item -ItemType Directory $NVDPath -ErrorAction SilentlyContinue | Out-Null
 
 "[+] Downloading NVD JSON updates"
 # Source: https://nvd.nist.gov/vuln/data-feeds
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 for($year = 2002; $year -le [DateTime]::Now.Year; $year++)
 {
-    $outfile = "$NVDPath\nvdcve-1.1-$year.json.zip"
-    Invoke-WebRequest "https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-$year.json.zip" -OutFile $outfile
+    $outfile = "$NVDPath\nvdcve-2.0-$year.json.zip"
+    Invoke-WebRequest "https://nvd.nist.gov/feeds/json/cve/2.0/nvdcve-2.0-$year.json.zip" -OutFile $outfile
     Expand-Archive $outfile -DestinationPath $NVDPath -Force
     Remove-Item $outfile
 }
@@ -48,14 +47,14 @@ for($year = 2002; $year -le [DateTime]::Now.Year; $year++)
     "- $year"
 
     # Load JSON in memory
-    $json = (Get-Content "$NVDPath\nvdcve-1.1-$year.json" | ConvertFrom-Json)
+    $json = (Get-Content -Encoding utf8 "$NVDPath\nvdcve-2.0-$year.json" | ConvertFrom-Json)
 
     # Iterate over CVEs
-    foreach($cve in $json.CVE_Items)
+    foreach($cve in $json.vulnerabilities.cve)
     {
         # Only focus on Microsoft vulnerabilities
         $mscve = $false
-        $cpes = $cve.configurations.nodes.cpe_match.cpe23Uri + $cve.configurations.nodes.children.cpe_match.cpe23Uri
+        $cpes = $cve.configurations.nodes.cpeMatch.criteria
         foreach($cpe in $cpes)
         {
             if($cpe -like '*microsoft*')
@@ -68,20 +67,20 @@ for($year = 2002; $year -le [DateTime]::Now.Year; $year++)
             { continue }
 
         # Extract Exploit-DB and other exploit links
-        $edb = @($cve.cve.references.reference_data | Where-Object { $_.refsource -EQ "EXPLOIT-DB" -or $_.tags -contains 'Exploit' } | Select-Object -expand url) -join ", "
+        $edb = @($cve.references | Where-Object { $_.tags -contains 'Exploit' } | Select-Object -Unique -ExpandProperty url) -join ", "
         
         # Skip if no exploit available
         if($edb -eq "")
             { continue }
 
         $exploits += [PSCustomObject]@{
-            "CVE"=$cve.cve.CVE_data_meta.ID;
+            "CVE"=$cve.id;
             "Exploits"=$edb
         }
     }
 
     # Cleanup json
-    Remove-Item "$NVDPath\nvdcve-1.1-$year.json"
+    Remove-Item "$NVDPath\nvdcve-2.0-$year.json"
 }
 
 # Remove NVD directory
