@@ -26,6 +26,7 @@ The WES-NG collector pulls information from various sources:
 - Microsoft Security Bulletin Data: KBs for older systems [1]
 - MSRC: The Microsoft Security Update API of the Microsoft Security Response Center (MSRC): Standard source of information for modern Microsoft Updates [2]
 - NIST National Vulnerability Database (NVD): Complement vulnerabilities with Exploit-DB links [3]
+- OffSec Exploit-DB [4]
 These are combined into a single .csv file which is compressed and hosted in this GitHub repository.
 
 ## Rationale
@@ -49,6 +50,8 @@ See [CHANGELOG.md](https://github.com/bitsadmin/wesng/blob/master/CHANGELOG.md)
 [2] https://portal.msrc.microsoft.com/en-us/developer
 
 [3] https://nvd.nist.gov/vuln/data-feeds
+
+[4] https://www.exploit-db.com/
 
 #
 **Authored by Arris Huijgen ([@bitsadmin](https://twitter.com/bitsadmin/) - https://github.com/bitsadmin/)**

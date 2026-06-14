@@ -1,8 +1,3 @@
-<#
-Commandline:
-Remove-Item ..\definitions.zip ; .\collect_msrc.ps1 ; .\collect_nvd.ps1 ; .\push_definitions.ps1
-#>
-
 # Stop if file seems corrupted
 Write-Warning 'Validating definitions.zip file'
 $zip = Get-ChildItem ..\definitions.zip

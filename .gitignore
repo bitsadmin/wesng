@@ -134,5 +134,6 @@ apikey.txt
 
 # Temporary files created by the collector
 MSRC.csv
+EDB.csv
 NVD.csv
 Bulletin.csv
